@@ -1,7 +1,14 @@
 # horse-pain-poc
 
+[![status](https://img.shields.io/badge/Faza_0-GO-success)](GATE.md)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
+
 Faza 0 sanity-check stosu open-source dla automatycznej detekcji bólu u koni
 zgodnie z **Ridden Horse Pain Ethogram (RHpE, Sue Dyson, 24 zachowania)**.
+
+![DLC SuperAnimal-Quadruped keypoints na sample horse video — 5 klatek z overlay'em szkieletu](docs/example_output.png)
+*5 klatek z notebooka `00_smoke_dlc_sample.ipynb` — DLC SuperAnimal-Quadruped zero-shot na [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) (Wikimedia Commons CC).*
 
 To **nie jest narzędzie diagnostyczne**. To 45-minutowy weekend exploration
 (`bash setup.sh && jupyter lab notebooks/00_smoke_dlc_sample.ipynb`)
