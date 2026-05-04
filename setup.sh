@@ -42,7 +42,8 @@ uv pip install --python .venv/bin/python --prerelease=allow \
     "pandas>=2.2" \
     "jupyter>=1.0" \
     "ipykernel>=6.29" \
-    "yt-dlp>=2024.8"
+    "yt-dlp>=2024.8" \
+    "ultralytics>=8.3"
 
 # 4. weights SuperAnimal-Quadruped — DLC 3.x pobiera lazy przy pierwszym `video_inference_superanimal`.
 #    Próbujemy proaktywnie, żeby Notebook 00 nie zatrzymał się na downloadzie. Niewykonanie = OK.
@@ -146,7 +147,36 @@ else
     echo "==> [6/6] $SAMPLE_VIDEO już istnieje, pomijam"
 fi
 
+# 7. clone horse-face-ear-detection — YOLOv8n custom weights dla movement-detection
+HFED="vendor/horse-face-ear-detection"
+if [ ! -d "$HFED/.git" ]; then
+    echo "==> [7/8] Klonuję jmalves5/horse-face-ear-detection (YOLOv8n custom weights)..."
+    git clone --depth 1 https://github.com/jmalves5/horse-face-ear-detection "$HFED" || \
+        echo "    (UWAGA: clone padło — Etap A nie zadziała bez tych weights)"
+else
+    echo "==> [7/8] $HFED już istnieje, pomijam"
+fi
+
+# 8. download subsetu HF dataset joaomalves/read-my-ears (test split + ~20 klipów)
+RME_DATA="vendor/ReadMyEars_Dataset/data"
+if [ ! -f "$RME_DATA/test.csv" ]; then
+    echo "==> [8/8] Pobieram subset joaomalves/read-my-ears (CSVs + S1 klipy)..."
+    .venv/bin/python - <<'PY' || echo "    (UWAGA: HF download padł — Etap A może nie mieć danych)"
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id="joaomalves/read-my-ears",
+    repo_type="dataset",
+    local_dir="vendor/ReadMyEars_Dataset/data",
+    allow_patterns=["test.csv", "train.csv", "val.csv", "videos/action_S1.*", "videos/background_S1.*"],
+)
+print("    pobrane do vendor/ReadMyEars_Dataset/data/")
+PY
+else
+    echo "==> [8/8] HF dataset subset już istnieje, pomijam"
+fi
+
 echo ""
 echo "==> ✓ Setup gotowy."
-echo "==> Następny krok: source .venv/bin/activate && jupyter lab notebooks/00_smoke_dlc_sample.ipynb"
-echo "==> Jeśli macOS sygnalizuje problemy z DLC/torch — przejdź na notebooks/99_colab_fallback.ipynb"
+echo "==> Notebook 00 (DLC smoke):     jupyter lab notebooks/00_smoke_dlc_sample.ipynb"
+echo "==> Notebook 01 (RME movement):  jupyter lab notebooks/01_read_my_ears_replicate.ipynb"
+echo "==> Colab fallback:              notebooks/99_colab_fallback.ipynb"
