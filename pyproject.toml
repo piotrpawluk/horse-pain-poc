@@ -1,7 +1,7 @@
 [project]
 name = "horse-training-poc"
 version = "0.0.1"
-description = "Faza 0 PoC — sanity check stosu open-source dla detekcji bólu u koni wg Ridden Horse Pain Ethogram (Sue Dyson)."
+description = "Faza 0+1 PoC — sanity check + Read My Ears replikacja stosu open-source dla detekcji bólu u koni wg Ridden Horse Pain Ethogram (Sue Dyson)."
 requires-python = ">=3.10,<3.12"
 dependencies = [
     "deeplabcut[modelzoo]>=3.0.0rc14",
@@ -16,6 +16,7 @@ dependencies = [
     "jupyter>=1.0",
     "ipykernel>=6.29",
     "yt-dlp>=2024.8",
+    "ultralytics>=8.3",
 ]
 
 [tool.uv]

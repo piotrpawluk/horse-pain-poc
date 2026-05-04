@@ -1,20 +1,38 @@
 # horse-pain-poc
 
 [![status](https://img.shields.io/badge/Faza_0-GO-success)](GATE.md)
+[![status](https://img.shields.io/badge/Faza_1_Etap_A-partial-yellow)](GATE.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
-Faza 0 sanity-check stosu open-source dla automatycznej detekcji bólu u koni
+PoC stosu open-source dla automatycznej detekcji bólu u koni
 zgodnie z **Ridden Horse Pain Ethogram (RHpE, Sue Dyson, 24 zachowania)**.
 
 ![DLC SuperAnimal-Quadruped keypoints na sample horse video — 5 klatek z overlay'em szkieletu](docs/example_output.png)
 *5 klatek z notebooka `00_smoke_dlc_sample.ipynb` — DLC SuperAnimal-Quadruped zero-shot na [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) (Wikimedia Commons CC).*
 
-To **nie jest narzędzie diagnostyczne**. To 45-minutowy weekend exploration
-(`bash setup.sh && jupyter lab notebooks/00_smoke_dlc_sample.ipynb`)
-sprawdzający, czy zerolot pose-estimation + behavior-classification działa
-na sprzęcie pojedynczego użytkownika i daje sygnał wystarczający do
-zaplanowania większego projektu.
+To **nie jest narzędzie diagnostyczne**. To weekend exploration:
+- **Faza 0** (~45 min, [GATE.md](GATE.md)): sanity-check zerolot pose-estimation z DLC
+- **Faza 1 Etap A** (~30 min): pełna replikacja Read My Ears (Alves CVPR W'25) movement-detection na ich [HF dataset](https://huggingface.co/datasets/joaomalves/read-my-ears)
+
+## Replication results — Read My Ears movement-detection
+
+Pełen pipeline 1:1 na 48 klipach test split:
+
+| Metric | Value | Paper claim |
+|--------|-------|-------------|
+| Accuracy | **0.583** | 0.875 |
+| Precision | 0.524 | — |
+| Recall | 1.000 | — |
+| F1 | 0.688 | — |
+
+![Confusion matrix](docs/movement_detection_results.png)
+
+**Pipeline działa, ale paper accuracy nie reprodukuje się** — algorytm jest
+overaggressive (recall 1.0, ale 20/26 background klasyfikowane jako action).
+Główne źródła rozbieżności: YOLOv8l zamiast yolov8n (publicznie dostępne tylko
+`l`), brak ich pre-computed face-masked clips, brak ich FPS=25 resampling.
+Threshold sweep nie ratuje — best 0.65 przy thr=3.
 
 ## Co znajdziesz w tym repo
 
