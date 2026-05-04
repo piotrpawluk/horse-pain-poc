@@ -1,0 +1,22 @@
+[project]
+name = "horse-training-poc"
+version = "0.0.1"
+description = "Faza 0 PoC — sanity check stosu open-source dla detekcji bólu u koni (RHpE). Zgodnie z poc-ai-rhpe.md."
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    "deeplabcut[modelzoo]>=3.0.0rc14",
+    "torch>=2.3",
+    "torchvision",
+    "huggingface_hub>=0.24",
+    "transformers>=4.44",
+    "opencv-python-headless>=4.10",
+    "matplotlib>=3.7,<3.9",
+    "numpy>=1.26,<2.1",
+    "pandas>=2.2",
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "yt-dlp>=2024.8",
+]
+
+[tool.uv]
+package = false
