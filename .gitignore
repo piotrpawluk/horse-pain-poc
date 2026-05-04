@@ -1,0 +1,16 @@
+# Pobierane przez setup.sh (~500 MB+) — nie wersjonujemy
+.venv/
+data/
+checkpoints/
+outputs/
+vendor/
+
+# Notebooki: tylko źródła wersjonujemy, executed kopie nie
+notebooks/*.executed.ipynb
+*.ipynb_checkpoints/
+
+# Standardowe
+.DS_Store
+*.swp
+__pycache__/
+*.pyc
