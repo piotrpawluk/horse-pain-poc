@@ -22,11 +22,11 @@ Wypełnić po uruchomieniu `setup.sh` + notebooków `00` i `01`. Każdy punkt to
 
 ## Werdykt
 
-**Decyzja: [x] GO** (4/4 z asteriskiem przy punkcie 3)
+**Decyzja: [x] GO** (4/4)
 
-Stos open-source dla detekcji bólu u koni działa end-to-end na macOS Apple Silicon. DLC SuperAnimal-Quadruped jako pose backbone (Faza 0) + V-JEPA-2 zerolot + linear probe daje **0.854 vs paper 0.875** na Read My Ears benchmark (Faza 1). X-CLIP text-conditioned zerolot okazał się nieskuteczny dla subtle motion (0.40-0.60). Foundation models z półki są realnym pivotem dla skalowania.
+**Faza 0** (DLC SuperAnimal-Quadruped pose backbone): działa end-to-end na macOS Apple Silicon w ~45 min, keypoints wzrokowo sensowne na koniu (głowa, kark, łopatki, biodra, kończyny, uszy). **Faza 1** (Read My Ears benchmark): 4 podejścia testowane na pełnym test split (N=48). **Najlepsze osiągnięte**: V-JEPA-2 + linear probe = **0.854** (foundation video model z półki, BEZ żadnego treningu modelu, sekundy LogReg na CPU) — delta tylko −2,1 pp od paper claim 0.875. Etap A movement-detection 1:1 = 0.583 (custom YOLO pipeline). X-CLIP zerolot 0.40–0.60 (text-conditioned approach nie działa dla subtle motion). **Etap B/C/D LSTM tracks anulowane** — V-JEPA-2 zerolot dorównuje paper'owi, fine-tune VideoMAE od zera (6-10h GPU) ma znikomy expected upside. **Pivot dla skalowania na 24 RHpE behaviors**: V-JEPA-2 embeddings (1024-D) + 24 niezależne linear probes (każdy ~1s treningu na CPU, wymaga ~50-100 labeled klipów per behavior) zamiast trenowania custom modelu per-class.
 
-Data wypełnienia: 2026-05-04
+Data wypełnienia: 2026-05-04 (Faza 0) / 2026-05-05 (Faza 1)
 
 ## Notatki dodatkowe (do Fazy 1+)
 
