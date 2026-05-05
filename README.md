@@ -1,7 +1,7 @@
 # horse-pain-poc
 
 [![status](https://img.shields.io/badge/Faza_0-GO-success)](GATE.md)
-[![status](https://img.shields.io/badge/Faza_1_V--JEPA--2-0.854-success)](GATE.md)
+[![best](https://img.shields.io/badge/V--JEPA--2_+_linear_probe-0.854-success)](GATE.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
@@ -21,22 +21,26 @@ Pełen pipeline na 48 klipach test split (HF dataset `joaomalves/read-my-ears`):
 
 | Approach | Accuracy | Notes |
 |----------|----------|-------|
-| **V-JEPA-2 + linear probe** (zero-shot) | **0.854** | Foundation video model z półki, BEZ ich custom YOLO/preprocessing, BEZ żadnego treningu modelu |
+| Paper claim (Alves CVPR W'25) | **0.875** | Z ich custom YOLOv8n + face_masked_clips + FPS=25 |
+| **V-JEPA-2 + linear probe** | **0.854** | Foundation video model z półki, BEZ custom preprocessing, BEZ treningu modelu (sekundy LogReg) |
 | V-JEPA-2 + k-NN (k=15) | 0.729 | Same embeddingi, prostszy klasyfikator |
+| X-CLIP zerolot S1 (binary prompts) | 0.604 | Text-conditioned, "horse moving its ears" vs "calm horse" |
 | Etap A movement-detection (1:1) | 0.583 | Pełna replikacja ich pipeline'u (YOLOv8l + optical flow) |
-| Paper claim (Alves CVPR W'25) | 0.875 | Z ich custom YOLOv8n + face_masked_clips + FPS=25 |
+| X-CLIP zerolot S2 (cinematic) | 0.458 | Model **zawsze przewiduje action** — propty się zlewają |
+| X-CLIP zerolot S3 (multi-prompt voting) | 0.396 | Najgorsze — too many similar prompts |
 
-![Comparison](docs/vjepa2_comparison.png)
+![Comparison](docs/final_comparison.png)
 
 **Kluczowe wnioski:**
 
-1. **V-JEPA-2 zerolot jest tylko 2 pp od paper claim** — `facebook/vjepa2-vitl-fpc16-256-ssv2` (Meta, czerwiec 2025) jako ekstraktor cech 1024-D + sklearn `LogisticRegression` na features. Trening klasyfikatora < 1s na CPU. Embedding extraction 283 klipów ~25 min na MPS.
-2. **Movement-detection 1:1 (Etap A) nie reprodukuje paper'u** — algorytm hyper-aware na threshold + brak ich preprocessing artifactów (yolov8n, face_masked_clips, FPS=25).
-3. **Strategiczna implikacja**: foundation models z półki bywają lepsze niż custom-trained pipelines z paper'ów — szczególnie gdy paper preprocessing nie jest pełnie reprodukowalny. Dla rozszerzenia do 24 RHpE behaviors: V-JEPA-2 embeddings + 24 niezależne linear probes zamiast trenowania custom modelu per-class.
+1. **V-JEPA-2 zerolot tylko 2 pp od paper claim** — `facebook/vjepa2-vitl-fpc16-256-ssv2` (Meta, czerwiec 2025) jako ekstraktor cech 1024-D + sklearn `LogisticRegression` na features. Trening klasyfikatora < 1s na CPU. Embedding extraction 283 klipów ~25 min na MPS.
+2. **Movement-detection 1:1 (Etap A) nie reprodukuje paper'u** — brak ich preprocessing artifactów (yolov8n, face_masked_clips, FPS=25).
+3. **X-CLIP text-conditioned zerolot NIE działa dla subtle motion** — model trenowany na grube YouTube actions (people running, cars driving) nie potrafi rozróżnić "horse moving ears" od "calm horse" z samych promptów.
+4. **Strategiczna implikacja**: dla 24 RHpE behaviors nie wystarczy "wpisz 24 promty zerolot". Potrzeba V-JEPA-2 embeddings + 24 niezależne linear probes (każdy wymaga małego labeled subsetu ~50-100 klipów per behavior, sekundy treningu na CPU).
 
-**Co dalej (do dyskusji w Issue #1):**
-- Email do autorów Alves/Andersen z konkretnym wynikiem 0.854 jako otwierający kolaborację
-- X-CLIP text-conditioned zerolot na 24 RHpE behaviors — czy można w pełni zerowy trening?
+**Co dalej:**
+- Email do autorów Alves/Andersen z wynikiem 0.854 jako otwierający kolaborację
+- Faza 2 — własny dataset RHpE z ground truth od certyfikowanego assessor'a, V-JEPA-2 embeddings + multi-label linear probes per RHpE behavior
 
 ## Co znajdziesz w tym repo
 

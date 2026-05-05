@@ -24,7 +24,7 @@ Wypełnić po uruchomieniu `setup.sh` + notebooków `00` i `01`. Każdy punkt to
 
 **Decyzja: [x] GO** (4/4 z asteriskiem przy punkcie 3)
 
-Stos open-source dla detekcji bólu u koni działa end-to-end na macOS Apple Silicon w ~45 min. DLC SuperAnimal-Quadruped jest najmocniejszym ogniwem — out-of-the-box keypoints na koniu są wzrokowo sensowne i są bazą dla detekcji 5 z 24 RHpE behaviors planowanych w Fazie 1. Read My Ears (Faza 1) — Etap A movement-detection: 0.583; Alternatywa V-JEPA-2 zerolot: **0.854** (−2,1 pp od paper). Foundation models są realnym pivotem.
+Stos open-source dla detekcji bólu u koni działa end-to-end na macOS Apple Silicon. DLC SuperAnimal-Quadruped jako pose backbone (Faza 0) + V-JEPA-2 zerolot + linear probe daje **0.854 vs paper 0.875** na Read My Ears benchmark (Faza 1). X-CLIP text-conditioned zerolot okazał się nieskuteczny dla subtle motion (0.40-0.60). Foundation models z półki są realnym pivotem dla skalowania.
 
 Data wypełnienia: 2026-05-04
 
@@ -38,4 +38,6 @@ Data wypełnienia: 2026-05-04
 - **YOLOv8l weights** — `jmalves5/horse-face-ear-detection` ma tylko `yolov8l_*.pt` (~175 MB każdy), nie nano. Custom yolov8n nie jest dystrybuowany publicznie.
 - **`utils.metrics` import** — `vendor/read-my-ears/utils/` nie ma `__init__.py`. Inline'owana kopia w notebooku 01.
 - **Etap B/C/D (LSTM tracks)** — **anulowane**. V-JEPA-2 zerolot dorównuje paper claim, fine-tune VideoMAE od zera (6-10h GPU) ma znikomy expected upside.
-- **Następne kroki potencjalne**: (a) X-CLIP text-conditioned zerolot na 24 RHpE behaviors jako PoC multi-label scoringu z półki; (b) email do autorów Alves/Andersen z konkretnym wynikiem 0.854 jako otwierającą rozmowę kolaboracyjną.
+- **X-CLIP text-conditioned zerolot przetestowany — NIE działa dla tego task'u**. `microsoft/xclip-base-patch16-16-frames` na 48 test klipach: S1 binary 0.604, S2 cinematic 0.458, S3 multi-prompt 0.396. Cinematic i multi-prompt confusion matrix pokazuje że model **zawsze przewiduje action** — text-conditioned approach nie rozróżnia subtle ear motion od still poses. **Implikacja**: dla 24 RHpE behaviors nie wystarczy "wpisz 24 promty zerolot"; potrzebny **V-JEPA-2 embeddings + 24 niezależne linear probes** (każdy wymaga małego labeled subsetu ~50-100 klipów per behavior).
+- **Compat issue (do naprawy upstream)**: transformers 5.7.0 + tokenizers 0.23.0rc0 ma bug w `CLIPTokenizer.__init__` linia 117 — wywołuje `processors.RobertaProcessing(cls=...)` ale nowy API wymaga `cls_token=`. Workaround: monkey patch w pierwszej komórce notebooka 03 (mapuje `cls` → `cls_token`).
+- **Następne kroki potencjalne**: (a) email do autorów Alves/Andersen z konkretnym wynikiem 0.854 jako otwierającą rozmowę kolaboracyjną; (b) Faza 2 — własny dataset RHpE z ground truth od certyfikowanego assessor'a, V-JEPA-2 embeddings + multi-label linear probes per RHpE behavior.
