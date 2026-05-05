@@ -1,7 +1,7 @@
 # horse-pain-poc
 
 [![status](https://img.shields.io/badge/Faza_0-GO-success)](GATE.md)
-[![status](https://img.shields.io/badge/Faza_1_Etap_A-partial-yellow)](GATE.md)
+[![status](https://img.shields.io/badge/Faza_1_V--JEPA--2-0.854-success)](GATE.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
@@ -15,24 +15,28 @@ To **nie jest narzędzie diagnostyczne**. To weekend exploration:
 - **Faza 0** (~45 min, [GATE.md](GATE.md)): sanity-check zerolot pose-estimation z DLC
 - **Faza 1 Etap A** (~30 min): pełna replikacja Read My Ears (Alves CVPR W'25) movement-detection na ich [HF dataset](https://huggingface.co/datasets/joaomalves/read-my-ears)
 
-## Replication results — Read My Ears movement-detection
+## Replication results — Read My Ears ear-movement classification
 
-Pełen pipeline 1:1 na 48 klipach test split:
+Pełen pipeline na 48 klipach test split (HF dataset `joaomalves/read-my-ears`):
 
-| Metric | Value | Paper claim |
-|--------|-------|-------------|
-| Accuracy | **0.583** | 0.875 |
-| Precision | 0.524 | — |
-| Recall | 1.000 | — |
-| F1 | 0.688 | — |
+| Approach | Accuracy | Notes |
+|----------|----------|-------|
+| **V-JEPA-2 + linear probe** (zero-shot) | **0.854** | Foundation video model z półki, BEZ ich custom YOLO/preprocessing, BEZ żadnego treningu modelu |
+| V-JEPA-2 + k-NN (k=15) | 0.729 | Same embeddingi, prostszy klasyfikator |
+| Etap A movement-detection (1:1) | 0.583 | Pełna replikacja ich pipeline'u (YOLOv8l + optical flow) |
+| Paper claim (Alves CVPR W'25) | 0.875 | Z ich custom YOLOv8n + face_masked_clips + FPS=25 |
 
-![Confusion matrix](docs/movement_detection_results.png)
+![Comparison](docs/vjepa2_comparison.png)
 
-**Pipeline działa, ale paper accuracy nie reprodukuje się** — algorytm jest
-overaggressive (recall 1.0, ale 20/26 background klasyfikowane jako action).
-Główne źródła rozbieżności: YOLOv8l zamiast yolov8n (publicznie dostępne tylko
-`l`), brak ich pre-computed face-masked clips, brak ich FPS=25 resampling.
-Threshold sweep nie ratuje — best 0.65 przy thr=3.
+**Kluczowe wnioski:**
+
+1. **V-JEPA-2 zerolot jest tylko 2 pp od paper claim** — `facebook/vjepa2-vitl-fpc16-256-ssv2` (Meta, czerwiec 2025) jako ekstraktor cech 1024-D + sklearn `LogisticRegression` na features. Trening klasyfikatora < 1s na CPU. Embedding extraction 283 klipów ~25 min na MPS.
+2. **Movement-detection 1:1 (Etap A) nie reprodukuje paper'u** — algorytm hyper-aware na threshold + brak ich preprocessing artifactów (yolov8n, face_masked_clips, FPS=25).
+3. **Strategiczna implikacja**: foundation models z półki bywają lepsze niż custom-trained pipelines z paper'ów — szczególnie gdy paper preprocessing nie jest pełnie reprodukowalny. Dla rozszerzenia do 24 RHpE behaviors: V-JEPA-2 embeddings + 24 niezależne linear probes zamiast trenowania custom modelu per-class.
+
+**Co dalej (do dyskusji w Issue #1):**
+- Email do autorów Alves/Andersen z konkretnym wynikiem 0.854 jako otwierający kolaborację
+- X-CLIP text-conditioned zerolot na 24 RHpE behaviors — czy można w pełni zerowy trening?
 
 ## Co znajdziesz w tym repo
 
