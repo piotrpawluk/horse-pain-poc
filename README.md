@@ -22,16 +22,18 @@ To **nie jest narzędzie diagnostyczne**. To research prototype:
 
 **Faza 2 wymaga zróżnicowanego datasetu** z polskich realiów (hala jeździecka, oświetlenie, rasy, sprzęt) — to czego nie ma w żadnym publicznym datasetcie.
 
-**Czego potrzebuję:** 60–100 klipów wideo (smartfon na statywie wystarczy, 3 kąty: bok / czoło / ⅓), różne konie pod jeźdźcem, 3–5 minut każdy. Im więcej różnych ośrodków/koni/jeźdźców, tym lepiej (LOSO wymaga ≥10 unique sessions — patrz [Lesson 8](docs/lessons_learned.md)).
+**Czego potrzebuję:** klipy wideo z różnych ośrodków/koni/jeźdźców (LOSO wymaga ≥10 unique sessions — patrz [Lesson 8](docs/lessons_learned.md)). **Ale nie byle jak** — dobra próbka wymaga konkretnego protokołu nagrywania żeby nie powtórzyć session leakage z iter 1.5.
+
+**👉 Przed nagrywaniem przeczytaj** [`docs/recording-protocol.md`](docs/recording-protocol.md) (1 strona, ~5 min lektury). Najważniejszy wymóg: **w obrębie jednej sesji nagraniowej uchwycić różne stany behavior'u** (ten sam koń, ta sama kamera, ten sam kąt — różne sytuacje). Bez tego model uczy się rozpoznawać sesję, nie behavior. Protocol zawiera również szablon RODO-compliant zgody.
 
 **Co dostaję ja:** materiał do treningu modelu (open-source, MIT) + walidacja czy V-JEPA-2 + linear probe pipeline działa na realnych polskich klipach.
 
-**Co dostajesz Ty:** 
-- Zdjęcia/timeline ruchu uszu/pose-estimation Twoich koni jako bonus
+**Co dostajesz Ty:**
+- Zdjęcia / timeline ruchu uszu / pose-estimation Twoich koni jako bonus
 - Współautorstwo w writeup'ie jeśli zostanie publikowany
-- Spokój ducha — RODO + pisemne zgody jeźdźców/właścicieli ogarniam, surowe klipy nigdzie poza moim laptopem nie wychodzą, używane tylko do treningu/walidacji modelu, nie do publikacji wideo
+- Spokój ducha — RODO + pisemne zgody jeźdźców/właścicieli ogarniam, surowe klipy nigdzie poza moim laptopem nie wychodzą
 
-**Ramy etyczne**: welfare > PoC. Jeśli model wykryje sygnały bólu w trakcie nagrań, sesja się przerywa, koń idzie do wet'a. Nie indukuję bólu. Nagrania normalnej pracy pod jeźdźcem.
+**Ramy etyczne**: welfare > PoC. Jeśli koń wykazuje sygnały bólu w trakcie nagrywania, sesja się przerywa, koń idzie do weterynarza. Bez indukowanego bólu/strachu. Naturalna codzienna praca pod jeźdźcem.
 
 Kontakt: piotr.pawluk@gmail.com lub Issues w tym repo.
 
