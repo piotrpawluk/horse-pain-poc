@@ -2,7 +2,7 @@
 
 > Automated RHpE scoring with V-JEPA-2 — methodology-first PoC
 
-[![status](https://img.shields.io/badge/iter_6.5-LOSO_baseline_established-blue)](GATE.md)
+[![status](https://img.shields.io/badge/iter_6.5-LOSO_baseline_established-blue)](docs/lessons_learned.md)
 [![baseline](https://img.shields.io/badge/Read_My_Ears_LOSO-0.875-success)](docs/lessons_learned.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
@@ -57,7 +57,7 @@ Full methodology trail in [`docs/lessons_learned.md`](docs/lessons_learned.md) �
 
 ## How to engage
 
-**For ML researchers / academics.** The substantive contributions live in [`docs/lessons_learned.md`](docs/lessons_learned.md): conditional bg-masking with quantified per-source costs (Lesson 9), the two failure modes in cross-source ear movement detection (Lesson 10, including the S8 two-horses confound case study), and the LOSO replication of Read My Ears 0.875 (Lesson 1, Sanity 5 in [`outputs/`](outputs/)). Methodology critique welcome via Issues.
+**For ML researchers / academics.** The substantive contributions live in [`docs/lessons_learned.md`](docs/lessons_learned.md): conditional bg-masking with quantified per-source costs (Lesson 9), the two failure modes in cross-source ear movement detection (Lesson 10, including the S8 two-horses confound case study), and the LOSO replication of Read My Ears 0.875 (Lesson 1; raw `outputs/iter65_sanity5_*.json` files are produced locally by `setup.sh` + the notebooks, not committed). Methodology critique welcome via Issues.
 
 **For data contributors.** Field dataset collection is in progress, targeting ≥ 10 horses × 2–3 ear states × 2–3 takes = 60–100 clips across ≥ 10 unique sessions. Read [`docs/recording-protocol.md`](docs/recording-protocol.md) before recording (one page, ~5 min). Welfare > PoC — no provocations, no induced stress, naturalistic training-session footage only. GDPR-compliant consent template included (English + Polish).
 
