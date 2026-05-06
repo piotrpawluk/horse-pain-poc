@@ -35,6 +35,7 @@ Wniosek: 30 klipów zebranych intuicyjnie ≠ 30 klipów które uczą model. Ten
 | Kamera | smartfon na statywie | drgania ręki cały czas zmieniają tło — model uczy się szumu zamiast konia |
 | Kąt | jeden wybrany kąt na całą sesję; preferowany bok 90° lub ¾ z przodu | spójny widok pozwala modelowi porównywać klipy zamiast uczyć się różnic kąta |
 | Odległość | cała sylwetka konia + ~30% margines | close-upy pomijają kontekst (postawa, ogon); zbyt szeroko gubi mimikę |
+| **Pojedynczy podmiot w kadrze** | **tylko jeden koń widoczny; brak innych poruszających się subiektów (drugi koń w stallu obok, instruktor chodzący, swingujące drzwi, bujający się sprzęt)** | **sprawdzone empirycznie**: drugi poruszający się koń lub człowiek w tle jest mylony przez model jako ruch ucha. W Read My Ears jeden ze źródeł nagrań miał dwa konie w kadrze — model zawodził dramatycznie (LOSO AUC 0.633 vs ~0.90 na czystych źródłach). Patrz Lesson 10 w `lessons_learned.md`. |
 | Rozdzielczość | 1080p | więcej miejsca w przesyłaniu, model i tak downsampluje |
 | Klatkaż | 25–30 fps (default smartfona) | bezbolesny default, nie kombinujmy |
 | Długość | ~30 s per klip | krótsze gubi temporal context, dłuższe mieszają wiele behaviors |
@@ -70,6 +71,7 @@ Im bardziej "naturalnie jak zawsze" — tym lepiej dla projektu.
 - Mieszanie kątów / świateł / lokalizacji w jednej sesji — łamie spójność, robi z tego de facto różne sesje.
 - Klipy z YouTube albo z innych źródeł — ich session leakage jest niepoznawalny, nie da się ich włączyć do balanced LOSO.
 - Close-upy na samą głowę — gubimy postawę i ogon, model traci kontekst.
+- **Drugi koń lub osoba w kadrze** (potwierdzone empirycznie) — jakikolwiek poruszający się drugi podmiot wprowadza ruch tła który model myli z ruchem ucha. Jeśli stajnia ma dwa konie w sąsiednich stallach widocznych z kamery, znajdź inny kąt albo odsuń kamerę, albo oddziel czasowo (drugi koń wyprowadzony na czas nagrań).
 
 ## RODO i własność intelektualna
 

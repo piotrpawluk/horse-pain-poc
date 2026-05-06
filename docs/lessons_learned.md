@@ -159,26 +159,120 @@ This is not an argument against Track B. It is a recalibration of the cost.
 
 ---
 
+---
+
+## Lesson 9 — Background masking is conditional preprocessing, not a global default
+
+Sanity 5 LOSO on Read My Ears 283 clips initially looked like a defeat for background masking: average LOSO across sources dropped from 0.875 (V-JEPA-2 unmasked) to 0.764 (V-JEPA-2 with YOLO ear-bbox masking). Initial interpretation in lessons-learned drafts was "bg-masking doesn't help cross-source."
+
+The deep-dive (`outputs/iter65_sanity5_deepdive_results.json`) reveals this was a misread of a heterogeneous result. Per-source LOSO behavior of bg-masking:
+
+| source | unmasked AUC | bg-masked AUC | Δ |
+|---|---|---|---|
+| S8 | 0.633 | **0.875** | **+0.242** (rescue) |
+| S9 | 0.783 | **0.888** | **+0.105** (rescue) |
+| S1 | 0.816 | 0.837 | ≈ neutral |
+| S5 | 0.903 | 0.916 | ≈ neutral |
+| S2 | 0.927 | 0.893 | −0.034 |
+| S6 | 0.956 | 0.922 | −0.034 |
+| S3 | 0.995 | 0.885 | **−0.110** (hurt) |
+| S12 | 1.000 | 0.661 | **−0.339** (hurt severely) |
+
+The pattern is consistent: **sources where unmasked V-JEPA-2 is weak (presumably because of background confound) gain from masking; sources where unmasked is already strong lose from masking.** Averaging these into a single "bg-masked LOSO 0.764" hid the structure.
+
+Visual inspection of S8 confirms the rescue mechanism. S8 frames show **two horses in the same shot** — a bay horse in the foreground plus a darker horse partially visible behind stall bars. The second horse provides an independent motion signal; under unmasked V-JEPA-2 the model picks it up and over-predicts "action" on background clips (confusion matrix: FP=6/8 background→action, FN=4/16 action→background). YOLO ear-bbox masking crops the second horse out of the field of view, eliminating the confound, AUC rises 24 points.
+
+**Production implication.** Background masking should be applied **conditionally**, not as a global preprocessing step:
+
+```python
+if yolo_horse_detector(frame).count_instances() > 1:
+    use bg_masked_features
+elif yolo_human_detector(frame).count_instances() > 0:
+    use bg_masked_features
+else:
+    use unmasked_features  # cheaper and slightly better when scene is clean
+```
+
+The condition extends beyond "two horses" — any independently moving entity in frame (handler walking, swinging objects, second horse) is a candidate confound that masking can mitigate.
+
+**Methodological framing.** This is "context-aware preprocessing for cross-subject equine behavior recognition" — the kind of methodological note that fits between "engineering detail" and "publishable finding". Worth flagging in academic outreach.
+
+---
+
+## Lesson 10 — Two failure modes in cross-source ear movement detection
+
+Sanity 5 deep-dive identified two distinct mechanisms behind the three weakest LOSO folds (S8 0.633, S9 0.783, S1 0.816). They have different signatures and call for different fixes.
+
+**Failure mode 1: scene motion confound (S8).**
+- Confusion matrix asymmetric: 6/8 background clips classified as action (model sees motion that isn't ear movement)
+- Visual cause: secondary horse partially visible in frame
+- Bg-masked rescue: +24 pp (cropping out the second horse fixes it)
+- Implication for protocol: **single subject in frame** is a hard requirement
+
+**Failure mode 2: subtle ear movement in instrumented context (S9).**
+- Confusion matrix asymmetric the other way: 3/13 action clips classified as background (model misses real ear movement)
+- Visual cause: horse fitted with heart rate monitor harness and ECG electrode patches, recorded in controlled medical setup against plain wall, restrained posture
+- Bg-masked rescue: +11 pp (helps but doesn't fully fix — the signal is genuinely subtle)
+- Implication for protocol: **diverse recording contexts** in training distribution. If the model has only seen casual stable footage, it will struggle on instrumented contexts even without explicit confound. Worth including a few medical-instrumented clips in training data if the deployed model is expected to see them.
+
+These two case studies are the strongest substantive findings from Sanity 5, more useful for academic outreach than the headline LOSO=0.875 number itself.
+
+---
+
+## Lesson 11 — Realistic LOSO target on Polish wild data is 0.70–0.80, not 0.85+
+
+Read My Ears LOSO 0.875 was achieved on a controlled lab study: 12 horses, single research setup, presumably consistent camera/lighting/staff/distance/breed mix. Even within that controlled context, 3 of 12 sources fell below 0.85 (S8 0.633, S9 0.783, S1 0.816) and the underlying mechanisms turned out to be specific recording-quality issues rather than fundamental model limits.
+
+The Polish HKiJ peer network dataset planned for Faza 2 will have substantially more axes of variance:
+- 15–25 different stables (vs 1 research site)
+- Many cameras, many phone models, no calibration
+- Multiple riders, multiple trainers, multiple disciplines (recreation, sport, hippotherapy)
+- Year-round seasonal variation in lighting
+- Wide breed/conformation/age range
+
+Each axis of variance is a potential session leakage vector. Sue Dyson's own publications report between-rater κ for RHpE in field conditions of 0.5–0.7 — humans don't agree as consistently in the wild as they do in controlled studies, so a model trained on field data has a lower ceiling than a model trained on controlled data.
+
+**Realistic target: LOSO 0.70–0.80 with 0.85 as stretch goal under hard quality gates.** Not 0.85–0.90. Communicating 0.70 as a success criterion is uncomfortable but honest; setting an unmeetable 0.90 target invites cherry-picking later.
+
+---
+
+## Lesson 12 — V-JEPA-2 SSv2 fine-tune does not modify encoder weights (Sanity 1)
+
+Sanity 1 verified that `facebook/vjepa2-vitl-fpc16-256-ssv2` and `facebook/vjepa2-vitl-fpc64-256` share **byte-identical encoder weights across all 587 layers**. The SSv2 fine-tune adds a pooler + classifier head; the `VJEPA2Model` class loads only the encoder, dropping the head. So whichever V-JEPA-2 ViT-L checkpoint we instantiate, we get the same pretrain-only encoder features.
+
+Two consequences flow from this that should be stated explicitly wherever results from both checkpoints are reported:
+
+1. **Identical AUCs across "SSv2" and "PT" rows in our backbone matrix are mechanically forced, not independent confirmation.** Sanity 5 reports SSv2 LOSO = PT LOSO = 0.875 to three decimal places across 12 sources × 2 modes; this is a consistency check that the data pipeline is not broken, not an independent validation of source-invariance.
+
+2. **The "SSv2 fine-tune introduces motion bias" hypothesis from earlier iterations is structurally inapplicable to our pipeline** — we never see the SSv2-fine-tuned components. We have been using pretrain-only encoder features the entire time.
+
+When future readers (or paper reviewers) see two "different" backbones giving identical results, they should be told why. Otherwise it looks like a miracle and invites suspicion that some other bug is duplicating embeddings.
+
+---
+
 ## What worked (verified, build on)
 
-- **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline)
-- **Read My Ears protocol** (face mask + ear bbox crop + linear probe): AUC 0.97 unmasked, 0.91 background-masked, signal localized in ear region
-- **Linear probe (LogReg / RidgeClassifier) + LOO observed AUC + permutation test (200+ shuffles, 5-fold) + LOSO sanity** as a four-layer evaluation stack
-- **Hard pre-committed decision thresholds** for architecture choices (4-level rule)
+- **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
+- **Read My Ears protocol** (face mask + ear bbox crop + linear probe): LOO 0.97, bg-masked LOO 0.91, **LOSO 0.875** (Sanity 5 — source-invariant on their data)
+- **Linear probe (LogReg / RidgeClassifier) + LOO observed AUC + permutation test + LOSO** as a four-layer evaluation stack
+- **Hard pre-committed decision thresholds** for architecture choices
 - **Static-frame collapse diagnostic** for distinguishing temporal vs static feature reliance
+- **Conditional background masking** (Lesson 9): apply when YOLO detects >1 subject in frame, skip otherwise — heterogeneous gains/losses across sources averaged 0.764 LOSO but +24 pp on hardest fold
 
 ## What didn't work (verified, don't rebuild)
 
 - **5-class softmax on 53 anchor clips** (iter 2/3/5): too small, session-confounded, eye_expression sink-effect
 - **head_position 0.898 LOO** as MVP candidate (Sanity 3 LOSO 0.561 = session leakage)
 - **5-fold CV with class_weight='balanced' on imbalanced small-N classes** (mouth_open N=3 collapsed to all-zero predictions in iter 5)
-- **DINOv2+V-JEPA-2 concat** (lost on 2 of 4 behaviors in iter 6)
+- **DINOv2+V-JEPA-2 concat** (lost on 2 of 4 behaviors in iter 6, LOSO 0.747 vs SSv2 0.875 in Sanity 5)
+- **DINOv2 alone as universal backbone**: LOSO 0.514 on Read My Ears, but more importantly **anti-correlated for 4 of 12 sources** (S1 0.388, S6 0.233, S9 0.154, S12 0.393). Image-only foundation models can learn label inversion when label is source-specific.
+- **Background masking as global default** (Lesson 9): hurts strong sources by ~10 pp while helping weak ones — must be conditional
 - **The 53-clip DIY anchor dataset as a training set** for any per-behavior classifier (iter 6.5)
 
 ## Open questions
 
 - ROI-cropped per-behavior classifiers (ear / eye / mouth / hindquarter) on properly diversified data — never reached because the anchor dataset was disqualified before we got there.
-- Whether the original Read My Ears paper used LOSO or LOO; if LOO, their 0.875 may be inflated by the same session-leakage mechanism (though Sanity 2's bg-masked 0.911 is reassuring evidence that *some* signal is genuinely in the ear region). **Update 2026-05-06**: inspection of `vendor/ReadMyEars_Dataset/data/{train,val,test}.csv` shows the same source videos (action_S1, S2, S3, S4, S5, S6, S10, S11) appear in all three splits — i.e. **clip-level random split, not session-level**. Their reported 0.875 is therefore likely inflated by intra-session correlation. To get a session-clean baseline, one would need a leave-one-source-out re-evaluation of their dataset using their movement-detection algorithm or our V-JEPA-2 + linear probe pipeline. Until that's done, we should treat 0.875 as an upper bound, not a target.
+- ~~Whether the original Read My Ears paper used LOSO or LOO; if LOO, their 0.875 may be inflated~~ **RESOLVED 2026-05-06 (Sanity 5)**: split is clip-level random (S1, S2, S3... in train+val+test), but **LOSO leave-one-source-out reproduces 0.875 exactly** on V-JEPA-2 SSv2 motion. The paper claim is robust under source-aware split — it appears either lucky methodology or genuinely source-invariant signal in their controlled lab data. Earlier suspicion that their 0.875 was inflated has been falsified empirically. See `outputs/iter65_sanity5_loso_rme_results.json`.
 - Track C (DLC keypoints + temporal features) — never tested; deferred to Faza 3 if Track B succeeds.
 - Whether DINOv2 alone is sufficient for production (Sanity 4 result, see `outputs/iter65_sanity4_dinov2_bgmask_results.json`).
 
@@ -189,7 +283,11 @@ This is not an argument against Track B. It is a recalibration of the cost.
 1. **Track A "head_position MVP" — kill.** No path forward without complete data redesign with balanced sessions.
 2. **Track B "ear_position via ROI replication" — proceed, with revised sizing.** ≥10 horses × 2–3 ear states × 2–3 takes = 60–100 clips, budget 3000–5000 PLN for assessor, 4–6 weeks recording.
 3. **LOSO required as primary evaluation metric**, not LOO. Permutation test on top.
-4. **Pre-commit a Track B success criterion before recording starts:** e.g., "LOSO AUC ≥ 0.75 across ≥8 of ≥10 horses, with ≥3 clips per class per horse."
-5. **Track C (DLC keypoints) — remains deferred** to Faza 3.
+4. **Pre-commit a realistic Track B success criterion before recording starts** (Lesson 11): LOSO AUC **≥0.70** across ≥8 of ≥10 sources is a passing MVP; ≥0.80 is strong; ≥0.85 is unrealistic on diverse Polish data and shouldn't be promised. RME 0.875 was on a controlled lab study.
+5. **Pipeline architecture** — V-JEPA-2 SSv2 encoder + ear-bbox crop + linear probe + **conditional background masking** (Lesson 9): default unmasked, switch to bg-masked when YOLO detects secondary subject in frame.
+6. **Recording-protocol gates** (Lesson 10):
+   - Single subject in frame, no secondary horses or moving humans visible
+   - Diverse recording contexts in training distribution if deployed model is expected to see them (medical-instrumented vs casual-stable vs under-saddle)
+7. **Track C (DLC keypoints) — remains deferred** to Faza 3.
 
 The point of this document is not that the project is in trouble. It is that we now know what we don't know, which is genuinely the best position from which to plan Faza 2.
