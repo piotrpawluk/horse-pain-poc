@@ -252,6 +252,34 @@ When future readers (or paper reviewers) see two "different" backbones giving id
 
 ---
 
+## Lesson 13 — RHpE behavior taxonomy by detection difficulty
+
+Sources: Dyson 2018 (canonical RHpE paper, 24 behaviors); *Train with Trust Project* mobile field guide (2023, operational definitions with quantitative thresholds).
+
+This is a **theoretical mapping** of the 24 RHpE behaviors to the detection-pipeline patterns we have at hand or could plausibly build. It is *not* a coverage promise — "fits a pipeline pattern" does not mean "will produce LOSO ≥ 0.70 on field data". Iter-6.5 head_position (LOO 0.898 → LOSO 0.561 = session leakage) is the cautionary anchor: a Class A behavior in the taxonomy below failed catastrophically on real data.
+
+**Four classes, ordered by tractability:**
+
+**Class A — ROI + V-JEPA-2 + linear probe pattern (10 behaviors).** The Read My Ears pipeline shape. Each is a static visual classification or a sustained-state recognition task on a behavior-specific ROI.
+- Ears Back (≥5s); Eyes Closed (2–5s); White of the Eye (repeated exposure); Intense Stare (≥5s, glazed); Mouth Open/Close (≥10s); Tongue Out; Head Tilt; Above Vertical (>30°, ≥10s); Behind Vertical (>10°, ≥10s); Tail Position (crooked/clamped).
+- Implementation footnote: some "Class A" items (Above Vertical, Head Tilt, sustained-duration thresholds like Eyes Closed ≥2s) are arguably better served by DLC pose estimation + temporal aggregation than by clip-level V-JEPA-2. They land in Class A here because they share the **per-behavior ROI** structural pattern, but the right backbone for some of them may be Track C, not Track B.
+
+**Class B — DLC keypoints + temporal/frequency analysis (8 behaviors).** Movement and gait dynamics; require pose tracking through time.
+- Bit Pulled Through; Head Up/Down (repeated, off-rhythm); Head Side to Side (tossing, repeated); Tail Swishing (repeated frequency); Rushed Gait (>40 trot steps / 15s); Slowed Gait (<35 trot steps / 15s); Spontaneous Change of Pace; Stumble / Trip / Toe Drag.
+- The two gait-frequency behaviors (Rushed / Slowed Gait) are operationally **deterministic** under the TWTP definition: count peaks on hoof-Y time series within a 15s window, threshold. No foundation model required, no per-clip assessor labeling required (ground truth is the count). This is a credible Track D candidate (see "Future work" below).
+
+**Class C — Multi-modal: video + rider context + audio (4 behaviors).** Each requires information that pure horse-video doesn't contain.
+- Moving on 3 Tracks (needs reference frame for hindlimb expected position); Canter Dysfunction (sophisticated gait classifier — correct/incorrect lead, disunited / cross-canter); Spooking ("against the rider's cues" — needs rider-intent tracking to distinguish requested direction change from spook); Resistant ("reluctant to go forward; needing repeated physical or verbal encouragement" — needs rider leg/hand cue tracking + audio).
+
+**Class D — Rare events with sparse ground truth (2 behaviors).** Visually obvious when they occur, hard to collect.
+- Rearing; Bucking. Detection (motion magnitude threshold) is trivial; *event detection* problem with a strong base-rate issue (1–2 episodes per 100h of naturalistic recording). Ground-truth collection is the binding constraint, not the model.
+
+**Strategic implication.** The 8/24 pain-inference threshold is theoretically reachable using only Class A + B behaviors (18 of 24). A horse manifesting pain *primarily* through Class C behaviors (rider-dependent) would be under-scored by a video-only system — that's the structural ceiling, not an engineering deficit. Worth surfacing in any clinical-validation discussion.
+
+**What this taxonomy is and is not.** It is a planning artifact for prioritizing Phase 2/3 scope. It is not a claim that 18 behaviors are *achievable* — that would require per-behavior empirical validation analogous to Sanity 5 for ear movement, on diverse field data, with certified RHpE assessor adjudication. The honest one-line summary: **"10 + 8 = 18 of 24 behaviors *plausibly* extend the same pipeline patterns; the remaining 6 require capabilities we don't have."**
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
@@ -291,5 +319,6 @@ When future readers (or paper reviewers) see two "different" backbones giving id
    - Single subject in frame, no secondary horses or moving humans visible
    - Diverse recording contexts in training distribution if deployed model is expected to see them (medical-instrumented vs casual-stable vs under-saddle)
 7. **Track C (DLC keypoints) — remains deferred** to Phase 3.
+8. **Track D candidate — Rushed / Slowed Gait via deterministic step counting** (see Lesson 13, Class B). Operational definition under TWTP guide is *"more than 40 trot steps per 15 seconds"* (Rushed) / *"fewer than 35"* (Slowed). DLC SuperAnimal-Quadruped → hoof Y-coordinate time series → bandpass + peak detection → count peaks per 15s window. No assessor adjudication required (ground truth is the count). 1–2 weekend prototype, contingent on DLC keypoint quality on arena footage being good enough — currently unverified for our deployment conditions and is the binding risk. Worth running before committing to Track B MVP, as it adds 2/24 behaviors to coverage at a fraction of the cost.
 
 The point of this document is not that the project is in trouble. It is that we now know what we don't know, which is genuinely the best position from which to plan Phase 2.
