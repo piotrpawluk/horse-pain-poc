@@ -44,6 +44,10 @@ This is a research prototype, **not a diagnostic tool**.
 - **Static-frame collapse diagnostic** for distinguishing temporal vs static feature reliance
 - **Conditional background masking** — apply when YOLO detects > 1 subject in frame, skip otherwise
 
+## Augmentation experiment (in progress)
+
+A `gemini-augmentation` branch hosts a label-noise audit tool ([`tools/gemini_audit.py`](tools/gemini_audit.py)) that runs Gemini 2.5 Pro over the 283 RME clips and flags disagreements with the human labels. The use case is justified empirically: frontier multimodal LLMs **do not replace** V-JEPA-2 on fine-grained motion (frame-sampled MLLMs miss sub-second deltas — same gap that broke X-CLIP), but they are useful as a **second-opinion layer** for surfacing labeling errors. Results land in `outputs/gemini_audit_summary.json` after a one-command run. See [`docs/gemini-integration.md`](docs/gemini-integration.md) for setup, GDPR caveat, and cost.
+
 ## What doesn't work
 
 - **5-class softmax on 53 anchor clips** — too small, session-confounded; eye_expression sink-effect
