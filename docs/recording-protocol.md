@@ -1,81 +1,108 @@
 # Protocol nagrywania klipów — projekt RHpE PoC
 
-*Wersja 1.0 — 2026-05-06. Jedna strona. Przeczytaj przed nagrywaniem.*
+*Wersja 2.0 — 2026-05-06. Warto przeczytać przed nagrywaniem — oszczędzi nam obu czasu.*
 
-## Po co protocol
+## Welfare zwierzęcia jest nadrzędne
 
-Pierwsza iteracja PoC zebrała 53 klipy "jak Bóg da" (różne ośrodki, telefon, YouTube, miks formatów). Sanity check ujawnił że model uczył się **rozpoznawać sesję nagraniową** (telefon Lesznowola vs YouTube documentary), nie pozycji uszu/ogona/głowy. LOSO drop −34pp dla head_position, −49pp dla tail_movement. Pełna analiza: [`lessons_learned.md`](lessons_learned.md).
+Welfare > PoC. Bez wyjątków. To pierwsza zasada projektu.
 
-**Wniosek**: 30 klipów zebranych według intuicji ≠ 30 klipów które uczą model. Ten protocol zapobiega tej pomyłce.
+- Jeśli koń w trakcie nagrywania pokazuje sygnały bólu lub silnego dyskomfortu — sesja się przerywa, koń idzie do weterynarza.
+- Bodźce użyte w trakcie nagrywania są naturalnymi elementami codziennej pracy z koniem. Nie indukujemy strachu, nie prowokujemy bólu, nie wymuszamy stanów dyskomfortu.
+- Jeśli cokolwiek w tym protocolu wydaje Ci się sprzeczne z welfare Twojego konia — nie rób tego, daj znać, dostosujemy.
 
-## Twardy wymóg metodologiczny
+## Co konkretnie próbujemy zrobić
 
-**W obrębie jednej sesji nagraniowej musisz uchwycić więcej niż jeden stan tego samego behavior.** Tzn. ten sam koń, ta sama kamera, ten sam kąt, to samo światło — ale w trakcie 30 minut nagrywania uchwycić np. uszy do przodu **i** uszy do tyłu/na boki. Bez tego model uczy się "ośrodek X = uszy w pozycji Y", nie "behavior".
+**Klasyfikacja pojedynczych behaviors z RHpE** (ridden horse pain ethogram, Sue Dyson, 24 zachowania) — aktualnie pozycja uszu (ucho do przodu / w bok / do tyłu).
 
-## Wymagania techniczne
+To **nie jest** detektor bólu. RHpE wymaga ≥8 z 24 behaviors razem żeby wnioskować o bólu mięśniowo-szkieletowym. Tu budujemy fundament — pojedyncze klasyfikatory per-behavior, które w odległej przyszłości złożą się w narzędzie wspomagające ocenę. Aktualne MVP = jedna z 24 cegiełek.
 
-| pozycja | wymóg |
-|---|---|
-| Kamera | smartfon na **statywie** (nie z ręki — drgania cały czas zmieniają tło) |
-| Kąt | jeden wybrany kąt na całą sesję; preferowane: bok (90°) lub ¾ z przodu |
-| Odległość | cała sylwetka konia widoczna + ~30% margines (nie close-up) |
-| Rozdzielczość | 1080p wystarczy (4K niepotrzebne, więcej miejsca) |
-| Klatkaż | 25-30 fps (default smartfona) |
-| Długość | 30 sekund per klip × 5 klipów per sesja = 2.5 min nagrań netto |
-| Format | .mp4 lub .mov bez problemu |
-| Oświetlenie | konsystentne w obrębie sesji (nie nagrywać częściowo w słońcu, częściowo w cieniu) |
+## Kto ocenia co widzi model na klipie
 
-## Procedura: 1 sesja = 5 klipów × różne sytuacje
+Ty nie. Twoja rola = **nagrać**. Ground truth (czyli "ten klip pokazuje uszy do przodu", "ten klip pokazuje uszy do tyłu") robi **certyfikowany RHpE assessor po fakcie**. Nie próbuj przewidywać co model "powinien" zobaczyć w klipie ani prowokować konkretnych zachowań — to zafałszowuje dane i przenosi etyczne dylematy na Ciebie.
 
-Cel jest **uchwycić różne stany behavior'u w stałym kontekście wizualnym**. Bez indukowania bólu, bez stresowania konia. Wykorzystujemy naturalne, etyczne bodźce:
+Cała obietnica jest prostsza niż się wydaje: **nagraj normalną zróżnicowaną sesję treningową, jaką i tak robisz**.
 
-| # | sytuacja | typowo wywołuje |
-|---|---|---|
-| 1 | **Spokojny relaks** — koń stoi luźno, brak interakcji, otoczenie ciche | uszy luźne/na boki, oczy spokojne, postawa zrelaksowana |
-| 2 | **Uwaga skierowana** — wprowadzenie znajomego bodźca (właściciel woła z zewnątrz, ktoś przechodzi) | uszy do przodu, oczy szeroko otwarte |
-| 3 | **Praca pod jeźdźcem (lekka)** — chód lub stęp, normalna lekcja, bez forsowania | różne stany w zależności od konia + sytuacji |
-| 4 | **Coś co wymaga kompensacji** — nierówne podłoże, zmiana kierunku, krótki kłus po stępie | model behavior pod lekkim wysiłkiem |
-| 5 | **Po wysiłku, relaks** — koniec lekcji, rozluźnienie | często powrót do spokojnego stanu, ale czasem sygnały zmęczenia |
+## Po co osobny protocol
 
-Można dostosować — kluczowe jest **różnorodność stanów w obrębie tej samej sesji wizualnej**.
+Pierwsza iteracja PoC zebrała 53 klipy bez konkretnych zasad nagrywania (różne ośrodki, telefon, YouTube, miks formatów). Sanity check ujawnił że model uczył się rozpoznawać sesję nagraniową (telefon Lesznowola vs YouTube documentary), a nie behavior konia. LOSO drop −34pp dla head_position, −49pp dla tail_movement. Pełna analiza: [`lessons_learned.md`](lessons_learned.md).
 
-## Co NIE robić
+Wniosek: 30 klipów zebranych intuicyjnie ≠ 30 klipów które uczą model. Ten dokument opisuje co działa i dlaczego, żeby nasz wspólny czas miał sens.
 
-- ❌ Nie nagrywać 30 minut ciągiem — split na 5 osobnych klipów
-- ❌ Nie zmieniać pozycji kamery między klipami w obrębie sesji
-- ❌ Nie miksować świateł (część w hali, część na padoku) w jednej sesji
-- ❌ Nie nagrywać close-upów — całą sylwetka
-- ❌ Nie indukować strachu/bólu — bodźce muszą być etyczne
+## Co działa technicznie (i dlaczego)
 
-## Ramy etyczne (must-read)
+| pozycja | rekomendacja | dlaczego |
+| --- | --- | --- |
+| Kamera | smartfon na statywie | drgania ręki cały czas zmieniają tło — model uczy się szumu zamiast konia |
+| Kąt | jeden wybrany kąt na całą sesję; preferowany bok 90° lub ¾ z przodu | spójny widok pozwala modelowi porównywać klipy zamiast uczyć się różnic kąta |
+| Odległość | cała sylwetka konia + ~30% margines | close-upy pomijają kontekst (postawa, ogon); zbyt szeroko gubi mimikę |
+| Rozdzielczość | 1080p | więcej miejsca w przesyłaniu, model i tak downsampluje |
+| Klatkaż | 25–30 fps (default smartfona) | bezbolesny default, nie kombinujmy |
+| Długość | ~30 s per klip | krótsze gubi temporal context, dłuższe mieszają wiele behaviors |
+| Format | .mp4 lub .mov | oba bez problemu |
+| Oświetlenie | spójne w obrębie sesji | mieszanie hala / słońce / cień w jednej sesji = model znów uczy się oświetlenia |
 
-**Welfare > PoC.** Jeśli koń wykazuje sygnały bólu w trakcie nagrywania, sesja się przerywa, koń idzie do weterynarza. Bez wyjątku.
+## Procedura: 1 sesja = 5 klipów z normalnej sesji treningowej
 
-**Brak indukowanego bólu/strachu.** Wszystkie bodźce wymienione powyżej są naturalnymi elementami codziennej pracy z koniem.
+Cel: uchwycić różne momenty zwykłej, codziennej sesji treningowej. Nie chodzi o specjalne aranżowanie — wystarczy nagrać 5 różnych momentów z tego co i tak robisz.
 
-**RODO**: jeźdźcy/właściciele/osoby w kadrze muszą podpisać **pisemną zgodę** (szablon poniżej + drugi szablon dla osób trzecich w kadrze). Możliwość wycofania zgody w dowolnym momencie. Kontakt: piotr.pawluk@gmail.com.
+| # | typowy moment | typowy czas |
+| --- | --- | --- |
+| 1 | Moment przed lub po sesji — koń stoi luźno | ~30 s |
+| 2 | Rozgrzewka — pierwsze minuty stępu | ~30 s |
+| 3 | Główna część — stęp na luźnych wodzach albo lekki kłus | ~30 s |
+| 4 | Zmiany kierunku, przejścia chód-stęp-chód | ~30 s |
+| 5 | Rozluźnienie — koniec sesji, długie wodze | ~30 s |
 
-**Co dzieje się z surowymi klipami**: przechowywane lokalnie na moim laptopie (zaszyfrowany dysk), używane wyłącznie do treningu/walidacji modelu, NIE publikowane jako wideo w żadnej formie. Jeśli writeup będzie publikowany, opisuje tylko *embeddingi* i *metryki accuracy*, nie identyfikowalne wideo.
+To tylko sugestie momentów. Możesz dostosować pod swoją sesję — kluczowa jest **różnorodność momentów**, nie konkretna lista. Jeśli Twoja sesja wygląda inaczej (praca z ziemi, lonża, hipoterapia), wybierz 5 sensownie różnych momentów z tego co robisz.
 
-## Co przesłać + format nazewnictwa
+**W trakcie nagrywania:**
 
-Po nagraniu sesji prześlij mi wszystkie 5 klipów + krótki opis (ramka tekstowa wystarczy):
+- nie prowokuj konkretnych reakcji konia (cofania, spinania się, stanów stresu)
+- nie wymuszaj sytuacji których normalnie nie ma w treningu
+- nie modyfikuj jak pracujesz z koniem dla potrzeb nagrania
+
+Im bardziej "naturalnie jak zawsze" — tym lepiej dla projektu.
+
+## Co nie zadziała (i dlaczego warto wiedzieć)
+
+- 30-minutowy ciągły film — pomijamy podział na momenty, trudniej analizować temporal context. Lepiej 5 osobnych klipów po 30 s.
+- Kamera w ręku — drgania zmieniają tło, model uczy się drgań a nie konia.
+- Mieszanie kątów / świateł / lokalizacji w jednej sesji — łamie spójność, robi z tego de facto różne sesje.
+- Klipy z YouTube albo z innych źródeł — ich session leakage jest niepoznawalny, nie da się ich włączyć do balanced LOSO.
+- Close-upy na samą głowę — gubimy postawę i ogon, model traci kontekst.
+
+## RODO i własność intelektualna
+
+Krótko: jeźdźcy / właściciele / osoby w kadrze podpisują pisemną zgodę przed sesją. To twardy wymóg prawny, niezależny ode mnie. Szablon zgody niżej.
+
+Co dzieje się z surowymi klipami:
+
+- przechowywane lokalnie na zaszyfrowanym dysku, nie w chmurze publicznej
+- używane wyłącznie do treningu i walidacji modelu
+- nie publikowane jako wideo w żadnej formie
+- jeśli writeup będzie publikowany, zawiera tylko embeddingi i metryki accuracy — bez identyfikowalnych ujęć
+
+Możliwość wycofania zgody w dowolnym momencie. Kontakt: <piotr.pawluk@gmail.com>.
+
+## Format przesłania
+
+Po nagraniu sesji proszę o przesłanie 5 klipów + krótki opis. Pomocne nazewnictwo:
 
 ```
-{horse_name}_{session_id}_{situation}_{date}.mp4
+{horse_name}_{session_id}_{moment}_{date}.mp4
 
-np. miszka_s01_relaks_2026-05-12.mp4
-    miszka_s01_uwaga_2026-05-12.mp4
-    miszka_s01_praca_2026-05-12.mp4
-    miszka_s01_kompensacja_2026-05-12.mp4
-    miszka_s01_porelaks_2026-05-12.mp4
+np. miszka_s01_spokoj_2026-05-12.mp4
+    miszka_s01_rozgrzewka_2026-05-12.mp4
+    miszka_s01_glowna_2026-05-12.mp4
+    miszka_s01_zmiany_2026-05-12.mp4
+    miszka_s01_rozluzni_2026-05-12.mp4
 ```
 
-W mailu lub formularzu — krótki opis konia (rasa, wiek, doświadczenie, ewentualne historyczne problemy), opis sesji (gdzie, kiedy, kto jeździł, jakie bodźce użyto).
+W mailu / formularzu pomocny jest krótki opis: koń (rasa, wiek, doświadczenie, ewentualne historyczne problemy weterynaryjne), sesja (gdzie, kiedy, kto jeździł, jakie były naturalne bodźce w trakcie).
 
-**Sposób przesłania**: WeTransfer/Google Drive/Dropbox z linkiem do mnie (piotr.pawluk@gmail.com), albo dysk na spotkanie. Nie wysyłaj przez Messengera — kompresuje wideo i degraduje jakość.
+Sposób przesłania: WeTransfer / Google Drive / Dropbox z linkiem do mnie (<piotr.pawluk@gmail.com>), albo pendrive na spotkanie. Messenger kompresuje wideo i degraduje jakość — lepiej unikać.
 
-## Szablon zgody (do wydruku, podpisania przez jeźdźca/właściciela)
+## Szablon zgody (do wydruku / podpisania)
 
 ```
 ZGODA NA WYKORZYSTANIE NAGRAŃ DO PROJEKTU BADAWCZEGO
@@ -97,15 +124,15 @@ Data: ______________
 Podpis: ______________
 ```
 
-## Po stronie współpracownika — minimum
+## Jak to wygląda od Twojej strony
 
-1. Przeczytaj ten dokument w całości (5 minut)
-2. Daj znać czy masz pytania (mail / Issues w repo)
-3. Umów ze mną sesję nagraniową lub nagraj samemu wg powyższych zasad
-4. Prześlij pliki + krótki opis
+1. Przeczytanie tego dokumentu (~5 minut). Pytania na priv / mailem / przez Issues w repo.
+2. Umówienie sesji (sam, ze mną, jak wygodnie).
+3. Nagranie 5 klipów wg powyższych wskazówek z normalnej sesji treningowej.
+4. Przesłanie plików + krótkiego opisu.
 
-Każdy zwrot z konkretnym pytaniem o protocol = realny współpracownik. Każde "spadnij, mam 50 klipów z YouTube'a" = polite decline (tamte klipy mają session leakage z definicji).
+Jeśli coś z tego nie pasuje albo masz pomysł jak zrobić to lepiej — daj znać. Protocol jest wersjonowany w repo, mogę go zaktualizować jeśli wynikną sensowne uwagi.
 
 ---
 
-**Aktualizacje protocolu**: ten dokument jest wersjonowany w repo. Jeśli go zmienię, dam znać współpracownikom przed kolejną sesją nagraniową.
+*Aktualizacje protocolu wersjonowane w repo. Jeśli zmienię, dam znać współpracownikom przed kolejną sesją.*
