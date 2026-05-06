@@ -14,3 +14,6 @@ notebooks/*.executed.ipynb
 *.swp
 __pycache__/
 *.pyc
+
+# Secrets / API keys (Gemini, etc.) — never commit
+.env
