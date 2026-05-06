@@ -1,4 +1,4 @@
-# Lessons Learned — RHpE Auto-Scoring PoC (Faza 0–1.5)
+# Lessons Learned — RHpE Behavior Classification PoC (Faza 0–1.5)
 
 *Working document, written 2026-05-06 after iter 6.5 sanity checks.*
 
