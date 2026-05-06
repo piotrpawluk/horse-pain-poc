@@ -195,6 +195,8 @@ else:
 
 The condition extends beyond "two horses" — any independently moving entity in frame (handler walking, swinging objects, second horse) is a candidate confound that masking can mitigate.
 
+**When NOT to use bg-masking.** When the scene is clean (single horse in frame, stationary handler, stable background), unmasked V-JEPA-2 features are slightly stronger AND cheaper to compute. In our Read My Ears matrix this manifested as bg-masking hurting the strong-unmasked sources S12 (1.000 → 0.661, −34 pp) and S3 (0.995 → 0.885, −11 pp). The mechanism is plausibly that masking removes peripheral context (horse body posture, background lighting cues) that V-JEPA-2 was using as weak-but-helpful auxiliary signal. So bg-masking is a fix for a specific failure mode, not a free upgrade.
+
 **Methodological framing.** This is "context-aware preprocessing for cross-subject equine behavior recognition" — the kind of methodological note that fits between "engineering detail" and "publishable finding". Worth flagging in academic outreach.
 
 ---
