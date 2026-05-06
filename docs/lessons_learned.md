@@ -1,10 +1,10 @@
-# Lessons Learned — RHpE Behavior Classification PoC (Faza 0–1.5)
+# Lessons Learned — RHpE Behavior Classification PoC (Phase 0–1.5)
 
 *Working document, written 2026-05-06 after iter 6.5 sanity checks.*
 
 This document records methodological lessons from the iteration sequence, with emphasis on what we learned by being wrong. It is intended both as a working reference for the project and as evidence of rigor for academic outreach (Andersen, Zamansky, UPWr).
 
-The headline: **Iter 6.5 LOSO sanity check disproved the head_position MVP** that iter 5–6 built up. Without it, Faza 2 would have started with 3000–5000 PLN and 40h of recording on top of session leakage, not behavior detection. The cost of rigor was ~3h of additional compute; the cost of skipping it would have been six weeks of misallocated work.
+The headline: **Iter 6.5 LOSO sanity check disproved the head_position MVP** that iter 5–6 built up. Without it, Phase 2 would have started with 3000–5000 PLN and 40h of recording on top of session leakage, not behavior detection. The cost of rigor was ~3h of additional compute; the cost of skipping it would have been six weeks of misallocated work.
 
 ---
 
@@ -12,14 +12,14 @@ The headline: **Iter 6.5 LOSO sanity check disproved the head_position MVP** tha
 
 | Iteration | Question | Outcome |
 |---|---|---|
-| **0** (2026-05-04) | Czy stack open-source działa na M-series? | DLC SuperAnimal-Quadruped GO 4/4 w ~45 min |
-| **1** (2026-05-05) | Czy reprodukujemy Read My Ears 0.875 ear_movement? | ✓ V-JEPA-2 + linear probe = 0.854 (paper 0.875, Δ −2.1pp) |
-| **1.5 iter 2** | Czy V-JEPA-2 zerolot LOO cosine wykrywa 5 RHpE behaviors na DIY 53 klipach? | overall 0.358; eye_expression 1.000 (later identified as Padma sink-effect) |
-| **iter 3** | Czy head-crop YOLO ROI ratuje ear_position? | NIE — 0/17 ear (vs 0/17 full-frame); ROI head-crop niewystarczająca |
-| **iter 4** | Czy LOO cosine na 283 RME daje sygnał? | LOO cosine k=1: 0.756; linear probe 0.894 (przebija paper) |
-| **iter 5** | Czy linear probe ratuje 5-class na 53 klipach? | head_position AUC 0.927 (binary OvR), reszta < chance |
-| **iter 6** | Czy V-JEPA-2 SSv2 jest motion-biased? Macierz 4 backbones × 4 behaviors | Hipoteza motion-domination ODRZUCONA; head_position 0.898 wygląda na real signal |
-| **iter 6.5** | Sanity checks: weights, bg-leakage, session leakage | **head_position UNIEWAŻNIONY**; cały 53-clip dataset session-confounded |
+| **0** (2026-05-04) | Does the open-source stack work on M-series? | DLC SuperAnimal-Quadruped GO 4/4 in ~45 min |
+| **1** (2026-05-05) | Do we replicate Read My Ears 0.875 ear_movement? | ✓ V-JEPA-2 + linear probe = 0.854 (paper 0.875, Δ −2.1pp) |
+| **1.5 iter 2** | Does zero-shot V-JEPA-2 LOO cosine detect 5 RHpE behaviors on 53 DIY clips? | overall 0.358; eye_expression 1.000 (later identified as Padma sink-effect) |
+| **iter 3** | Does head-crop YOLO ROI rescue ear_position? | NO — 0/17 ear (vs 0/17 full-frame); head-crop ROI insufficient |
+| **iter 4** | Does LOO cosine on 283 RME clips show signal? | LOO cosine k=1: 0.756; linear probe 0.894 (beats paper) |
+| **iter 5** | Does linear probe rescue 5-class on 53 clips? | head_position AUC 0.927 (binary OvR), rest < chance |
+| **iter 6** | Is V-JEPA-2 SSv2 motion-biased? Matrix 4 backbones × 4 behaviors | motion-domination hypothesis REJECTED; head_position 0.898 looks like real signal |
+| **iter 6.5** | Sanity checks: weights, bg-leakage, session leakage | **head_position INVALIDATED**; the entire 53-clip dataset is session-confounded |
 
 Files: `outputs/few_shot_validation_results.json`, `outputs/readmyears_loo_baseline_results.json`, `outputs/few_shot_validation_results_iter5_linearprobe.json`, `outputs/backbone_matrix_iter6_results.json`, `outputs/iter65_sanity*.json`.
 
@@ -225,7 +225,7 @@ These two case studies are the strongest substantive findings from Sanity 5, mor
 
 Read My Ears LOSO 0.875 was achieved on a controlled lab study: 12 horses, single research setup, presumably consistent camera/lighting/staff/distance/breed mix. Even within that controlled context, 3 of 12 sources fell below 0.85 (S8 0.633, S9 0.783, S1 0.816) and the underlying mechanisms turned out to be specific recording-quality issues rather than fundamental model limits.
 
-The Polish HKiJ peer network dataset planned for Faza 2 will have substantially more axes of variance:
+The diverse field dataset planned for Phase 2 (HKiJ peer network and beyond) will have substantially more axes of variance:
 - 15–25 different stables (vs 1 research site)
 - Many cameras, many phone models, no calibration
 - Multiple riders, multiple trainers, multiple disciplines (recreation, sport, hippotherapy)
@@ -275,12 +275,12 @@ When future readers (or paper reviewers) see two "different" backbones giving id
 
 - ROI-cropped per-behavior classifiers (ear / eye / mouth / hindquarter) on properly diversified data — never reached because the anchor dataset was disqualified before we got there.
 - ~~Whether the original Read My Ears paper used LOSO or LOO; if LOO, their 0.875 may be inflated~~ **RESOLVED 2026-05-06 (Sanity 5)**: split is clip-level random (S1, S2, S3... in train+val+test), but **LOSO leave-one-source-out reproduces 0.875 exactly** on V-JEPA-2 SSv2 motion. The paper claim is robust under source-aware split — it appears either lucky methodology or genuinely source-invariant signal in their controlled lab data. Earlier suspicion that their 0.875 was inflated has been falsified empirically. See `outputs/iter65_sanity5_loso_rme_results.json`.
-- Track C (DLC keypoints + temporal features) — never tested; deferred to Faza 3 if Track B succeeds.
+- Track C (DLC keypoints + temporal features) — never tested; deferred to Phase 3 if Track B succeeds.
 - Whether DINOv2 alone is sufficient for production (Sanity 4 result, see `outputs/iter65_sanity4_dinov2_bgmask_results.json`).
 
 ---
 
-## Recommendations for Faza 2 (post-iter-6.5)
+## Recommendations for Phase 2 (post-iter-6.5)
 
 1. **Track A "head_position MVP" — kill.** No path forward without complete data redesign with balanced sessions.
 2. **Track B "ear_position via ROI replication" — proceed, with revised sizing.** ≥10 horses × 2–3 ear states × 2–3 takes = 60–100 clips, budget 3000–5000 PLN for assessor, 4–6 weeks recording.
@@ -290,6 +290,6 @@ When future readers (or paper reviewers) see two "different" backbones giving id
 6. **Recording-protocol gates** (Lesson 10):
    - Single subject in frame, no secondary horses or moving humans visible
    - Diverse recording contexts in training distribution if deployed model is expected to see them (medical-instrumented vs casual-stable vs under-saddle)
-7. **Track C (DLC keypoints) — remains deferred** to Faza 3.
+7. **Track C (DLC keypoints) — remains deferred** to Phase 3.
 
-The point of this document is not that the project is in trouble. It is that we now know what we don't know, which is genuinely the best position from which to plan Faza 2.
+The point of this document is not that the project is in trouble. It is that we now know what we don't know, which is genuinely the best position from which to plan Phase 2.

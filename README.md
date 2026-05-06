@@ -1,112 +1,66 @@
 # horse-pain-poc
 
-[![status](https://img.shields.io/badge/Faza_1.5-sanity_checks_done-blue)](GATE.md)
-[![best](https://img.shields.io/badge/V--JEPA--2_ear_movement-0.91_(bg--masked)-success)](GATE.md)
-[![data](https://img.shields.io/badge/szukam-polskich_klipów-orange)](#współpraca--szukam-danych-z-polskich-stajni)
+> Automated RHpE scoring with V-JEPA-2 — methodology-first PoC
+
+[![status](https://img.shields.io/badge/iter_6.5-LOSO_baseline_established-blue)](GATE.md)
+[![baseline](https://img.shields.io/badge/Read_My_Ears_LOSO-0.875-success)](docs/lessons_learned.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
-PoC stosu open-source dla automatycznej **klasyfikacji pojedynczych behaviors** z **Ridden Horse Pain Ethogram (RHpE, Sue Dyson, 24 zachowania)** — building blocks pod późniejsze multi-behavior pain assessment, nie wykrywanie bólu samo w sobie.
+The Ridden Horse Pain Ethogram (Dyson 2018) is a 24-behavior checklist for detecting musculoskeletal pain in ridden horses. This repo explores whether a **frozen video foundation model** (V-JEPA-2, Meta 2025) plus **session-aware evaluation** (LOSO) can replicate the published Read My Ears baseline (Alves CVPR W'25, AUC 0.875) and generalize to wilder field data.
 
-> **Co to znaczy konkretnie:** RHpE wymaga ≥8 z 24 behaviors razem żeby wnioskować o bólu mięśniowo-szkieletowym (Dyson 2018). Tu budujemy klasyfikatory **pojedynczych behaviors** — aktualnie ear_movement, w roadmap pozostałe 23. Multi-behavior pain assessment to horyzont ≥2 lata, wymaga walidacji klinicznej i kolaboracji z certyfikowanymi RHpE assessorami. **Aktualne MVP = jedna z 24 cegiełek.**
+> **Scope note.** This is *single-behavior classification*, not pain detection. RHpE requires ≥8 of 24 behaviors co-occurring before pain inference is appropriate (Dyson 2018). The current MVP focuses on one behavior (ear movement); the methodology is built so the same V-JEPA-2 + linear-probe pipeline can be re-applied per behavior. Multi-behavior pain assessment is a 2+ year horizon and requires clinical validation with certified RHpE assessors.
 
-![DLC SuperAnimal-Quadruped keypoints na sample horse video — 5 klatek z overlay'em szkieletu](docs/example_output.png)
-*5 klatek z notebooka `00_smoke_dlc_sample.ipynb` — DLC SuperAnimal-Quadruped zero-shot na [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) (Wikimedia Commons CC).*
+This is a research prototype, **not a diagnostic tool**. Notebook 00 produces a DLC SuperAnimal-Quadruped overlay on the [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) sample (Wikimedia Commons CC) — see `outputs/sample_keypoints_grid.png` after running `setup.sh` + notebook 00.
 
-To **nie jest narzędzie diagnostyczne**. To research prototype:
-- **Faza 0** (~45 min, [GATE.md](GATE.md)): sanity-check zerolot pose-estimation z DLC
-- **Faza 1** (~3h): replikacja Read My Ears (Alves CVPR W'25) na ich [HF dataset](https://huggingface.co/datasets/joaomalves/read-my-ears) → V-JEPA-2 + linear probe = 0.854
-- **Faza 1.5** (~10h): few-shot walidacja na 5 RHpE behaviors z DIY anchor klipami (53)
-- **iter 6.5** (~3h): 4 sanity checks które ujawniły session leakage w 4/5 behaviors → patrz [`docs/lessons_learned.md`](docs/lessons_learned.md)
+## Status (as of 2026-05)
 
-## Współpraca — szukam danych z polskich stajni
+| Behavior | Approach | LOSO AUC | Status |
+| --- | --- | --- | --- |
+| ear_movement (Read My Ears replication) | V-JEPA-2 + linear probe | **0.875** | ✓ replicates paper claim under source-aware split |
+| head_position | V-JEPA-2 full-frame + LR | 0.561 | ✗ session leakage (LOO 0.898 → LOSO 0.561, Δ −34pp) |
+| eye_expression | V-JEPA-2 + LR | n/a | ✗ all positive sessions from one source — confound, dropped |
+| ear_position (anchor data) | V-JEPA-2 full-frame + LR | <0.5 | ✗ requires ear-region ROI crop, not full-frame |
 
-**Faza 2 wymaga zróżnicowanego datasetu** z polskich realiów (hala jeździecka, oświetlenie, rasy, sprzęt) — to czego nie ma w żadnym publicznym datasetcie.
+**Current focus.** Track B — `ear_position` via Read My Ears-style ROI replication on a diverse field dataset. Target: LOSO AUC ≥ 0.70 across ≥ 8 of ≥ 10 sources, with 0.80 strong, 0.85 stretch (see [Lesson 11](docs/lessons_learned.md)). The 53-clip DIY anchor dataset is **not** training data — iteration 6.5 LOSO disproved any per-behavior claim built on it.
 
-**Czego potrzebuję:** klipy wideo z różnych ośrodków/koni/jeźdźców (LOSO wymaga ≥10 unique sessions — patrz [Lesson 8](docs/lessons_learned.md)). Dobra próbka wymaga konkretnego protokołu nagrywania żeby nie powtórzyć session leakage z iter 1.5.
+## Key methodological findings
 
-**👉 Warto przeczytać przed nagrywaniem:** [`docs/recording-protocol.md`](docs/recording-protocol.md) (1 strona, ~5 min). Główna zasada: **5 różnych momentów z normalnej sesji treningowej** (ten sam koń, ta sama kamera, ten sam kąt — naturalna codzienna praca, bez prowokowania konkretnych reakcji). Twoja rola = nagrać; ocena behavior na klipach to robota certyfikowanego RHpE assessora po fakcie. Protocol zawiera również szablon RODO-compliant zgody.
+- **Read My Ears 0.875 holds under source-aware LOSO** (Sanity 5). Replication confirms the paper claim; the random clip-level split happened not to inflate due to visual heterogeneity of their 12 sources. Earlier suspicion that 0.875 was inflated has been falsified empirically.
+- **LOO/LOSO gap ~10pp on this dataset.** Any future ear-related LOO result should be mentally adjusted by ~10pp to estimate the LOSO baseline. On the 53-clip DIY data the gap is up to 34pp — small-N + multi-source makes LOO fundamentally unsafe.
+- **Conditional bg-masking** ([Lesson 9](docs/lessons_learned.md)). Secondary motion in frame (a second horse, a walking handler) degrades V-JEPA-2 cross-source robustness. YOLO-detected scene motion → switch to bg-masked features (S8 fold: 0.633 → 0.875, **+24pp**); clean scene → unmasked (S12: 1.000 → 0.661 if forced through masking, **−34pp**). Conditional preprocessing, not a global default.
+- **DINOv2 alone fails cross-source.** Image-only mean-pooled DINOv2 LOO 0.780 → LOSO 0.514 (chance), with anti-correlation on 4 of 12 sources. Temporal context (V-JEPA-2) is necessary, not nice-to-have.
+- **V-JEPA-2 SSv2 fine-tune ≡ pretrain-only checkpoint at the encoder** ([Lesson 12](docs/lessons_learned.md)). All 587 encoder layers are byte-identical between `vjepa2-vitl-fpc16-256-ssv2` and `vjepa2-vitl-fpc64-256` — the SSv2 head is dropped when loading via `VJEPA2Model`. Comparisons of "SSv2 vs PT" in our pipeline measure the same encoder.
 
-**Co dostaję ja:** materiał do treningu modelu (open-source, MIT) + walidacja czy V-JEPA-2 + linear probe pipeline działa na realnych polskich klipach.
+## What works
 
-**Co dostajesz Ty:**
-- Zdjęcia / timeline ruchu uszu / pose-estimation Twoich koni jako bonus
-- Współautorstwo w writeup'ie jeśli zostanie publikowany
-- Spokój ducha — RODO + pisemne zgody jeźdźców/właścicieli ogarniam, surowe klipy nigdzie poza moim laptopem nie wychodzą
+- **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline)
+- **Read My Ears protocol** (face mask + ear bbox crop + linear probe) — LOO 0.97, bg-masked LOO 0.91, **LOSO 0.875** (source-invariant on their data)
+- **Linear probe + LOO observed AUC + permutation test + LOSO** as a four-layer evaluation stack
+- **Hard pre-committed decision thresholds** for architecture choices (4-level rule before running comparison)
+- **Static-frame collapse diagnostic** for distinguishing temporal vs static feature reliance
+- **Conditional background masking** — apply when YOLO detects > 1 subject in frame, skip otherwise
 
-**Ramy etyczne**: welfare > PoC. Jeśli koń wykazuje sygnały bólu w trakcie nagrywania, sesja się przerywa, koń idzie do weterynarza. Bez indukowanego bólu/strachu. Naturalna codzienna praca pod jeźdźcem.
+## What doesn't work
 
-Kontakt: piotr.pawluk@gmail.com lub Issues w tym repo.
+- **5-class softmax on 53 anchor clips** — too small, session-confounded; eye_expression sink-effect
+- **head_position 0.898 LOO** as MVP candidate — Sanity 3 LOSO 0.561 = session leakage
+- **DINOv2 + V-JEPA-2 concat** — lost on 2 of 4 behaviors in the iter-6 matrix; LOSO 0.747 vs SSv2 0.875 in Sanity 5
+- **DINOv2 alone as universal backbone** — LOSO 0.514 on Read My Ears, anti-correlated on 4 of 12 sources
+- **Background masking as a global default** — hurts strong sources by ~10pp while helping weak ones; must be conditional
+- **The 53-clip DIY anchor dataset as a training set** for any per-behavior classifier (iter 6.5)
 
-## Replication results — Read My Ears ear-movement classification
+Full methodology trail in [`docs/lessons_learned.md`](docs/lessons_learned.md) — 12 lessons across iter 1–6.5, including why LOO is not a safe baseline in this domain and why sample size has to be counted in sessions, not clips.
 
-Pełen pipeline na 283 klipach (HF dataset `joaomalves/read-my-ears`):
+## How to engage
 
-| Approach | Accuracy / AUC | Notes |
-|----------|---------------|-------|
-| Paper claim (Alves CVPR W'25) | 0.875 | Z ich custom YOLOv8n + face_masked_clips |
-| **V-JEPA-2 + linear probe** (iter 4 reprodukcja) | **0.894** AUC | Foundation video model z półki, BEZ custom preprocessing, BEZ treningu modelu |
-| V-JEPA-2 + linear probe (Faza 1, 48 test split) | 0.854 | Initial reprodukcja na test split |
-| V-JEPA-2 + linear probe + bg-masked (iter 6.5 Sanity 2) | 0.911 AUC | Mask outside ear bbox → signal w ear region (drop tylko -6pp) |
-| DINOv2 + linear probe + bg-masked (iter 6.5 Sanity 4) | 0.809 AUC | Image-only baseline, słabszy od V-JEPA-2 o 10pp |
-| V-JEPA-2 + LOO cosine k=1 | 0.756 | Same embeddingi bez probe'a — gap 14pp pokazuje wartość LR |
-| X-CLIP zerolot S1 (binary prompts) | 0.604 | Text-conditioned NIE działa dla subtle motion |
-| Etap A movement-detection (1:1) | 0.583 | Pełna replikacja ich pipeline'u (YOLOv8l + optical flow) |
+**For ML researchers / academics.** The substantive contributions live in [`docs/lessons_learned.md`](docs/lessons_learned.md): conditional bg-masking with quantified per-source costs (Lesson 9), the two failure modes in cross-source ear movement detection (Lesson 10, including the S8 two-horses confound case study), and the LOSO replication of Read My Ears 0.875 (Lesson 1, Sanity 5 in [`outputs/`](outputs/)). Methodology critique welcome via Issues.
 
-**Kluczowe wnioski (post Faza 1):**
+**For data contributors.** Field dataset collection is in progress, targeting ≥ 10 horses × 2–3 ear states × 2–3 takes = 60–100 clips across ≥ 10 unique sessions. Read [`docs/recording-protocol.md`](docs/recording-protocol.md) before recording (one page, ~5 min). Welfare > PoC — no provocations, no induced stress, naturalistic training-session footage only. GDPR-compliant consent template included (English + Polish).
 
-1. **V-JEPA-2 zerolot przebija paper claim** — `facebook/vjepa2-vitl-fpc16-256-ssv2` (Meta, czerwiec 2025) jako ekstraktor cech 1024-D + sklearn `LogisticRegression`. Trening klasyfikatora < 1s na CPU. Embedding extraction 283 klipów ~6 min na M-series MPS.
-2. **Sygnał jest faktycznie w region ucha** (Sanity 2: bg-masked drop tylko -6pp). Read My Ears protocol robust.
-3. **V-JEPA-2 ≫ DINOv2 dla ear movement** o 10pp. Temporal info ma istotny wkład.
+**For replication.** [`GATE.md`](GATE.md) documents the original Phase 0 GO/NO-GO criteria (all passed). Quickstart below — `setup.sh` is idempotent, runs on macOS Apple Silicon or Colab T4 fallback, 6 notebooks staged 00 → 99.
 
-## Faza 1.5 + iter 6.5 — what we learned by being wrong
-
-Faza 1.5: zebrałem 53 anchor klipów (5 RHpE behaviors × ~10 klipów) z legalnie dostępnych źródeł (24horsebehaviors.org, YouTube wykłady Dyson/Andersen). Plan był: walidacja czy V-JEPA-2 + LOO cosine wykrywa behaviors poza ear movement.
-
-Po 5 iteracjach wynik był optymistyczny: head_position binary OvR AUC 0.927 z linear probe. To wyglądało jak gotowy MVP dla Fazy 2.
-
-**Wtedy iter 6.5 sanity checks ujawniły session leakage.** LOSO (leave-one-session-out) zamiast LOO (leave-one-out):
-
-| behavior | LOO | LOSO | Δ | verdict |
-|---|---|---|---|---|
-| ear_position | 0.237 | 0.494 | +0.257 | leakage |
-| head_position | **0.898** | **0.561** | **−0.337** | **leakage** |
-| mouth_open | 0.740 | 0.513 | −0.227 | leakage |
-| tail_movement | 0.747 | **0.253** | **−0.495** | **catastrophic anti-correlation** |
-| eye_expression | 0.394 | 0.773 | +0.379 | partial (wszystkie sesje Padma) |
-
-Klasyfikator nie nauczył się behavior'u — uczył się **rozpoznawać sesję nagraniową** (telefon w Lesznowola vs YouTube documentary studio). LOSO drop −34pp dla head_position oznacza że 0.898 było artefaktem, nie sygnałem. Tail_movement LOSO 0.253 (gorsze niż chance) to spektakularny przykład anty-korelacji cross-session.
-
-**Co iter 6.5 oznacza praktycznie:**
-- Track A "head_position MVP" — **kill**. Brak fundamentu.
-- Track B "ear_position via Read My Ears ROI replikacja" — **proceed**, ale wymaga zróżnicowanego datasetu (≥10 unique sessions, balanced labels).
-- Read My Ears sam ma random clip-level split (te same source videos w train/val/test), więc ich 0.875 jest prawdopodobnie inflowany podobnym mechanizmem. Nasz bg-masked Sanity 2 = 0.911 sugeruje że *jakiś* signal jest w uchu, ale ich oryginalny baseline jest upper bound.
-
-**Pełna analiza metodologiczna:** [`docs/lessons_learned.md`](docs/lessons_learned.md) — 8 lekcji od iter 1 do iter 6.5, w tym dlaczego LOO nie jest bezpieczny baseline w tej dziedzinie i dlaczego sample size trzeba liczyć w sesjach, nie klipach.
-
-## Co znajdziesz w tym repo
-
-```
-.
-├── setup.sh                  idempotentny installer oparty o uv (macOS / Linux)
-├── pyproject.toml            pinowane deps (DLC 3.0.0rc14, torch 2.11, transformers 5.7, gradio, webvtt-py)
-├── GATE.md                   binarne kryteria GO/NO-GO + lekcje
-├── docs/
-│   └── lessons_learned.md    8 lekcji metodologicznych z iter 1-6.5 (must-read)
-├── notebooks/
-│   ├── 00_smoke_dlc_sample.ipynb            DLC SuperAnimal-Quadruped zero-shot
-│   ├── 01_read_my_ears_replicate.ipynb      Read My Ears (CVPR W'25) replikacja
-│   ├── 04_few_shot_rhpe_validation.ipynb    Faza 1.5 — Gradio UI clipping + V-JEPA-2 eval
-│   └── 99_colab_fallback.ipynb              backup do Google Colab T4
-├── tools/
-│   └── subtitle_search.py                   VTT keyword parser (Faza 1.5 anchor clipping)
-└── .gitignore
-```
-
-`data/`, `checkpoints/`, `outputs/`, `vendor/` są gitignored — pobiera je
-`setup.sh` (sample horse video z Wikimedia Commons CC, weights z HuggingFace).
-
-## Quickstart (macOS Apple Silicon, lokalnie)
+## Quickstart (macOS Apple Silicon, local)
 
 ```bash
 git clone https://github.com/piotrpawluk/horse-pain-poc
@@ -116,45 +70,72 @@ source .venv/bin/activate
 jupyter lab notebooks/00_smoke_dlc_sample.ipynb
 ```
 
-Notebooki w kolejności: `00` (DLC sanity) → `01` (Read My Ears replikacja) → `04` (Faza 1.5 Gradio UI clipping + V-JEPA-2 eval). Pełne wyniki + lekcje w [`GATE.md`](GATE.md), pełna metodologia w [`docs/lessons_learned.md`](docs/lessons_learned.md).
+Notebook order: `00` (DLC sanity) → `01` (Read My Ears replication) → `02` (V-JEPA-2 zero-shot) → `04` (few-shot 5-behavior validation; the iter-6.5 caveats above apply). Full results in [`GATE.md`](GATE.md), full methodology in [`docs/lessons_learned.md`](docs/lessons_learned.md).
 
 ## Quickstart (Google Colab, fallback)
 
-Otwórz `notebooks/99_colab_fallback.ipynb` w [Google Colab](https://colab.research.google.com/) (File → Upload notebook). Free T4 wystarczy. Nie wymaga lokalnego setupu.
+Open `notebooks/99_colab_fallback.ipynb` in [Google Colab](https://colab.research.google.com/) (File → Upload notebook). Free T4 is sufficient. No local setup required.
 
-## Setup gotchas (dla replikacji)
+## Repo structure
 
-1. **DLC 3.0** stable nie wydane (maj 2026); pinować `>=3.0.0rc14` z `--prerelease=allow`
+```
+.
+├── setup.sh                  idempotent installer (uv-based; macOS / Linux)
+├── pyproject.toml            pinned deps (DLC 3.0.0rc14, torch 2.11, transformers 5.7, gradio, webvtt-py)
+├── GATE.md                   Phase 0 GO/NO-GO criteria + lessons (historical)
+├── docs/
+│   ├── lessons_learned.md    12 methodological lessons from iter 1-6.5 (must-read)
+│   └── recording-protocol.md field data collection protocol (welfare-first, GDPR template)
+├── notebooks/
+│   ├── 00_smoke_dlc_sample.ipynb            DLC SuperAnimal-Quadruped zero-shot
+│   ├── 01_read_my_ears_replicate.ipynb      Read My Ears (CVPR W'25) replication
+│   ├── 02_vjepa2_zeroshot.ipynb             V-JEPA-2 + linear probe baseline
+│   ├── 03_xclip_zeroshot.ipynb              X-CLIP text-conditioned (negative result)
+│   ├── 04_few_shot_rhpe_validation.ipynb    5-behavior few-shot validation (iter 6.5 caveats apply)
+│   └── 99_colab_fallback.ipynb              Google Colab T4 backup
+├── tools/
+│   └── subtitle_search.py                   VTT keyword parser (anchor clipping helper)
+└── .gitignore
+```
+
+`data/`, `checkpoints/`, `outputs/`, `vendor/` are gitignored — `setup.sh` fetches them (sample horse video from Wikimedia Commons CC, weights from HuggingFace).
+
+## Setup gotchas (for replication)
+
+1. **DLC 3.0** stable not yet released (May 2026); pin `>=3.0.0rc14` with `--prerelease=allow`
 2. **matplotlib pin `<3.9`** (DLC requirement)
-3. **HF Hub 1.x** usunął `huggingface_hub.commands.huggingface_cli` — używać Python API `snapshot_download`
-4. **HEVC w klipach z iPhone** (.MOV) — OpenCV powinien czytać native; macOS TCC quarantine xattrs blokują niektóre files (`xattr -d com.apple.quarantine <file>` po imporcie z Photos library)
-5. **Inferencja**: V-JEPA-2 ViT-L 16 frames @ 256×256 ≈ 1.3s/clip MPS; 283 klipy ~6 min
+3. **HF Hub 1.x** removed `huggingface_hub.commands.huggingface_cli` — use the Python API `snapshot_download`
+4. **HEVC in iPhone .MOV clips** — OpenCV reads them natively; macOS TCC quarantine xattrs block some files imported from Photos library (`xattr -d com.apple.quarantine <file>` after import)
+5. **Inference cost**: V-JEPA-2 ViT-L 16 frames @ 256×256 ≈ 1.3 s/clip on MPS; 283 clips ≈ 6 min
 
-## Stack rationale (skrót)
+## Methodology stack rationale
 
-- **V-JEPA-2 ViT-L** ([Meta, czerwiec 2025](https://arxiv.org/abs/2506.09985)) — foundation video model, encoder features 1024-D, używany jako pretrain-only backbone (SSv2 fine-tune nie modyfikuje encodera, tylko dodaje głowę — patrz [Lesson 4](docs/lessons_learned.md))
-- **DINOv2 large** (image-only, 1024-D) — alternatywny image-only baseline; w naszym pipeline słabszy o 10pp od V-JEPA-2
-- **DeepLabCut SuperAnimal-Quadruped** ([Nature Comm 2024](https://www.nature.com/articles/s41467-024-48792-2)) — zero-shot pose dla 45+ gatunków, zaplanowany dla Track C (temporal behaviors w Fazie 3)
-- **Read My Ears** (Alves et al., [CVPR W'25](https://arxiv.org/abs/2505.03554)) — bazowy pipeline ROI: face mask + ear bbox + classifier; pokazana skalowalność na 24 RHpE behaviors via per-behavior ROI replikacja
-- **scikit-learn RidgeClassifier / LogisticRegression** — linear probe na cached embeddings, sekundy treningu na CPU
-- **uv** zamiast conda — 10× szybszy installer
-- **AutoML cloud** odrzucony jako strategic dead-end: Vertex AutoML legacy, Azure Custom Vision retires 09.2028, AWS Rekognition nie ma natywnego video
+- **V-JEPA-2 ViT-L** ([Meta, June 2025](https://arxiv.org/abs/2506.09985)) — foundation video model, 1024-d encoder features. Used as pretrain-only backbone (the SSv2 fine-tune does not modify encoder weights — see [Lesson 12](docs/lessons_learned.md)).
+- **DINOv2 large** (image-only, 1024-d) — alternative image-only baseline; in our pipeline ~10pp behind V-JEPA-2 on ear movement and anti-correlated cross-source on 4 of 12 sources.
+- **DeepLabCut SuperAnimal-Quadruped** ([Nature Comm 2024](https://www.nature.com/articles/s41467-024-48792-2)) — zero-shot pose estimation for 45+ species; staged for Track C (temporal behaviors, deferred to Phase 3).
+- **Read My Ears** (Alves et al., [CVPR W'25](https://arxiv.org/abs/2505.03554)) — baseline ROI pipeline: face mask + ear bbox + classifier; the per-behavior ROI pattern generalizes to other RHpE behaviors.
+- **scikit-learn RidgeClassifier / LogisticRegression** — linear probe on cached embeddings, seconds to train on CPU.
+- **uv** instead of conda — ~10× faster installer, deterministic resolution.
 
-## Etyka / disclaimer
+## Ethics / disclaimer
 
-To jest **research prototype, nie narzędzie diagnostyczne**. Każde
-zastosowanie kliniczne wymaga walidacji przez certyfikowanego RHpE
-assessor'a i konsultacji weterynaryjnej. Welfare zwierzęcia jest
-nadrzędne wobec PoC — jeśli model wykryje sygnały bólu w trakcie
-zbierania danych, należy przerwać sesję i skierować konia do weterynarza.
+This is a **research prototype, not a diagnostic tool**. Any clinical application requires validation by a certified RHpE assessor and veterinary consultation. Animal welfare is **not negotiable** — if a horse shows pain signals during data collection, the session stops and the horse goes to a vet. No induced stress, no provocations: data must come from naturalistic training sessions only. The recording protocol enforces this categorically.
 
-## Licencja
+## License
 
-MIT — zobacz [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
-## Krótkie podziękowania
+## Acknowledgments
 
-- Mathis Lab — DeepLabCut + SuperAnimal-Quadruped
-- Alves, Andersen, Zamansky et al. — Read My Ears
-- Sue Dyson — RHpE jako framework
-- Wikimedia Commons — sample horse video pod licencją CC
+- **Mathis Lab** — DeepLabCut + SuperAnimal-Quadruped
+- **Alves, Andersen, Zamansky et al.** — Read My Ears (CVPR W'25)
+- **Sue Dyson** — RHpE as a clinical framework
+- **Wikimedia Commons** — sample horse video under CC license
+
+## Citation
+
+If you cite this repo informally:
+
+> Pawluk, P. (2026). *horse-pain-poc: Automated RHpE scoring with V-JEPA-2 — methodology-first PoC*. GitHub. https://github.com/piotrpawluk/horse-pain-poc
+
+Contact: piotr.pawluk@gmail.com or open an Issue.
