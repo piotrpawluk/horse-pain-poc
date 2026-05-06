@@ -1,7 +1,7 @@
 [project]
 name = "horse-training-poc"
 version = "0.0.1"
-description = "Faza 0–1.5 PoC — sanity check + Read My Ears replikacja + few-shot V-JEPA-2 walidacja stosu open-source dla detekcji bólu u koni wg Ridden Horse Pain Ethogram (Sue Dyson)."
+description = "Methodology-first PoC for automated RHpE single-behavior classification with V-JEPA-2 — open-source stack sanity check."
 requires-python = ">=3.10,<3.12"
 dependencies = [
     "deeplabcut[modelzoo]>=3.0.0rc14",

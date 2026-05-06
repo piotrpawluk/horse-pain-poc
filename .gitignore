@@ -1,15 +1,15 @@
-# Pobierane przez setup.sh (~500 MB+) — nie wersjonujemy
+# Fetched by setup.sh (~500 MB+) — not versioned
 .venv/
 data/
 checkpoints/
 outputs/
 vendor/
 
-# Notebooki: tylko źródła wersjonujemy, executed kopie nie
+# Notebooks: only source files are versioned; executed copies are not
 notebooks/*.executed.ipynb
 *.ipynb_checkpoints/
 
-# Standardowe
+# Standard
 .DS_Store
 *.swp
 __pycache__/
