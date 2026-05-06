@@ -22,9 +22,9 @@ To **nie jest narzędzie diagnostyczne**. To research prototype:
 
 **Faza 2 wymaga zróżnicowanego datasetu** z polskich realiów (hala jeździecka, oświetlenie, rasy, sprzęt) — to czego nie ma w żadnym publicznym datasetcie.
 
-**Czego potrzebuję:** klipy wideo z różnych ośrodków/koni/jeźdźców (LOSO wymaga ≥10 unique sessions — patrz [Lesson 8](docs/lessons_learned.md)). **Ale nie byle jak** — dobra próbka wymaga konkretnego protokołu nagrywania żeby nie powtórzyć session leakage z iter 1.5.
+**Czego potrzebuję:** klipy wideo z różnych ośrodków/koni/jeźdźców (LOSO wymaga ≥10 unique sessions — patrz [Lesson 8](docs/lessons_learned.md)). Dobra próbka wymaga konkretnego protokołu nagrywania żeby nie powtórzyć session leakage z iter 1.5.
 
-**👉 Przed nagrywaniem przeczytaj** [`docs/recording-protocol.md`](docs/recording-protocol.md) (1 strona, ~5 min lektury). Najważniejszy wymóg: **w obrębie jednej sesji nagraniowej uchwycić różne stany behavior'u** (ten sam koń, ta sama kamera, ten sam kąt — różne sytuacje). Bez tego model uczy się rozpoznawać sesję, nie behavior. Protocol zawiera również szablon RODO-compliant zgody.
+**👉 Warto przeczytać przed nagrywaniem:** [`docs/recording-protocol.md`](docs/recording-protocol.md) (1 strona, ~5 min). Główna zasada: **5 różnych momentów z normalnej sesji treningowej** (ten sam koń, ta sama kamera, ten sam kąt — naturalna codzienna praca, bez prowokowania konkretnych reakcji). Twoja rola = nagrać; ocena behavior na klipach to robota certyfikowanego RHpE assessora po fakcie. Protocol zawiera również szablon RODO-compliant zgody.
 
 **Co dostaję ja:** materiał do treningu modelu (open-source, MIT) + walidacja czy V-JEPA-2 + linear probe pipeline działa na realnych polskich klipach.
 
