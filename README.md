@@ -6,8 +6,9 @@
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
-PoC stosu open-source dla automatycznej detekcji bólu u koni
-zgodnie z **Ridden Horse Pain Ethogram (RHpE, Sue Dyson, 24 zachowania)**.
+PoC stosu open-source dla automatycznej **klasyfikacji pojedynczych behaviors** z **Ridden Horse Pain Ethogram (RHpE, Sue Dyson, 24 zachowania)** — building blocks pod późniejsze multi-behavior pain assessment, nie wykrywanie bólu samo w sobie.
+
+> **Co to znaczy konkretnie:** RHpE wymaga ≥8 z 24 behaviors razem żeby wnioskować o bólu mięśniowo-szkieletowym (Dyson 2018). Tu budujemy klasyfikatory **pojedynczych behaviors** — aktualnie ear_movement, w roadmap pozostałe 23. Multi-behavior pain assessment to horyzont ≥2 lata, wymaga walidacji klinicznej i kolaboracji z certyfikowanymi RHpE assessorami. **Aktualne MVP = jedna z 24 cegiełek.**
 
 ![DLC SuperAnimal-Quadruped keypoints na sample horse video — 5 klatek z overlay'em szkieletu](docs/example_output.png)
 *5 klatek z notebooka `00_smoke_dlc_sample.ipynb` — DLC SuperAnimal-Quadruped zero-shot na [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) (Wikimedia Commons CC).*
