@@ -11,7 +11,10 @@ The Ridden Horse Pain Ethogram (Dyson 2018) is a 24-behavior checklist for detec
 
 > **Scope note.** This is *single-behavior classification*, not pain detection. RHpE requires ≥8 of 24 behaviors co-occurring before pain inference is appropriate (Dyson 2018). The current MVP focuses on one behavior (ear movement); the methodology is built so the same V-JEPA-2 + linear-probe pipeline can be re-applied per behavior. Multi-behavior pain assessment is a 2+ year horizon and requires clinical validation with certified RHpE assessors.
 
-This is a research prototype, **not a diagnostic tool**. Notebook 00 produces a DLC SuperAnimal-Quadruped overlay on the [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) sample (Wikimedia Commons CC) — see `outputs/sample_keypoints_grid.png` after running `setup.sh` + notebook 00.
+![DLC SuperAnimal-Quadruped keypoints overlaid on a sample horse video — 5 frames with skeleton overlay](docs/example_output.png)
+*5 frames from `00_smoke_dlc_sample.ipynb` — DLC SuperAnimal-Quadruped zero-shot on [Horse_walking_in_corral_MVI_7490](https://commons.wikimedia.org/wiki/File:Horse_walking_in_corral_MVI_7490.MOV.ogv) (Wikimedia Commons CC).*
+
+This is a research prototype, **not a diagnostic tool**.
 
 ## Status (as of 2026-05)
 
