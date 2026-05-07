@@ -86,6 +86,8 @@ Same patterns hold under v2 as v1 — the vector differs by ±1 on only 2 of 12 
 
 **Reading.** Qwen v2 + C produces **near-templated** evidence sentences — small word swaps ("frames" ↔ "clip", "movement" ↔ "positional changes") on top of the same skeletal phrase, with confidence locked at 0.9 (down from v1's 0.95). The bug fix did not unlock genuinely clip-conditioned evidence under prompt C. Even on `action_S3.mp4_2_.mp4` — which v2 catches under the looser prompt A — prompt C's strict 2-class enum + system instruction routes the model back into the conservative templated response. Gemini 3.1 + C produces clip-specific evidence and catches the same clip; Qwen v2 + C produces near-templated evidence and misses it. The system instruction's evidence-citation request is being satisfied syntactically rather than semantically on Qwen, regardless of whether the model has the video.
 
+> **Reframing of the v2 "false positive" `background_S4.mp4_7_.mp4`** (added 2026-05-07 after independent manual review): the project owner reviewed all 22 background clips in the dataset and observed *real ear motion on a non-target horse in the background of the frame* on this clip. Qwen v2's reasoning *"ears slightly rotated and twitching, indicating movement"* matches that observation. The v2 prediction is therefore a **target-confusion failure** ([Lesson 9](../docs/lessons_learned.md) multi-horse confound territory, independently confirmed), **not a hallucination**. See [Lesson 17](../docs/lessons_learned.md) for the dataset-level review and [Lesson 15](../docs/lessons_learned.md) for the qualitative implication on v2's bg-rate.
+
 ## 6. §4 outcome and decision (re-evaluated on v2)
 
 | Spec §4 row | Threshold | **Qwen v2 7B observed** | Hit? |
