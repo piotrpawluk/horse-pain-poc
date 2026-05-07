@@ -116,10 +116,10 @@ Determine whether V-JEPA-2 + LR's predictions track RME labels (expected — it 
    - **V-JEPA-2 vs Piotr (strict, certain only)**
    - **V-JEPA-2 vs Piotr (permissive, ? = agree with RME)**
 6. Plot or tabulate per-source disagreement rates side-by-side.
-7. Identify the disagreement pattern:
-   - **Pattern A — V-JEPA-2 leans toward Piotr labels:** V-JEPA-2 vs Piotr agreement > V-JEPA-2 vs RME agreement on at least 7/12 sources. Means model is finding visual signal despite training on RME's stricter labels. **Triggers Step 5 (B) as high-EV.**
-   - **Pattern B — V-JEPA-2 tracks RME labels:** V-JEPA-2 vs RME ≥ V-JEPA-2 vs Piotr on most sources. Expected outcome — model fits its training labels. **Step 5 (B) becomes lower-EV; can skip or downgrade.**
-   - **Pattern C — Mixed by source:** V-JEPA-2 leans toward Piotr on some sources (likely the noisier ones — S5, S10), tracks RME on cleaner sources (S6, S7). **Triggers Step 5 (B) with focus on noisy-source sub-analysis.**
+7. Identify the disagreement pattern. **Pre-registration interpretation locked 2026-05-07 under the Lesson 17 bifurcation framing — audit threshold ≠ EquiFACS threshold ≠ "right"; both protocols are valid and apply different intensity/duration gates. RHpE coders use ethogram-grade thresholds analogous to EquiFACS, so the project-positive outcome is V-JEPA-2 sitting at the EquiFACS threshold (Pattern B), not the audit threshold (Pattern A).**
+   - **Pattern A — V-JEPA-2 leans toward Piotr labels:** V-JEPA-2 vs Piotr agreement > V-JEPA-2 vs RME agreement on at least 7/12 sources. Means the model is sitting at the audit threshold despite being trained on EquiFACS-derived RME labels. **Worrying for RHpE transfer, not celebratory.** Two possible mechanisms: (i) pretrained V-JEPA-2 features carry sub-threshold motion information the LR couldn't filter (capacity concern), or (ii) the LR is undertrained / under-regularized (training-discipline concern). Either way, the model did not cleanly learn what it was trained on. **Triggers Step 5 (B) as a calibration investigation, not as a "high-EV upside" run.** The question to answer is "what changed and why," not "is V-JEPA-2 even better than 0.875?"
+   - **Pattern B — V-JEPA-2 tracks RME labels:** V-JEPA-2 vs RME ≥ V-JEPA-2 vs Piotr on most sources. **The good outcome for the project.** Means V-JEPA-2 + LR successfully learned coder-grade discrimination from coder-grade labels — direct support for RHpE transfer. Less surprising as research (model fits training labels — expected); more useful as project finding (architecture demonstrably learns ethogram-grade discrimination). **Step 5 (B) becomes lower-EV; can be skipped or downgraded.**
+   - **Pattern C — Mixed by source:** V-JEPA-2 leans toward Piotr on noisy sources (likely S5, S10) and tracks RME on clean sources (likely S6, S7). **Calibration question made concrete — useful diagnostic but ambiguous for RHpE transfer**, because RHpE deployment will not have a clean / noisy source distinction baked in. Triggers Step 5 (B) with focus on the per-source split: under what conditions does the model land at which threshold? Likely correlates with the per-source disagreement rate from Lesson 17.
 
 ### Deliverables
 - `outputs/vjepa2_loso_per_clip_predictions.jsonl`
@@ -129,8 +129,8 @@ Determine whether V-JEPA-2 + LR's predictions track RME labels (expected — it 
 
 ### Gate 1 decision
 After this step, the agent decides:
-- **Pattern A or C → run Step 5 (B). Run Step 4 (D) first as precursor.**
-- **Pattern B → skip Step 5. Document in `outputs/vjepa2_label_agreement_decomposition.md` why retraining was not pursued.**
+- **Pattern A or C → run Step 5 (B). Run Step 4 (D) first as precursor.** Note the interpretation lock above: A and C both warrant Step 5, but as calibration investigations (figuring out *what* and *why*), not as expected-improvement runs.
+- **Pattern B → skip Step 5. Document in `outputs/vjepa2_label_agreement_decomposition.md` why retraining was not pursued.** Pattern B is the project-positive outcome; not running Step 5 is the right call when Pattern B holds because there is nothing left to investigate at the threshold-fit level.
 
 If Gate 1 says skip B, the agent proceeds to Step 3 (consistency check still runs) and then Step 6 (light C). The 90 min that would have gone to B is recovered.
 
@@ -189,11 +189,12 @@ Define the 55 multi-horse confound clips as a labeled subset, both for B's "clea
 **Effort:** ~90 min. **Conditional on Gate 1.**
 
 ### Goal
-Compute V-JEPA-2 + LR LOSO AUC against user labels under three label variants. Determine whether the published 0.875 number under- or over-states model performance under different ground-truth assumptions.
+Characterize V-JEPA-2 + LR's threshold behavior under three label variants. Determine **which threshold the model lands at**, not whether it is "better" or "worse" than 0.875. Step 5 only runs under Gate 1 patterns A or C — both of which are calibration investigations, per the §4 interpretation lock.
 
 ### Important framing constraints
-- The new LOSO numbers are **not** directly comparable to the published 0.875 in a "this is the better number" sense. Different label sets measure different ground truths. Both numbers are valid; they measure different things. Writeup must be precise about this.
-- The point of B is to characterize V-JEPA-2 + LR's behavior under cleaner / different / cleaner-and-multi-horse-removed labels, not to claim a "better" LOSO.
+- The new LOSO numbers are **not** directly comparable to the published 0.875 in a "this is the better number" sense. Different label sets measure different ground truths under different intensity/duration thresholds. Both protocols are valid; the model can sit at either threshold (or between); neither is "right." Writeup must be precise about this.
+- **Anti-pattern lock.** The audit threshold is not "cleaner labels"; it is a *different* protocol with a more permissive intensity gate. RHpE uses ethogram-grade thresholds analogous to EquiFACS, **not** analogous to the audit. Therefore: higher LOSO under audit-permissive labels is **not** "model is even better than the published 0.875." It is "model is sitting at a different threshold than its training signal," which is the calibration question Step 5 exists to characterize. Do not let "Strict / Cleaned > 0.875" read as "strongest validation of V-JEPA-2 + LR as the spine" — that framing inverts the project-positive interpretation under the bifurcation lens (see Lesson 17).
+- The project-positive outcome is **all variants ≈ 0.875** (model robust to threshold variation but tracking its EquiFACS training signal — Pattern B's signature) **or Strict ≈ Permissive ≈ 0.875 with Cleaned slightly higher** (multi-horse removal helps but threshold-fit is stable). Variants that diverge materially from each other are calibration-concern signals, not capability-celebration signals.
 
 ### Tasks
 1. Run three LOSO variants using the existing notebook 02 V-JEPA-2 + LR pipeline, swapping label sources:
@@ -210,11 +211,11 @@ Compute V-JEPA-2 + LR LOSO AUC against user labels under three label variants. D
 | Permissive | Mixed | 283 | ? | … |
 | Cleaned | User, single-subject | 228 | ? | … |
 
-4. Interpret the deltas. Possible patterns:
-   - **All variants ≈ 0.875**: model is robust to labeling protocol differences within the visible-motion → AU-coded space. Strong robustness story.
-   - **Strict / Cleaned > 0.875**: model performance was being held down by label noise; cleaner labels reveal higher actual ceiling. Strongest validation of V-JEPA-2 + LR as the spine.
-   - **Strict / Cleaned < 0.875**: model was fitting label noise. Performance under cleaner labels is genuinely lower. Suggests V-JEPA-2 + LR's discrimination is partially tracking EquiFACS-specific quirks rather than general motion-AU patterns.
-   - **Per-source heterogeneous**: model behavior varies by source. Likely correlates with per-source disagreement rate from Step 1.
+4. Interpret the deltas under the bifurcation lens. **Pre-registered interpretations:**
+   - **All variants ≈ 0.875**: model is robust to threshold variation but tracking its EquiFACS training signal — Pattern B-style outcome at the LOSO level. **Project-positive.** The model has learned ethogram-grade discrimination; switching the evaluation label set within ±2 pp does not destabilize the result. Strongest support for keeping V-JEPA-2 + LR as the spine for RHpE.
+   - **Strict / Cleaned > 0.875**: model is sitting closer to the audit threshold than to the EquiFACS threshold despite training on RME labels. **Calibration concern, not validation.** This is the Pattern A signature at the LOSO level: the model didn't cleanly learn what it was trained on. Investigate why — pretrained-feature capacity carrying sub-threshold motion the LR couldn't filter, or LR under-regularization. Step 7 (full C) should frame this carefully so the higher number is not read as "validation of V-JEPA-2 + LR as the spine"; it is evidence that the EquiFACS-grade training signal didn't fully transfer to the model. RHpE transfer becomes a question, not a presumption.
+   - **Strict / Cleaned < 0.875**: model performance was partially driven by label noise structure rather than general ear-motion discrimination. Cleaner-but-different labels reveal lower actual ethogram-fit. Suggests V-JEPA-2 + LR is fitting EquiFACS-specific quirks (specific coder calibration, specific session-noise patterns); generalization to RHpE-grade is uncertain. Calibration concern symmetric to the > 0.875 case but with a different mechanism.
+   - **Per-source heterogeneous (some > 0.875, some < 0.875)**: Pattern C signature at the LOSO level. Model tracks different thresholds on different sources, likely correlating with per-source disagreement rate from Step 1 (S5/S10 noisy → audit-aligned; S6/S7 clean → EquiFACS-aligned). **Most diagnostic outcome but most ambiguous for RHpE transfer** because deployment will not have a clean / noisy distinction baked in.
 
 ### Deliverables
 - Three `outputs/loso_v2_<variant>_predictions.jsonl` files
