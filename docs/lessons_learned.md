@@ -489,6 +489,8 @@ If most "subthreshold motion" cases are *correctly* labeled bg per the EquiFACS 
 
 When 66-clip re-watch results land, the borderline self-consistency rate (likely ~70-90 %) and confident-case self-consistency rate (must be ≥ 90 % per spec hard-stop gate) will be inserted here as the headline caveat figure. Until then, every quantitative claim above is single-observer-disagreement-with-published-protocol, not an audit reliability claim.
 
+**FH-only protocol clarification adopted 2026-05-07, before re-watch.** In multi-horse clips, the verdict applies to the foreground horse only (largest / most central / in focus); background-horse motion is excluded regardless of magnitude. The original audit's `fh:`/`bh:` notation made the multi-horse split visible per clip but did not commit to a verdict rule; FH-only is the now-explicit rule. **14 of the 66 re-watch clips are multi-horse** (all S4 + S8); 7 are `multi_horse_distractor` borderlines that have a predictable protocol-driven flip from `?` to confident `BACKGROUND` under FH-only. Step 3 will compute both raw self-consistency (conservative; includes those 7 protocol-flips as "inconsistencies") and protocol-adjusted self-consistency (excludes them as protocol clarification). The protocol-adjusted rate is the headline figure; the raw rate is the conservative bound. The 2 multi-horse confident controls (`action_S4.mp4_5_.mp4`, `action_S8.mp4_4_.mp4`) are `target_focus` cases with strong FH motion — they should remain confident `ACTION` under FH-only, so a flip on either is a real inconsistency that triggers the hard-stop gate.
+
 ---
 
 ## What worked (verified, build on)
