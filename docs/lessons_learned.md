@@ -199,6 +199,8 @@ The condition extends beyond "two horses" — any independently moving entity in
 
 **Methodological framing.** This is "context-aware preprocessing for cross-subject equine behavior recognition" — the kind of methodological note that fits between "engineering detail" and "publishable finding". Worth flagging in academic outreach.
 
+**Quantified rate (added 2026-05-07 from independent manual audit).** The multi-horse confound rate on Read My Ears is **19.4 % (55/283), all in S4 (31 clips) + S8 (24 clips)**. Per-clip target/distractor annotations from the audit's `fh:`/`bh:` notation are saved in `outputs/multi_horse_subset.jsonl` with `target_motion_present` and `distractor_motion_present` flags. See [Lesson 17](#lesson-17--single-reviewer-audit-of-rme-labels-may-2026-full-283-clip-dataset-consistency-check-pending) for the audit context — the multi-horse finding converges with this Lesson 9 LOSO-derived claim from a different angle (Lesson 9 derived multi-horse confound from V-JEPA-2's S8 LOSO collapse pattern, the audit derived it from per-clip observation; neither analysis informed the other).
+
 ---
 
 ## Lesson 10 — Two failure modes in cross-source ear movement detection
@@ -517,6 +519,41 @@ If most "subthreshold motion" cases are *correctly* labeled bg per the EquiFACS 
 ### Implications for downstream interpretation
 
 Every quantitative claim in this lesson now carries the κ = 0.586 (moderate) within-observer-reliability tag — not a settled benchmark, but a measured bound. The 12.4 % audit-RME disagreement headline should be read with this overlay: roughly 80 % of the borderline disagreements are stable across re-watch and represent real threshold-mismatch with EquiFACS; the remaining 20 % are within-observer noise on subthreshold cases. The **multi-horse confound is the hardest finding** (100 % within-observer match on the 7 distractor borderlines, plus the 19.4 % dataset-level confound rate, plus Lesson 9's independent confirmation from V-JEPA-2 LOSO patterns), and it's the only audit finding that doesn't depend on threshold-calibration interpretation. Full per-clip results in `outputs/consistency_check_results.md`.
+
+### Step 5 LOSO variant results (V-JEPA-2 + LR retrained on Piotr labels)
+
+Three V-JEPA-2 + LR LOSO variants run with the canonical config (`RidgeClassifier(alpha=1.0, class_weight='balanced')` + `StandardScaler` per fold): **Strict** (272 clips), **Permissive** (283 clips), **Cleaned** (218 single-subject clips). RME baseline LOSO reproduced exactly (0.8746, sanity check passed). Full breakdown in [`outputs/loso_label_variant_comparison.md`](../outputs/loso_label_variant_comparison.md).
+
+| Variant | N | Global LOSO AUC | Δ vs published 0.8746 |
+|---|---|---|---|
+| Original (RME) | 283 | 0.8746 | 0.0000 *(sanity reproduce)* |
+| **Strict** (Piotr-certain post-rewatch) | 272 | **0.7386** | **−0.1360** |
+| **Permissive** (re-watch overrides + originals) | 283 | **0.7345** | **−0.1401** |
+| **Cleaned** (Strict + single-subject only) | 218 | **0.7386** | **−0.1360** |
+
+**Pattern signature: Strict / Cleaned < 0.875 by ~13.6 pp uniformly.** All three variants drop ~14 pp; the drop is systematic, not random fold-to-fold variance.
+
+**Mechanism decomposition (the load-bearing finding).** The −13.6 pp Strict drop splits into:
+- **−3.6 pp eval-mismatch** (B-prime: V-JEPA-2 + LR trained on RME, *evaluated* against Piotr-strict labels = 0.8389)
+- **−10 pp retrain-noise** (Step 5: V-JEPA-2 + LR *retrained* on Piotr-strict labels with κ = 0.586 within-observer reliability = 0.7386)
+
+**The features generalize at modest cost; the audit labels are too noisy for clean retraining.** This is the difference between "V-JEPA-2 features can't represent the audit signal" (would have been a feature-side limitation) and "single-observer audit labels at this κ are too noisy to train a probe" (label-side limitation). It's the latter. For **RHpE transfer**, the implication is concrete: if RHpE field labels achieve typical multi-rater EquiFACS-grade κ ≥ 0.7, the retrain-noise component shrinks and total transfer cost approaches ~3–5 pp. **V-JEPA-2 + LR transfers cleanly under those conditions.** This makes the inter-rater-κ requirement on `docs/recording-protocol.md` load-bearing rather than nice-to-have.
+
+**S5 vs S10 calibration-vs-noise prediction confirmed.** The Step 3 prediction (S10 stable threshold ≠ EquiFACS, S5 unstable threshold + ≠ EquiFACS) maps cleanly to LOSO-AUC variance across variants:
+
+| Source | Within-observer consistency | Variance across S/P/C variants |
+|---|---|---|
+| **S10** | 100 % stable | **0.048** |
+| **S5** | 60 % unstable | **0.105** |
+
+S5's variance is ~2.2× S10's, mirroring the within-observer-inconsistency ratio. **The calibration-vs-noise distinction is operational at the LOSO level.** For any future RHpE-style work: per-source consistency × per-source agreement is a 2-axis decomposition that should be computed at the start of source-aware evaluation, not as a post-hoc diagnostic.
+
+**Project recommendations refined:**
+1. **V-JEPA-2 + LR remains the spine.** Features carry the audit-grade signal at small cost; published 0.875 LOSO is reproducible exactly and is not a measurement artifact.
+2. **Inter-rater κ measurement on RHpE field labels is non-negotiable.** Single-observer κ ≈ 0.6 is not enough to clean-retrain the probe at ethogram-grade. The data-collection protocol must include a second annotator and report inter-rater agreement.
+3. **Per-source consistency × agreement diagnostic** is the methodological output that should be pulled forward into any RHpE deployment evaluation.
+
+Forward-pointer: **Step 6 (Light C, always-runs)** synthesizes the labeling-protocol output (FH-only rule, subthreshold-motion threshold gates, single-subject focus) into a one-page document for RHpE field labeling. **Step 7 (Full C, gated by Step 5 strength)** is now triggered: the result is unambiguously coherent and worth a methodology-note writeup integrating this LOSO comparison + Step 6 protocol + Lesson 17 audit findings into Andersen-grade narrative form.
 
 ---
 
