@@ -280,6 +280,53 @@ This is a **theoretical mapping** of the 24 RHpE behaviors to the detection-pipe
 
 ---
 
+## Lesson 14 — Perception/classification decoupling on Gemini 2.5 Pro and 3.1 Pro Preview (May 2026)
+
+**Scope first.** This is a *supporting methodological observation*, not the project thesis. The thesis remains V-JEPA-2 LOSO 0.875 source-aware replication (see Lessons 1, 5, 9, 10, 12 + Sanity 5). This lesson exists because we tested whether a frontier multimodal LLM could serve as an off-the-shelf label-noise auditor on the 283-clip Read My Ears dataset (CC-BY-4.0, anonymized) and found the failure mode interesting enough to document. It does not generalize beyond what was tested.
+
+**Tested configurations** — Gemini 2.5 Pro and Gemini 3.1 Pro Preview (Jan 2026 model card), accessed via Google AI Studio API in May 2026. Single API key, all calls between 2026-05-06 and 2026-05-07. fps=10 video sampling on 36 stratified Read My Ears clips (3 per source, S1–S12, 14 action / 22 background). Three prompts (A: generic; B: EquiFACS-coder anchored; C: Gemini-3.x best-practice with system instruction, evidence-grounded user prompt, no negative constraints). Probe = description-only prompt at temp=1.0 with no classification request. Code in `tools/gemini_audit.py`; raw JSONLs in `outputs/gemini_audit_*`.
+
+**Three findings, in order of strength.**
+
+### 1. Cross-rep instability is structural, not configurational
+
+Across 5 reps per clip on the description-only probe at Google's officially recommended Gemini 3.x parameters (temperature=1.0, thinking_level=low):
+
+- Gemini 3.1 Pro Preview, **N=20** clips (10 from initial probe + 10 N-expansion at fresh seed): **0 / 20 (0%)** clips show consistent motion/still classification across 5 reps.
+- Gemini 2.5 Pro, **N=10** clips at temp=1.0 (thinking_level not supported on 2.5 Pro — it returns 400 INVALID_ARGUMENT): **2 / 10 (20%)** clips consistent.
+
+The instability is not improved by following Google's prompt-engineering guidance. The 80% flip rate from the original temp=0.5 probe was not a temperature artifact — corrected parameters give 0% consistency on N=20.
+
+### 2. Perception/classification decoupling — generation-general
+
+Same model, same clips, same parameters. Compare what the description-only probe reports against what the classification-mode prompt commits to:
+
+| Configuration | Probe motion-attribution rate (mean across reps) | Decoupled clips (probe sees motion ≥3/5 reps **and** classifier outputs "background") |
+| --- | --- | --- |
+| 3.1 Pro Preview + Prompt C @ corrected params | 55% | **13 / 20 (65%)** |
+| 2.5 Pro + Prompt B + temp=1.0 probe | 66% | **7 / 10 (70%)** |
+| 2.5 Pro + Prompt A + temp=1.0 probe | 66% | 0 / 10 — Prompt A *over*-detects, no decoupling shows |
+
+Whenever the classification surface carries a refusal bias (Prompt B on 2.5, Prompt C on 3.1 — and the model's structural conservatism on 3.1 makes Prompts A and B also degenerate-toward-background there), the same model under the same conditions reports motion in the majority of description-only reps but commits to "background" on most of those clips when classification is requested.
+
+**Mechanism (informed conjecture, not measured).** Post-training likely selects harder for conservative classification commitments than for conservative descriptive language. The classifier output is a different surface from the description output, and the optimization pressure is distributed differently across the two. This is consistent with how alignment training is typically structured (penalize confidently wrong classifications more than penalize confident descriptive language) but we have not verified the mechanism inside the model.
+
+### 3. Conservatism on 3.1 Pro Preview is structural, not parameter-driven
+
+| 3.1 Pro Preview configuration | "action" predicted / 36 |
+| --- | --- |
+| Prompt A, temp=0, default thinking | 0 |
+| Prompt B, temp=0, default thinking | 1 |
+| Prompt C (best-practice), temp=1.0, thinking=low, system-instruction grounded | 1 |
+
+Google's recommended parameters + a 3.x-tailored prompt + system instruction → 3.1 Pro Preview classifies 35/36 clips as background regardless of true label. This is not a parameter-tuning issue. Following the documented prompt-engineering guidance does not unlock a calibrated classifier on this task on this model.
+
+**Operational implication.** Off-the-shelf Gemini 2.5 Pro and Gemini 3.1 Pro Preview, accessed via AI Studio API at the parameters tested in May 2026, are not reliable label-noise auditors for fine-grained equine ear-movement classification on Read My Ears clips. We do not extrapolate this claim to other multimodal LLMs (Claude, GPT-5/4, open-source) or to other behavior categories without testing. Audit-style use cases on this model class require either ensemble + voting at substantially larger N (untested here) or a different approach entirely.
+
+**What this lesson is not.** It is not evidence that frontier multimodal LLMs are universally unreliable. It is not a claim about Claude / GPT-class models. It is not the methodology paper. It is a documented, scoped, dated observation that the V-JEPA-2 + linear probe pipeline remains the right backbone for this task because the alternative we tested doesn't work in this regime.
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
