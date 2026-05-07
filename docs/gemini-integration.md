@@ -1,5 +1,7 @@
 # Gemini integration — label-noise audit experiment (status: hypothesis falsified)
 
+> **Update 2026-05-07.** The three failure modes documented here on Gemini 2.5/3.1 Pro reproduced on open-weight Qwen2.5-VL-7B-bf16 under the same protocol — see [Lesson 15](lessons_learned.md) and [`qwen-experiment-spec.md`](qwen-experiment-spec.md). Within the scope tested, the failure modes are not Gemini-family-specific; the MLLM-as-classifier track is closed for this task. This Gemini-specific writeup is preserved for the dated record; the cross-vendor framing lives in Lesson 15 + `outputs/qwen_vs_gemini_comparison.md`.
+
 This file documents an experiment that tested whether off-the-shelf frontier multimodal LLMs (Gemini 2.5 Pro and Gemini 3.1 Pro Preview, May 2026, AI Studio API) can serve as label-noise auditors on the 283-clip Read My Ears dataset (Alves et al. CVPR W'25, CC-BY-4.0). **The hypothesis was falsified at N=36 stratified clips; this document records the experiment, its findings, and how to reproduce them.**
 
 The original framing — "Gemini disagreements with the human label flag candidates for re-review" — assumed the model would be a reasonably calibrated witness. It is not, on this task, at the parameters and prompts we tested.

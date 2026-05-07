@@ -24,6 +24,7 @@ This is a research prototype, **not a diagnostic tool**.
 | head_position | V-JEPA-2 full-frame + LR | 0.561 | ✗ session leakage (LOO 0.898 → LOSO 0.561, Δ −34pp) |
 | eye_expression | V-JEPA-2 + LR | n/a | ✗ all positive sessions from one source — confound, dropped |
 | ear_position (anchor data) | V-JEPA-2 full-frame + LR | <0.5 | ✗ requires ear-region ROI crop, not full-frame |
+| ear_movement (MLLM-as-classifier on RME 36-clip subset) | Gemini 2.5/3.1 Pro + Qwen2.5-VL-7B | n/a (refusal-bias collapse) | ✗ all 3 Lesson 14 failure modes reproduced cross-vendor — see [Lesson 15](docs/lessons_learned.md) |
 
 **Current focus.** Track B — `ear_position` via Read My Ears-style ROI replication on a diverse field dataset. Target: LOSO AUC ≥ 0.70 across ≥ 8 of ≥ 10 sources, with 0.80 strong, 0.85 stretch (see [Lesson 11](docs/lessons_learned.md)). The 53-clip DIY anchor dataset is **not** training data — iteration 6.5 LOSO disproved any per-behavior claim built on it.
 
@@ -44,9 +45,14 @@ This is a research prototype, **not a diagnostic tool**.
 - **Static-frame collapse diagnostic** for distinguishing temporal vs static feature reliance
 - **Conditional background masking** — apply when YOLO detects > 1 subject in frame, skip otherwise
 
-## Augmentation experiment (in progress)
+## MLLM-as-classifier — tested cross-vendor, closed track
 
-A `gemini-augmentation` branch hosts a label-noise audit tool ([`tools/gemini_audit.py`](tools/gemini_audit.py)) that runs Gemini 2.5 Pro over the 283 RME clips and flags disagreements with the human labels. The use case is justified empirically: frontier multimodal LLMs **do not replace** V-JEPA-2 on fine-grained motion (frame-sampled MLLMs miss sub-second deltas — same gap that broke X-CLIP), but they are useful as a **second-opinion layer** for surfacing labeling errors. Results land in `outputs/gemini_audit_summary.json` after a one-command run. See [`docs/gemini-integration.md`](docs/gemini-integration.md) for setup, GDPR caveat, and cost.
+Two MLLM-as-classifier branches were run as supporting methodological observations to V-JEPA-2 + linear probe — both closed as of May 2026:
+
+- `gemini-augmentation` (merged): Gemini 2.5 Pro + 3.1 Pro Preview tested on a 36-clip stratified Read My Ears subset under three prompts including Google's official Gemini-3.x best-practice config. Three failure modes documented in [Lesson 14](docs/lessons_learned.md) — refusal-bias collapse (35/36 background on 3.1 Pro Preview at best-practice params), cross-rep instability, perception/classification decoupling. Tool: [`tools/gemini_audit.py`](tools/gemini_audit.py). Writeup: [`docs/gemini-integration.md`](docs/gemini-integration.md).
+- `experiment/qwen-mlx`: Qwen2.5-VL-7B-bf16 self-hosted via mlx-vlm on M2 Max, same 36-clip subset, same prompts (verbatim). All three failure modes reproduced — bg-rate 100 %, 0/10 cross-rep stable, 3/10 decoupling cases. Per-source agreement vector element-wise identical to Gemini 3.1 Pro Preview. [Lesson 15](docs/lessons_learned.md) + [`docs/qwen-experiment-spec.md`](docs/qwen-experiment-spec.md) + [`outputs/qwen_vs_gemini_comparison.md`](outputs/qwen_vs_gemini_comparison.md). Tool: [`tools/qwen_audit.py`](tools/qwen_audit.py).
+
+The MLLM-as-classifier track is closed within the scope tested. **V-JEPA-2 + linear probe (LOSO 0.875) remains the spine.** Frontier multimodal LLMs do not replace it on fine-grained motion in the regimes we tested — and they don't reliably augment it as label-noise auditors either.
 
 ## What doesn't work
 
