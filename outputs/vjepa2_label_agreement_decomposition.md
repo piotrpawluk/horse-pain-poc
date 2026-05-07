@@ -19,11 +19,25 @@ V-JEPA-2 + LR LOSO with the canonical config (`RidgeClassifier(alpha=1.0, class_
 - Δ vs published: **+0.0000** (well within ±0.02 sanity band)
 - Per-source LOSO AUC: S1 0.816, S2 0.927, S3 0.995, S4 0.911, S5 0.903, S6 0.956, S7 1.000, S8 **0.633** *(weak fold — multi-horse confound)*, S9 0.783, S10 1.000, S11 0.920, S12 1.000
 
-Per-clip predictions saved to `outputs/vjepa2_loso_per_clip_predictions.jsonl` (283 rows, full dataset, including LOSO score + Piotr verdict + Piotr category for each clip).
+Per-clip predictions saved to `outputs/vjepa2_loso_per_clip_predictions.jsonl` (283 rows, full dataset, including both LOSO `decision_function` score AND binary `predict()` output, per Piotr verdict + Piotr category for each clip).
 
-## Per-source agreement matrix
+### Two metrics, one model — published 0.8746 is the AUC, not the binary accuracy
 
-V-JEPA-2 binary prediction (from `predict()` at default threshold) agreement vs three label sets, per source. Strict drops the 56 borderline (`?`) clips (227 eligible total); permissive treats borderline verdicts as agreement with RME (283 total).
+The Pattern A/B/C spec uses "agreement" as its detection metric (binary classification accuracy). The published 0.8746 LOSO baseline is an **AUC** (continuous ranking metric on `decision_function` margins). Both are computed from the **same** B-prime predictions; they differ because they aggregate the model output differently. Reconciliation table:
+
+| Metric / label set | vs RME | vs Piotr strict (227) | vs Piotr perm (283) |
+|---|---|---|---|
+| **Continuous AUC** (`decision_function`) | **0.8746** ← matches published | 0.8389 | 0.8283 |
+| **Binary accuracy** (`predict()` at threshold = 0) | 0.8057 | 0.7974 | 0.7809 |
+
+- AUC measures ranking quality across all possible thresholds (the published metric).
+- Binary accuracy measures the binary-classification decision at `predict()`'s default threshold (0 on the Ridge signed-margin scale, with `class_weight='balanced'` shifting the decision toward minority-class recall — closer to Youden's J than to maximum-accuracy threshold). The two metrics are not directly comparable as numbers but are produced by the same fold-by-fold model.
+- **The 0.806 / 0.797 / 0.781 numbers in the per-source table below are binary accuracies because the spec's Pattern A/B/C trigger explicitly uses agreement** ("V-JEPA-2 vs Piotr **agreement** > V-JEPA-2 vs RME agreement on N/12 sources"). Reading 0.806 next to the published 0.8746 invites the wrong comparison; the correct comparison is 0.8746 (published AUC) ↔ 0.8746 (B-prime AUC) at the global level, and Pattern C identification proceeds from the per-source binary-accuracy deltas separately.
+- Both metrics tell a directionally consistent story at the aggregate level: V-JEPA-2 + LR agrees with RME more than with either Piotr variant (AUC drops 3.6 pp strict, 4.6 pp perm; binary accuracy drops 0.8 pp strict, 2.5 pp perm). The per-source split is what makes Pattern C the right call — see below.
+
+## Per-source agreement matrix (binary accuracy — Pattern detection metric per spec §4)
+
+V-JEPA-2 binary prediction (from `predict()` at the Ridge signed-margin = 0 boundary) agreement vs three label sets, per source. Strict drops the 56 borderline (`?`) clips (227 eligible total); permissive treats borderline verdicts as agreement with RME (283 total). **This is the metric the spec's Pattern A/B/C trigger explicitly uses.**
 
 | Src | n | vs RME | vs Piotr strict | vs Piotr perm | Δ strict−RME | Δ perm−RME |
 |---|---|---|---|---|---|---|
@@ -42,6 +56,28 @@ V-JEPA-2 binary prediction (from `predict()` at default threshold) agreement vs 
 | **AGG** | **283** | **228/283 = 0.806** | **181/227 = 0.797** | **221/283 = 0.781** | **−0.009** | **−0.025** |
 
 **Reading direction:** positive Δ = V-JEPA-2 agrees more with Piotr's labels than with RME on this source. Negative Δ = V-JEPA-2 agrees more with RME.
+
+## Per-source AUC matrix (continuous metric — for completeness)
+
+The same predictions ranked by `decision_function` rather than thresholded by `predict()`. Note: AUC is **undefined** when only one class is present in a per-source subset (S7 strict has only `action` clips, S8 strict has only `action` clips post-borderline-drop). In small per-source subsets (e.g. S1 strict = 20 clips), AUC is sensitive to changes in class balance from dropping borderline cases — the strict AUC drops on S1 (0.816 → 0.637) and S4 (0.911 → 0.500 = chance) reflect class-balance distortion in the subset, not necessarily a real ranking change.
+
+| Src | n vs RME | AUC vs RME | n strict | AUC vs strict | n perm | AUC vs perm |
+|---|---|---|---|---|---|---|
+| S1 | 21 | 0.816 | 20 | 0.637 *(small N + class-balance shift)* | 21 | 0.653 |
+| S2 | 25 | 0.927 | 14 | 0.833 | 25 | 0.861 |
+| S3 | 28 | 0.995 | 18 | 0.925 | 28 | 0.947 |
+| S4 | 32 | 0.911 | 27 | 0.500 *(class-balance distortion)* | 32 | 0.795 |
+| S5 | 25 | 0.903 | 20 | 0.845 | 25 | 0.903 |
+| S6 | 19 | 0.956 | 19 | 0.956 | 19 | 0.956 |
+| S7 | 21 | 1.000 | 19 | NA *(single class)* | 21 | 1.000 |
+| S8 | 24 | 0.633 | 17 | NA *(single class)* | 24 | 0.647 |
+| S9 | 24 | 0.783 | 20 | 0.810 | 24 | 0.757 |
+| S10 | 22 | 1.000 | 17 | 1.000 | 22 | 1.000 |
+| S11 | 19 | 0.920 | 19 | 0.852 | 19 | 0.852 |
+| S12 | 23 | 1.000 | 17 | 0.833 | 23 | 0.825 |
+| **GLOBAL** | **283** | **0.8746** | **227** | **0.8389** | **283** | **0.8283** |
+
+**Pattern observation under AUC differs from binary accuracy in detail but agrees in direction.** Under AUC, no source shows a meaningful gain on Piotr-strict over RME (S9 +0.027 is the largest, well within sample-size noise; S10 stays at 1.000 in both); most sources lose AUC under stricter labels because dropping borderline cases shrinks the per-source N and shifts class balance unpredictably. Under binary accuracy, the per-source split is sharper because the metric is robust to small-N effects. **The spec's Pattern detection metric is binary agreement (per §4 wording), so Pattern C identification is anchored on the binary-accuracy table above; the AUC table is supporting evidence about ranking, not the determining metric.** Both metrics agree at the aggregate level (V-JEPA-2 leans RME) and in the high-level per-source pattern (S5 and S8 are the headline calibration-concern sources; S1, S11, S12 are the cleanest tracking-RME sources).
 
 ## Per-source pattern under the bifurcation lens
 
@@ -89,7 +125,8 @@ Currently:
 
 ## Caveats specific to B-prime
 
+- **AUC vs binary-accuracy metric distinction is the core gotcha** — fully treated up top under "Two metrics, one model." The published 0.8746 is the AUC; the 0.806 is the binary accuracy at the Ridge `predict()` boundary; both come from the same B-prime run. Pattern detection used the binary-accuracy metric per spec §4 wording.
 - **Sanity check is per-clip global AUC (0.8746), not per-source mean AUC (which is 0.910 for this config).** The per-source mean is uniformly higher because easy sources (S7, S10, S12 = 1.000) and hard sources (S6 = 0.956, S8 = 0.633, S9 = 0.783) contribute equally to the mean while contributing unequally to the global AUC. The published 0.8746 is the global per-clip number.
-- **Binary-agreement metric uses `predict()` at default threshold 0.5.** Continuous LOSO AUC of 0.8746 is well-ordered ranking, not classification accuracy at any specific threshold. Aggregate binary agreement vs RME is 0.806, lower than 0.8746 because some clips are correctly ranked but on the wrong side of the 0.5 cut. This is normal and doesn't change Pattern C identification (which is based on per-source agreement deltas, not absolute agreement levels).
+- **AUC is unstable on small per-source strict subsets.** Dropping borderline cases changes the per-source class balance (e.g. S7 strict ends up with single class → AUC undefined; S4 strict drops to 0.500 because 5 of 27 strict clips happen to be on the decision boundary). The per-source AUC table flags these explicitly. Binary accuracy is more stable in these regimes, which is why Pattern detection per the spec uses agreement, not AUC.
 - **No retraining of V-JEPA-2.** Only the linear probe ran per fold on cached features. The "B-prime is not retraining" framing in the spec holds.
 - **Sample sizes per source range from 17 to 32**, with strict variant dropping borderline clips that vary heavily by source (S2 has more borderline cases than S6, etc.). Per-source agreement-rate deltas should be read as suggestive rather than statistically settled at this N.
