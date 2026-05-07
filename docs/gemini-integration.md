@@ -1,103 +1,91 @@
-# Gemini integration — label-noise audit
+# Gemini integration — label-noise audit experiment (status: hypothesis falsified)
 
-Status: scaffolded on the `gemini-augmentation` branch. Run-ready once a `GEMINI_API_KEY` is provided.
+This file documents an experiment that tested whether off-the-shelf frontier multimodal LLMs (Gemini 2.5 Pro and Gemini 3.1 Pro Preview, May 2026, AI Studio API) can serve as label-noise auditors on the 283-clip Read My Ears dataset (Alves et al. CVPR W'25, CC-BY-4.0). **The hypothesis was falsified at N=36 stratified clips; this document records the experiment, its findings, and how to reproduce them.**
 
-## What it is
+The original framing — "Gemini disagreements with the human label flag candidates for re-review" — assumed the model would be a reasonably calibrated witness. It is not, on this task, at the parameters and prompts we tested.
 
-`tools/gemini_audit.py` runs **Gemini 2.5 Pro** over the 283 Read My Ears clips, asks it to classify each clip as `action` (ear movement) or `background` (no ear movement), and compares against the human label. Disagreements flag clips for re-review.
+## What we tested
 
-## Why this and not "replace V-JEPA-2 with Gemini"
+Three prompt variants on two model generations × per-clip + cross-rep probe:
 
-Standard research synthesis (2026-05-06) established that frontier multimodal LLMs **do not replace** V-JEPA-2 + linear probe for fine-grained subtle behavior classification. The mechanism: Gemini samples video at 1 fps by default; ear movements happen on sub-second timescales. The same gap that broke X-CLIP zero-shot on this task. Direct precedent: Dussert et al. 2025 (*Methods in Ecology and Evolution*, [DOI 10.1111/2041-210X.70059](https://doi.org/10.1111/2041-210X.70059)) tested CogVLM/MobileVLM/CLIP/SigLIP zero-shot on three-class behavior VQA from camera traps — multimodal LLMs underperformed trained baselines.
+- **Prompt A** (generic) — *"is the horse actively moving its ears?"*
+- **Prompt B** (EquiFACS-anchored) — *"would a trained EquiFACS coder mark this as a coded ear AU?"*, observation-then-classify
+- **Prompt C** (Gemini-3.x best practice) — system-instruction-grounded, evidence-cite-then-classify, no negative constraints, temp=1.0, thinking_level=low
 
-What MLLMs **are** good at: second-opinion classification on ambiguous cases. The audit uses that capability.
+All prompt definitions live verbatim in `tools/gemini_audit.py`. Schemas are strict JSON. Video uploaded via File API at `videoMetadata.fps=10` (clips are 0.24–1.76 s long; default fps=1 collapses them to 1–2 frames each).
 
-## Setup
+## Headline findings
 
-1. Get an AI Studio API key at <https://aistudio.google.com/app/apikey>.
-2. Copy the env template and fill in your key:
-   ```bash
-   cd /path/to/poc
-   cp .env.example .env
-   # edit .env, set GEMINI_API_KEY=...
-   ```
-3. Install the new dependencies (already pinned in `pyproject.toml`):
-   ```bash
-   uv pip install --python .venv/bin/python "google-genai>=0.8" "python-dotenv>=1.0"
-   ```
+See [`lessons_learned.md` Lesson 14](lessons_learned.md) for the full writeup. Three results:
 
-## Run
+1. **Cross-rep instability is structural.** On Gemini 3.1 Pro Preview at Google's officially recommended Gemini 3.x parameters (temp=1.0, thinking_level=low), 0/20 clips produce consistent motion/still descriptions across 5 reps. On Gemini 2.5 Pro at temp=1.0, 2/10 clips consistent. The 80% flip rate is not a low-temperature artifact.
+2. **Perception/classification decoupling is generation-general.** On both 2.5 Pro (with Prompt B) and 3.1 Pro Preview (with Prompt C), the same model on the same clip reports motion in the majority of description-only reps but commits to "background" in classification mode. 13/20 clips on 3.1 + 7/10 clips on 2.5 show this pattern. The mechanism is plausibly that post-training selects harder for conservative classification commitments than for conservative descriptive language.
+3. **Conservatism on 3.1 Pro Preview is structural, not parameter-driven.** With the best-practice prompt + Google's recommended parameters, 3.1 still classifies 35/36 clips as background regardless of true label.
 
-**Dry run first** (no API calls; validates the code path with stubbed responses):
+**Operational implication.** Off-the-shelf Gemini 2.5 Pro and 3.1 Pro Preview, at the parameters tested in May 2026, are not reliable label-noise auditors for fine-grained equine ear-movement classification on Read My Ears. We do not extrapolate to Claude, GPT-class, or other multimodal LLMs without testing.
+
+## Reproduce
 
 ```bash
-python tools/gemini_audit.py --dry-run --limit 3
+cd /path/to/poc
+echo "GEMINI_API_KEY=<your key>" > .env
+
+# Classifier (Prompt C on 3.1 Pro Preview, best-practice config):
+python tools/gemini_audit.py \
+    --model gemini-3.1-pro-preview \
+    --prompt-version c \
+    --per-source 3 \
+    --fps 10 \
+    --temperature 1.0 \
+    --thinking-level low
+
+# Description-only probe (5 reps × 10 disagreement clips on 3.1 Pro Preview):
+python tools/gemini_audit.py --probe \
+    --model gemini-3.1-pro-preview \
+    --probe-source-model gemini-2.5-pro \
+    --probe-clips 10 \
+    --probe-reps 5 \
+    --probe-temp 1.0 \
+    --thinking-level low \
+    --probe-suffix _temp1.0_thinkLOW \
+    --fps 10
 ```
 
-**Smoke test** with 5 real clips (~$0.10–0.20 cost):
+For 2.5 Pro, **omit `--thinking-level`** — Gemini 2.5 Pro returns `400 INVALID_ARGUMENT: Thinking level is not supported for this model`.
 
-```bash
-python tools/gemini_audit.py --limit 5
-```
+JSONL outputs land in `outputs/`:
+- `gemini_audit_results_{model}_prompt{A,B,C}.jsonl` — per-clip classifications
+- `gemini_audit_probe_{model}{suffix}.jsonl` — per-rep description-only observations
+- `gemini_audit_summary_{model}_prompt{A,B,C}.json` — per-source agreement summaries
 
-**Full run** over all 283 clips (~$6–12, ~50–60 min at 6 RPM rate limit):
-
-```bash
-python tools/gemini_audit.py
-```
-
-The script is **idempotent** — re-running after a partial failure resumes from the last completed clip.
-
-## Outputs
-
-- `outputs/gemini_audit_results.jsonl` — one row per clip (clip path, source, true label, Gemini label, confidence, reasoning, agreement flag, latency, error)
-- `outputs/gemini_audit_summary.json` — per-source agreement table, disagreement counts, mean confidence on disagreements
-
-Both are gitignored (`outputs/` is in `.gitignore`).
+All gitignored (under `outputs/`).
 
 ## Cost estimate
 
-Gemini 3 Pro pricing (May 2026): ~$2 per 1M input tokens, video sampled at 1 fps = ~258 tokens/sec. A 30-second RME clip ≈ 7,740 input tokens ≈ $0.015 input + output. Per clip: **~$0.02–0.04**. Full 283-clip run: **~$6–12**.
+May 2026 Gemini API pricing (preview models priced lower than stable releases):
 
-For 1,000 audited clips: ~$20–40. For 10,000: ~$200–400. Beyond ~10k, V-JEPA-2 + linear probe wins on cost (electricity only).
+- Per-clip classifier (~1100 tokens prompt + ~50 tokens output): ≈ $0.005 on 3.1 Pro Preview, ≈ $0.04 on 2.5 Pro
+- Full 36-clip stratified run: $0.20 (3.1) – $1.50 (2.5)
+- N=10 × 5-rep probe: $0.25 (3.1) – $2.00 (2.5)
+- Replication of all experiments end-to-end (this writeup): under $5
 
-## GDPR caveat — read before using on field data
+## GDPR caveat (still applies; unchanged from original setup)
 
 This setup uses **Google AI Studio** (`generativelanguage.googleapis.com`). AI Studio has **no EU data residency** as of May 2026.
 
-That is **acceptable for Read My Ears**: the dataset is CC-BY-4.0, public, and contains anonymized ear-region clips with no identifiable persons. Sending it to AI Studio creates no new GDPR exposure beyond what's already public.
+That is **acceptable for Read My Ears**: dataset is CC-BY-4.0, public, anonymized, no identifiable persons. That is **not acceptable for our future field-collected clips** — when field clips arrive, switch to Vertex AI `europe-west4` before running anything from this repo on them.
 
-That is **not acceptable for our future field-collected clips**. Field data from the HKiJ peer network will contain:
-- Identifiable horses (markings, environment matching the owner's property)
-- Identifiable riders/handlers in frame
-- Recordings made under consent for "research only", not for "third-party AI processing"
+## What this experiment is and is not
 
-When field clips arrive, **switch to Vertex AI `europe-west4`** before using the audit on them:
-- Vertex provides regional pinning (data stays in the EU)
-- Different SDK code path: `genai.Client(vertexai=True, project=..., location="europe-west4")`
-- Note: as of May 2026, Vertex `europe-west4` only supports Gemini 2.5 (not 3.x) — fine for this audit; you'd need to re-test prompts.
+It is a **supporting methodological observation** for the V-JEPA-2 + linear probe pipeline. The thesis of the project remains V-JEPA-2 LOSO 0.875 source-aware replication on Read My Ears (Sanity 5). This experiment exists to document why we did not pivot to "MLLM-as-judge" — we tested it, it doesn't work in this regime, V-JEPA-2 stays the backbone.
 
-This migration is documented as a TODO, not implemented yet, because it requires GCP project setup that isn't in scope for the current scaffold.
-
-## What to do with the disagreement clips
-
-After a full run, open `outputs/gemini_audit_summary.json` and look for:
-
-1. **Source-clustered disagreements.** If disagreements concentrate on the weak-fold sources we already identified in Sanity 5 (S8 = two-horses confound, S9 = instrumented medical context), that's a **methodological finding** worth noting in the Andersen/Zamansky email. It would be independent confirmation, from a completely different family of models, that those two folds are genuinely harder.
-2. **Confident disagreements** (Gemini classifies oppositely with confidence ≥ 0.8). These are candidates for re-review by a certified RHpE assessor — possible label noise in the original dataset.
-3. **Low-confidence disagreements** (confidence < 0.5 on either side). Probably ambiguous edge cases; document but don't chase.
-
-## What this is NOT
-
-- Not a clinical decision-support tool
-- Not a replacement for the V-JEPA-2 + linear probe production classifier
-- Not validated against a certified RHpE assessor's adjudication of the disagreement set (yet)
-- Not deployed on field data with personal-data exposure (use Vertex `europe-west4` for that)
+It is not a publication-grade evaluation of frontier multimodal LLMs. N=36 stratified is a convenience sample, not a benchmark. The findings are dated (May 2026), scoped to two specific Gemini models accessed via a specific API endpoint, and should not be extrapolated to other models or other behaviors without testing.
 
 ## References
 
-- Standard research synthesis (2026-05-06) establishing replacement vs augmentation tradeoffs — see project memory and the Andersen email briefing in `Plans/`.
-- V-JEPA-2 paper: <https://arxiv.org/abs/2506.09985>
-- Gemini video understanding docs: <https://ai.google.dev/gemini-api/docs/video-understanding>
-- Vertex AI data residency: <https://cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency>
-- Animal-Bench (NeurIPS 2024): <https://proceedings.neurips.cc/paper_files/paper/2024/file/8fa604a81e5a236e2f38e917109571a3-Paper-Conference.pdf>
+- [Lesson 14 in `lessons_learned.md`](lessons_learned.md) — full writeup with numbers
+- [Gemini 3 Developer Guide](https://ai.google.dev/gemini-api/docs/gemini-3) — official parameter recommendations
+- [Gemini 3.1 Pro model card (DeepMind)](https://deepmind.google/models/model-cards/gemini-3-1-pro/) — model specifications
+- [Vertex AI Gemini 3 prompting guide](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/gemini-3-prompting-guide) — prompt-engineering best practices
+- [V-JEPA-2 paper (Meta, Jun 2025)](https://arxiv.org/abs/2506.09985) — the actual production classifier
+- [Read My Ears paper (Alves et al. CVPR W'25)](https://arxiv.org/abs/2505.03554) — source dataset + EquiFACS labels
