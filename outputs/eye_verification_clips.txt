@@ -1,0 +1,64 @@
+# Eye verification — 36-clip blind pass (May 2026)
+# Branch: experiment/eye-probe
+# Generated 2026-05-08 by tools/eye_probe.py + this script
+#
+# Watch each clip for VISIBLE EYE-REGION CHANGE — eye motion, blinking,
+# tension shift, asymmetric expression, white-of-eye becoming visible,
+# eyelid drooping or movement, or any other change in the eye area.
+#
+# Format (same as ear audit):
+#   <clip basename> - <observation> - <VERDICT>
+# VERDICT ∈ {ACTION, BACKGROUND, ACTION?, BACKGROUND?}
+#   ACTION = visible eye-region change
+#   BACKGROUND = eyes calm, no visible change
+#   ACTION? / BACKGROUND? = borderline; would defer to a second opinion
+#
+# Apply FH-only rule for multi-horse clips (verdict applies to foreground
+# horse only; background-horse motion excluded). Multi-horse clips are not
+# flagged inline this time — apply the rule from what you see directly.
+#
+# IMPORTANT: this is a BLIND verification pass. The 3 MLLMs (Gemini 2.5 Pro,
+# Gemini 3.1 Pro Preview, Qwen 2.5-VL-7B) have already been run on these
+# clips with their respective best-practice configs, but their outputs are
+# NOT shown here. Do your independent pass first; agent will compare
+# against MLLM predictions after your labels land.
+#
+# Clips in randomized order (seed=43, no source-grouping cue).
+#
+
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_2_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_0_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_3_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_6_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_12_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S10.mp4_0_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S8.mp4_12_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S6.mp4_2_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S11.mp4_0_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_3_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_3_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_4_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_10_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_0_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_8_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S9.mp4_8_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_11_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_2_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_11_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_9_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S3.mp4_3_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_15_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S2.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_11_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_2_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S5.mp4_10_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_5_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_2_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_17_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_9_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S4.mp4_7_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_12_.mp4 - 
