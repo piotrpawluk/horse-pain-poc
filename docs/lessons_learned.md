@@ -485,11 +485,38 @@ If most "subthreshold motion" cases are *correctly* labeled bg per the EquiFACS 
 - Not a basis for any V-JEPA-2 LOSO retraining decision yet. Step 2 (B-prime) is gating that.
 - Not a claim that Gemini 2.5 + Prompt A is the right MLLM for any classification task on RME. It is a configuration that happens to match a naive-observer threshold rather than the EquiFACS threshold; that is calibration information, not a recommendation.
 
-### Pending Step 3 (within-observer consistency)
+### Step 3 within-observer consistency check — RESULTS (re-watch executed 2026-05-07)
 
-When 66-clip re-watch results land, the borderline self-consistency rate (likely ~70-90 %) and confident-case self-consistency rate (must be ≥ 90 % per spec hard-stop gate) will be inserted here as the headline caveat figure. Until then, every quantitative claim above is single-observer-disagreement-with-published-protocol, not an audit reliability claim.
+**Hard-stop gate: PASS — 10/10 confident-control matches = 100 %.** Both multi-horse confident controls (`action_S4.mp4_5_.mp4`, `action_S8.mp4_4_.mp4`) held confident `ACTION` under FH-only as predicted. Step 4 + Step 5 cleared to proceed.
 
-**FH-only protocol clarification adopted 2026-05-07, before re-watch.** In multi-horse clips, the verdict applies to the foreground horse only (largest / most central / in focus); background-horse motion is excluded regardless of magnitude. The original audit's `fh:`/`bh:` notation made the multi-horse split visible per clip but did not commit to a verdict rule; FH-only is the now-explicit rule. **14 of the 66 re-watch clips are multi-horse** (all S4 + S8); 7 are `multi_horse_distractor` borderlines that have a predictable protocol-driven flip from `?` to confident `BACKGROUND` under FH-only. Step 3 will compute both raw self-consistency (conservative; includes those 7 protocol-flips as "inconsistencies") and protocol-adjusted self-consistency (excludes them as protocol clarification). The protocol-adjusted rate is the headline figure; the raw rate is the conservative bound. The 2 multi-horse confident controls (`action_S4.mp4_5_.mp4`, `action_S8.mp4_4_.mp4`) are `target_focus` cases with strong FH motion — they should remain confident `ACTION` under FH-only, so a flip on either is a real inconsistency that triggers the hard-stop gate.
+| Subset | n | Verdict-match | Notes |
+|---|---|---|---|
+| **Confident controls (HARD STOP)** | 10 | **10/10 = 100 %** | gate cleared |
+| Borderline (`?`) cases | 56 | **45/56 = 80.4 %** | Cohen's κ = **0.586 (moderate)** |
+| Multi-horse total | 14 | 13/14 = 92.9 % | FH-only protocol clarification worked |
+|   ↳ multi-horse target_focus | 7 | 6/7 = 85.7 % | 1 subthreshold flip (`bg_S8.mp4_1`) |
+|   ↳ multi-horse distractor | 7 | **7/7 = 100 %** | all 7 predicted protocol-flips materialized |
+| Single-horse | 52 | 42/52 = 80.8 % | drift on subthreshold motion, see below |
+| **All 66** | 66 | **55/66 = 83.3 %** | — |
+
+**Raw and protocol-adjusted rates are identical here** because the 7 predicted FH-only protocol-flips are all *certainty* flips (`BACKGROUND?` → `BACKGROUND`), not *verdict* flips — verdict-match counts them as agreement under either rule. The user's pre-protocol intuition on multi-horse distractor clips was already aligned with FH-only (just uncertain); the protocol resolves the uncertainty without changing the verdict.
+
+**11 borderline verdict-disagreements split asymmetrically** — 7 `BACKGROUND?` → `ACTION` (more permissive on re-watch), 4 `ACTION?` → `BACKGROUND` (stricter on re-watch). **Every single disagreement involves "extremely slight" or "slight" motion language** — the drift is concentrated entirely in the subthreshold-motion zone, exactly where the original `?` annotation was meant to capture uncertainty.
+
+**Per-source borderline rates reveal a calibration / noise contrast.** S5 (audit-disagreement-with-RME 24 %, the highest) shows 3/5 = 60 % within-observer consistency — high disagreement with RME *and* unstable threshold within the user. S10 (audit-disagreement-with-RME 23 %, second-highest) shows 5/5 = 100 % within-observer consistency — high disagreement with RME but a *stable* threshold that just differs from EquiFACS. **S5's audit-RME disagreement has both a calibration and a noise component; S10's is pure calibration.** This refines the per-source pattern from the binary-accuracy decomposition: S5's threshold drift is a real measurement issue, while S10 is a clean threshold-misalignment signal that V-JEPA-2 and Gemini decompositions can be interpreted against.
+
+**FH-only protocol clarification adopted 2026-05-07** — verdict applies to foreground horse only in multi-horse scenes; background-horse motion excluded regardless of magnitude. **14 of 66 re-watch clips were multi-horse** (all S4 + S8). The 7 `multi_horse_distractor` borderlines (FH ears still, BH moves) had a predictable protocol-driven resolution from `BACKGROUND?` to confident `BACKGROUND`; **all 7 materialized exactly**, validating both the rule and the user's pre-protocol intuition.
+
+### Caveats on the consistency rate
+
+- **Same-day re-watch.** The spec recommended >12 h between original audit and re-watch; the actual delay was within the same calendar day. Fresh-memory effects bias self-consistency *toward the high side*. The 80.4 % / κ = 0.586 should be read as a **ceiling** on within-observer reliability, not the settled long-term rate. A 1–2 week re-watch would tighten the bound.
+- **Re-watch was non-blind to the existence of the audit.** The user knew clips were sampled from `?` cases + 10 controls; this could bring priors to each clip ("probably borderline"). True blind re-watch would require forgetting clip-membership.
+- **κ = 0.586 is on the borderline subset only.** On confident verdicts the κ would be ≈ 1.0 (10/10 with chance ≈ 0.5). The borderline subset is by construction the least-stable subset.
+- **Per-source N is small** (1–11 per source). Per-source rates are suggestive, not statistically settled.
+
+### Implications for downstream interpretation
+
+Every quantitative claim in this lesson now carries the κ = 0.586 (moderate) within-observer-reliability tag — not a settled benchmark, but a measured bound. The 12.4 % audit-RME disagreement headline should be read with this overlay: roughly 80 % of the borderline disagreements are stable across re-watch and represent real threshold-mismatch with EquiFACS; the remaining 20 % are within-observer noise on subthreshold cases. The **multi-horse confound is the hardest finding** (100 % within-observer match on the 7 distractor borderlines, plus the 19.4 % dataset-level confound rate, plus Lesson 9's independent confirmation from V-JEPA-2 LOSO patterns), and it's the only audit finding that doesn't depend on threshold-calibration interpretation. Full per-clip results in `outputs/consistency_check_results.md`.
 
 ---
 
