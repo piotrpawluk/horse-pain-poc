@@ -325,28 +325,66 @@ Google's recommended parameters + a 3.x-tailored prompt + system instruction →
 
 **What this lesson is not.** It is not evidence that frontier multimodal LLMs are universally unreliable. It is not a claim about Claude / GPT-class models. It is not the methodology paper. It is a documented, scoped, dated observation that the V-JEPA-2 + linear probe pipeline remains the right backbone for this task because the alternative we tested doesn't work in this regime.
 
-## Lesson 15 — Same three failure modes reproduce on open-weight Qwen2.5-VL-7B (May 2026)
+## Lesson 15 — Three failure modes reproduce on open-weight Qwen2.5-VL-7B *after* the video pipeline was repaired (May 2026)
 
-**Scope.** Continuation of Lesson 14, same supporting-observation status. Tested whether an open-weight, self-hosted MLLM with a different post-training regime (Alibaba, not Google) avoids the Gemini failure modes. It does not. See `docs/qwen-experiment-spec.md` for the pre-registered protocol and `outputs/qwen_vs_gemini_comparison.md` for the side-by-side numbers.
+**Scope.** Continuation of Lesson 14, same supporting-observation status. The original Lesson 15 (PR #2 v1) was based on Qwen results in which the model never received video — `apply_chat_template` was called on a structured-messages list, which strips multimodal content via `extract_text_from_content` before any video tokens can be inserted (see Lesson 16 for the bug). The 36/36-background-collapse claim in v1 was text-only inference disguised as video inference. This lesson is **rewritten on the post-fix v2 results**, where prompt-token counts confirm the model is genuinely processing video frames (~5500 tokens vs the v1 text-only ~110). Branch `fix/qwen-mlx-video-input`. Spec: `docs/qwen-fix-and-revalidate-spec.md`. Side-by-side numbers in `outputs/qwen_vs_gemini_comparison.md`.
 
-**Configuration tested.** `mlx-community/Qwen2.5-VL-7B-Instruct-bf16` via mlx-vlm 0.5.0 on M2 Max (96 GB), 2026-05-07. Same 36-clip stratified subset as the Gemini runs (clip paths reconstructed from existing Gemini JSONLs — no re-stratification). Two classification probes (Prompt A at temp=0; Prompt C with system instruction at Qwen's official `temperature=1e-6, repetition_penalty=1.05`) and one description-only probe (5 reps × 10 clips at temp=0.7). All 122 inferences ran without errors; total wall-clock ≈ 10 min, $0.
+**Configuration tested.** `mlx-community/Qwen2.5-VL-7B-Instruct-bf16` via mlx-vlm 0.5.0 on M2 Max (96 GB), 2026-05-07. Same 36-clip stratified subset as the Gemini runs (clip paths reconstructed from existing Gemini JSONLs — no re-stratification). Two classification probes (Prompt A at temp=0; Prompt C with system instruction at Qwen's official `temperature=1e-6, repetition_penalty=1.05`, system instruction inlined into the user-text string per the mlx-vlm 0.5.0 list+video routing bug) and one description-only probe (5 reps × 10 clips at temp=0.7). 0/122 errors. v2 wall-clock ≈ 57 min (~5× v1's 10 min — the v1 timing was a tell, in retrospect: video processing should not be 3 s/clip on 14 GB of weights).
 
-**Result against pre-registered §4 outcome table.** Row 1: all three failure modes reproduced.
+**Result against pre-registered §4 outcome table (re-evaluated on v2).** Row 1: all three failure modes still reproduced — but the supporting evidence is now real model behavior, not a tokenization artifact.
 
-| Failure mode | Gemini 3.1 Pro Preview | **Qwen 7B-bf16** |
+| Failure mode | Gemini 3.1 Pro Preview | **Qwen 7B-bf16 v2 (post-fix)** |
 |---|---|---|
-| Refusal-bias collapse (bg-prediction rate) | 35/36 = 97 % (prompt C) | **36/36 = 100 %** (prompt A and prompt C — identical) |
-| Cross-rep instability (5-rep stable / 10) | 1/10 (initial probe) | **0/10** |
-| Perception/classification decoupling | 13/20 = 65 % | **3/10 = 30 %** (lower bound; conservative keyword classifier) |
-| Agreement with truth | 23/36 = 0.639 | **22/36 = 0.611** |
+| Refusal-bias collapse (bg-prediction rate, normalized) | 35/36 = 97 % (prompt C) | **34/36 = 94 %** (prompt A) · **35/36 = 97 %** (prompt C) |
+| Cross-rep instability (5-rep stable / 10) | 1/10 (initial), 2/20 (N-expansion) | **0/10** |
+| Perception/classification decoupling | 13/20 = 65 % | **2/10 = 20 %** (lower bound; conservative keyword classifier) |
+| Agreement with truth (normalized) | 23/36 = 0.639 (prompt C) | **22/36 = 0.611** (prompt A) · **21/36 = 0.583** (prompt C) |
 
-Qwen 7B's per-source agreement vector under both prompts is *element-wise identical* to Gemini 3.1 Pro Preview's — same right-or-wrong on every source. The Qwen-recommended `temperature=1e-6` and the system instruction *"Do not refuse to commit unless the clip is genuinely uninterpretable"* do **not** mitigate the collapse. Prompt C produces a *templated* evidence sentence (*"The ears remain in essentially the same position throughout the clip, with no visible positional changes or movements"*) on virtually every clip with confidence locked at 0.95 — so the system-instruction's evidence-citation request is satisfied syntactically without any clip-conditioned perception driving the citation.
+**What v2 added vs v1.** Three substantive changes:
+1. **Vocabulary leakage on prompt A.** Qwen v2 sometimes outputs `still` (echoing the prompt's `STILL` wording in the user text) instead of the schema's `background`. They are semantically identical in context, but the deviation is auditable: `qwen_label` field is preserved raw in the JSONL; downstream agreement comparison applies a `still → background` normalization rule. Prompt C's strict 2-class enum suppresses this leakage.
+2. **One true-action correctly classified.** `action_S3.mp4_2_.mp4` flips from v1's templated `background` to v2 prompt A's `action` — Qwen has *some* clip-conditioned perception; v1 had none. Under prompt C the same clip is still missed.
+3. **One false-positive emerges.** `background_S4.mp4_7_.mp4` flips from v1's templated `background` to v2's `action` (both prompts) — v1 was structurally incapable of false positives because everything collapsed.
 
-**Generalization, scoped.** Within the scope tested — fine-grained sub-second ear movement on RHpE clips, evaluated on a 36-clip stratified subset of Read My Ears — Lesson 14's three failure modes are not Gemini-family-specific. Two MLLM families with different training regimes, different vision encoders, and different inference paths (cloud API vs local MLX) produce indistinguishable per-source outcomes. We do **not** extrapolate to (a) larger Qwen sizes (32B-4bit was gated and skipped per spec §4), (b) other open-weight MLLM families (InternVL, MiniCPM-V, GLM-V, etc.), (c) Claude or GPT-5-class proprietary models, (d) coarser-grained behaviors where MLLMs are documented to perform well (Animal-Bench NeurIPS 2024).
+**Per-source pattern unchanged.** v1 → v2 differs by exactly ±1 on 2 of 12 sources (S3 +1 in A, S4 −1 in both). Ten of twelve sources have identical v1 and v2 agreement counts. This is the structural-convergence point: when the dominant mode is "lean to bg-majority" — whether from no-input artifact (v1) or genuine model conservatism (v2) — per-source numbers converge because they are determined by the dataset's per-source bg/action distribution, not by perception.
 
-**Operational implication.** The MLLM-as-classifier approach — both proprietary and open-weight, in the regimes we tested — does not produce a usable label-noise auditor on this task. **V-JEPA-2 + linear probe (LOSO 0.875) remains the spine of the pipeline.** The Qwen branch is a closed track, not a parked one.
+**Reasoning text on prompt C remains near-templated.** Even with video reaching the model, Qwen v2 + C produces evidence sentences with only minor word-swap variation across clips (*"…remain in a consistent position throughout the frames, with no visible movement or change in their orientation"* with `frames`/`clip` and `movement`/`positional changes` shuffled). Confidence dropped slightly from v1's locked 0.95 to v2's locked 0.9. The system instruction's evidence-citation request is being satisfied syntactically rather than semantically, regardless of whether the model has the video. Compare to Gemini 3.1 + C, which produces clip-specific evidence and catches `action_S3.mp4_2_.mp4` correctly while Qwen v2 + C misses it.
 
-**What this lesson is not.** Not a benchmark; N=36 is convenience-sized for tool selection. Not a publication-grade evaluation. Not a claim about MLLMs in general — it is scoped to this task, this dataset, this 5-week window, these two model families.
+**Generalization, scoped (rewritten).** The v1 generalization claim ("Lesson 14 three-failure-modes generalize from Gemini family to MLLM class") was structurally correct *by accident*: text-only inference happened to produce identical aggregate metrics to genuine-but-conservative inference, because both lean to `background` on a dataset where 22/36 are true-bg. The v2 evidence makes the same claim *correctly*: with video properly routed, Qwen 7B exhibits genuine refusal-bias collapse, genuine cross-rep instability, and genuine decoupling — matching Gemini 3.1 Pro Preview's pattern but with quantitative differences (94 % vs 100 % bg-rate on prompt A; 1/14 vs 0/14 true-action catches; 20 % vs 65 % decoupling; near-templated vs varied evidence). Within the scope tested — sub-second ear movement on RHpE, 36-clip stratified subset, May 2026 — the failure modes are not Gemini-family-specific. We do **not** extrapolate to larger Qwen sizes (32B-4bit gated and skipped per spec §4), other open-weight MLLM families, proprietary models we haven't tested (Claude, GPT-5-class), or coarser tasks where MLLMs are documented to perform well.
+
+**Operational implication (unchanged).** The MLLM-as-classifier approach — both proprietary and open-weight, in the regimes we tested — does not produce a usable label-noise auditor on this task. **V-JEPA-2 + linear probe (LOSO 0.875) remains the spine of the pipeline.** The Qwen branch is a closed track, not a parked one.
+
+**What this lesson is not.** Not a benchmark; N=36 is convenience-sized for tool selection. Not a publication-grade evaluation. Not a claim that all open-weight MLLMs collapse on RHpE — only Qwen2.5-VL-7B at bf16 has been tested. The bug we found in v1 is a reminder that aggregate metrics on an MLLM pipeline cannot substitute for direct verification that multimodal tokens are reaching the model.
+
+## Lesson 16 — Verify multimodal tokens reach the model before drawing any conclusions
+
+**Discovered via PR #2 → fix/qwen-mlx-video-input, May 2026.** This lesson exists because Lesson 15's first draft was confidently wrong. The bug took ~10 minutes to find via prompt-token inspection and ~3 hours to fix and re-validate; the bad result took ~10 minutes to produce.
+
+**The bug.** mlx-vlm 0.5.0's `apply_chat_template` has two distinct paths for multimodal content:
+
+| Call shape | What happens to video |
+|---|---|
+| `prompt=messages_list` with `content=[{"type": "video", ...}, {"type": "text", ...}]` | `extract_text_from_content` keeps only `type="text"` items. Video metadata is silently dropped before `_format_video_message` can run. **No `<\|video_pad\|>` token in the rendered prompt.** Subsequent `generate(..., video=path)` is a no-op for the prompt text — model sees text only. |
+| `prompt=user_text_str` with `video=path, fps=10, num_videos=1` as kwargs | Routes through `_format_video_message`, which is gated on `kwargs.get("video")` being truthy. **`<\|vision_start\|><\|video_pad\|><\|vision_end\|>` placeholders inserted.** Generate fills them with real video tokens. |
+
+Empirical render comparison on Qwen2.5-VL-7B (one RME clip, prompt A):
+
+- buggy call: 159 chars, 0× `<|video_pad|>`, prompt_tokens ≈ 111
+- correct call: 510 chars, 1× `<|video_pad|>`, prompt_tokens ≈ 5500
+
+The 50× difference in `prompt_tokens` is the smoking-gun signal. Text-only inference on a 14 GB VLM at ~3 s/clip should have been suspicious from the timing alone; in retrospect, video processing on M2 Max consistently runs at ~20 s/clip.
+
+**Related bug, same release.** Passing `prompt=[{"role": "system", "content": ...}, {"role": "user", "content": ...}]` together with `video=path` as a kwarg attaches `<|vision_start|><|video_pad|><|vision_end|>` placeholders to **both** messages, not just the user message. Verified empirically: `video_pad count: 2`. Workaround: inline the system instruction into the user-text string and use the single-string-prompt + video-kwarg path.
+
+**Verification rule (going forward).** Before drawing any conclusion from a multimodal LLM run, verify that multimodal tokens actually reach the model:
+
+1. **Prompt-token sanity.** Print `prompt_tokens` from the generation result. For a video clip at fps=10 of ~1 s on Qwen2.5-VL, expect ~5000+ tokens. If you see ~100, the video is missing.
+2. **Rendered-prompt inspection.** Print `formatted_prompt`'s length and whether it contains `<|video_pad|>` (Qwen) or the model's vision-token marker.
+3. **Latency sanity.** ~20 s/clip on M2 Max for video; ~3 s/clip means text-only.
+4. **Output diversity.** Identical templated reasoning across all clips at locked confidence is a strong tell that the model is not perceiving — variance in evidence prose is the cheapest indicator of clip-conditioning.
+
+The cost of this check is one log line. The cost of skipping it was a published-but-unmerged PR with confident generalization claims based on text-only inference. PRs from MLLM experiments should not merge until at least one of (1)–(3) is in the run log.
+
+**Operational implication.** All Qwen runs on this repo from `fix/qwen-mlx-video-input` forward log `prompt_tokens` and assert >2000 on video probes. The v1 outputs in `outputs/qwen25vl_7b_*.jsonl` (no `_v2` suffix) are kept as diagnostic evidence of the bug, not as model-behavior evidence.
 
 ---
 

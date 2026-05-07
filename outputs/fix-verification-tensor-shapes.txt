@@ -1,0 +1,17 @@
+[qwen] Loading mlx-community/Qwen2.5-VL-7B-Instruct-bf16 ...
+Fetching 14 files:   0%|          | 0/14 [00:00<?, ?it/s]Fetching 14 files: 100%|██████████| 14/14 [00:00<00:00, 54878.74it/s]
+Fetching 14 files:   0%|          | 0/14 [00:00<?, ?it/s]Fetching 14 files: 100%|██████████| 14/14 [00:00<00:00, 137196.86it/s]
+[qwen] Loaded in 9.7s
+[probe promptA] 5 total, 0 done, 5 todo → fix-verification-smoke-test.jsonl
+[debug] formatted prompt: 510 chars, <|video_pad|> present: True
+[debug] processor inspection failed: ValueError: Expected video as (T, C, H, W), got shape ().
+Prefill:   0%|          | 0/5495 [00:00<?, ?tok/s]Prefill:  37%|███▋      | 2048/5495 [00:08<00:13, 247.65tok/s]Prefill:  75%|███████▍  | 4096/5495 [00:12<00:03, 353.80tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:15<00:00, 395.70tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:15<00:00, 363.19tok/s]
+  [ 1/5] S3 action_S3.mp4_2_.mp4                     truth=action     qwen=action     ✓ (20.4s)
+Prefill:   0%|          | 0/5495 [00:00<?, ?tok/s]Prefill:  37%|███▋      | 2048/5495 [00:08<00:14, 233.30tok/s]Prefill:  75%|███████▍  | 4096/5495 [00:12<00:04, 337.72tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:15<00:00, 374.09tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:15<00:00, 343.84tok/s]
+  [ 2/5] S3 action_S3.mp4_8_.mp4                     truth=action     qwen=still      ✗ (18.8s)
+Prefill:   0%|          | 0/5495 [00:00<?, ?tok/s]Prefill:  37%|███▋      | 2048/5495 [00:08<00:15, 228.29tok/s]Prefill:  75%|███████▍  | 4096/5495 [00:13<00:04, 336.66tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:16<00:00, 367.52tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:16<00:00, 338.53tok/s]
+  [ 3/5] S10 action_S10.mp4_0_.mp4                    truth=action     qwen=still      ✗ (19.3s)
+Prefill:   0%|          | 0/5495 [00:00<?, ?tok/s]Prefill:  37%|███▋      | 2048/5495 [00:09<00:15, 221.34tok/s]Prefill:  75%|███████▍  | 4096/5495 [00:13<00:04, 316.62tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:17<00:00, 333.38tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:17<00:00, 312.54tok/s]
+  [ 4/5] S1 background_S1.mp4_11_.mp4                truth=background qwen=still      ✗ (21.0s)
+Prefill:   0%|          | 0/5495 [00:00<?, ?tok/s]Prefill:  37%|███▋      | 2048/5495 [00:10<00:17, 198.34tok/s]Prefill:  75%|███████▍  | 4096/5495 [00:15<00:04, 288.59tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:19<00:00, 309.47tok/s]Prefill: 100%|█████████▉| 5494/5495 [00:19<00:00, 287.50tok/s]
+  [ 5/5] S12 background_S12.mp4_2_.mp4                truth=background qwen=background ✓ (22.3s)
