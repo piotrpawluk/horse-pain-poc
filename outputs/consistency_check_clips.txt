@@ -40,69 +40,69 @@
 #      excluded from the variance count when they are explained by FH-only)
 # ─────────────────────────────────────────────────────────────────────
 
-background_S12.mp4_4_.mp4 - 
-background_S2.mp4_6_.mp4 - 
-background_S12.mp4_14_.mp4 - 
-background_S4.mp4_3_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-action_S3.mp4_16_.mp4 - 
-background_S4.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S2.mp4_3_.mp4 - 
-background_S2.mp4_8_.mp4 - 
-background_S10.mp4_2_.mp4 - 
-action_S2.mp4_0_.mp4 - 
-background_S2.mp4_2_.mp4 - 
-background_S1.mp4_10_.mp4 - 
-background_S4.mp4_6_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S10.mp4_4_.mp4 - 
-background_S9.mp4_4_.mp4 - 
-background_S8.mp4_7_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S10.mp4_1_.mp4 - 
-background_S5.mp4_8_.mp4 - 
-background_S9.mp4_3_.mp4 - 
-background_S8.mp4_4_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S12.mp4_3_.mp4 - 
-action_S3.mp4_9_.mp4 - 
-background_S11.mp4_6_.mp4 - 
-action_S3.mp4_10_.mp4 - 
-background_S8.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S10.mp4_3_.mp4 - 
-background_S2.mp4_11_.mp4 - 
-action_S4.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S3.mp4_0_.mp4 - 
-action_S4.mp4_24_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S2.mp4_7_.mp4 - 
-action_S8.mp4_4_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S2.mp4_10_.mp4 - 
-background_S8.mp4_0_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S2.mp4_12_.mp4 - 
-background_S2.mp4_0_.mp4 - 
-action_S3.mp4_15_.mp4 - 
-background_S12.mp4_5_.mp4 - 
-action_S6.mp4_0_.mp4 - 
-action_S5.mp4_10_.mp4 - 
-background_S12.mp4_11_.mp4 - 
-background_S2.mp4_9_.mp4 - 
-background_S3.mp4_7_.mp4 - 
-action_S5.mp4_11_.mp4 - 
-action_S2.mp4_5_.mp4 - 
-background_S2.mp4_5_.mp4 - 
-background_S8.mp4_1_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S4.mp4_2_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-action_S6.mp4_5_.mp4 - 
-background_S3.mp4_6_.mp4 - 
-background_S5.mp4_9_.mp4 - 
-background_S9.mp4_9_.mp4 - 
-background_S8.mp4_6_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S10.mp4_0_.mp4 - 
-action_S9.mp4_3_.mp4 - 
-background_S7.mp4_5_.mp4 - 
-background_S12.mp4_13_.mp4 - 
-background_S8.mp4_3_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
-background_S5.mp4_3_.mp4 - 
-background_S1.mp4_5_.mp4 - 
-action_S9.mp4_11_.mp4 - 
-action_S3.mp4_14_.mp4 - 
-action_S3.mp4_1_.mp4 - 
-action_S3.mp4_13_.mp4 - 
-background_S12.mp4_12_.mp4 - 
-action_S7.mp4_0_.mp4 - 
+background_S12.mp4_4_.mp4 - two frames, but ears still - BACKGROUND
+background_S2.mp4_6_.mp4 - extremely slight left ear rotation - ACTION
+background_S12.mp4_14_.mp4 - slight both ears rotation - ACTION
+background_S4.mp4_3_.mp4 - ears still - BACKGROUND
+action_S3.mp4_16_.mp4 - ears still - BACKGROUND
+background_S4.mp4_5_.mp4 - ears still - BACKGROUND
+background_S2.mp4_3_.mp4 - two frames, but ears still - BACKGROUND
+background_S2.mp4_8_.mp4 - extremely slight left ear rotation - ACTION
+background_S10.mp4_2_.mp4 - extremely slight left ear rotation - ACTION
+action_S2.mp4_0_.mp4 - strong right ear rotation - ACTION
+background_S2.mp4_2_.mp4 - light head tilt, ears still - BACKGROUND
+background_S1.mp4_10_.mp4 - ears still - BACKGROUND
+background_S4.mp4_6_.mp4 - ears still - BACKGROUND
+background_S10.mp4_4_.mp4 - extremely slight left ear rotation - ACTION
+background_S9.mp4_4_.mp4 - head tilt, extremely slight left ear rotation - ACTION
+background_S8.mp4_7_.mp4 - extremely slight left ear rotation - ACTION
+background_S10.mp4_1_.mp4 - extremely slight left ear rotation - ACTION
+background_S5.mp4_8_.mp4 - ears still - BACKGROUND
+background_S9.mp4_3_.mp4 - ears still - BACKGROUND
+background_S8.mp4_4_.mp4 - ears still - BACKGROUND
+background_S12.mp4_3_.mp4 - two frames, but ears still - BACKGROUND
+action_S3.mp4_9_.mp4 - strong head move, extremely slight right ear rotation - ACTION
+background_S11.mp4_6_.mp4 - ears still - BACKGROUND
+action_S3.mp4_10_.mp4 - strong head move, slight right ear rotation - ACTION
+background_S8.mp4_5_.mp4 - ears still - BACKGROUND
+background_S10.mp4_3_.mp4 - extremely slight left ear rotation - ACTION
+background_S2.mp4_11_.mp4 - two frames, slight left ear rotation - ACTION
+action_S4.mp4_5_.mp4 - both ears rotation - ACTION
+background_S3.mp4_0_.mp4 - ears still - BACKGROUND
+action_S4.mp4_24_.mp4 - strong head move, ears still - BACKGROUND
+background_S2.mp4_7_.mp4 - ears still - BACKGROUND
+action_S8.mp4_4_.mp4 - left ear rotation - ACTION
+background_S2.mp4_10_.mp4 - ears still - BACKGROUND
+background_S8.mp4_0_.mp4 - ears still - BACKGROUND
+background_S2.mp4_12_.mp4 - extremely slight left ear rotation - ACTION
+background_S2.mp4_0_.mp4 - ears still - BACKGROUND
+action_S3.mp4_15_.mp4 - extremely slight right ear rotation - ACTION
+background_S12.mp4_5_.mp4 - head movement, ears still - BACKGROUND
+action_S6.mp4_0_.mp4 - right ear rotation - ACTION
+action_S5.mp4_10_.mp4 - head rotation, ears still - BACKGROUND
+background_S12.mp4_11_.mp4 - ears still - BACKGROUND
+background_S2.mp4_9_.mp4 - ears still - BACKGROUND
+background_S3.mp4_7_.mp4 - ears still - BACKGROUND
+action_S5.mp4_11_.mp4 - head movement, right ear rotation - ACTION
+action_S2.mp4_5_.mp4 - two frames, but ears still - BACKGROUND
+background_S2.mp4_5_.mp4 - extremely slight left ear rotation - ACTION
+background_S8.mp4_1_.mp4 - both ears twitch - ACTION
+background_S4.mp4_2_.mp4 - head tilt, ears still - BACKGROUND
+action_S6.mp4_5_.mp4 - left ear rotation - ACTION
+background_S3.mp4_6_.mp4 - ears still - BACKGROUND
+background_S5.mp4_9_.mp4 - extremely slight left ear rotation - ACTION
+background_S9.mp4_9_.mp4 - strong head movement, left ear rotation - ACTION
+background_S8.mp4_6_.mp4 - ears still - BACKGROUND
+background_S10.mp4_0_.mp4 - ears still - BACKGROUND
+action_S9.mp4_3_.mp4 - strong head movement, left ear rotation - ACTION
+background_S7.mp4_5_.mp4 - ears still - BACKGROUND
+background_S12.mp4_13_.mp4 - ears still - BACKGROUND
+background_S8.mp4_3_.mp4 - ears still - BACKGROUND
+background_S5.mp4_3_.mp4 - ears still - BACKGROUND
+background_S1.mp4_5_.mp4 - extremely slight both ears rotation - ACTION
+action_S9.mp4_11_.mp4 - ears still - BACKGROUND
+action_S3.mp4_14_.mp4 - slight right ear rotation - ACTION
+action_S3.mp4_1_.mp4 - left ear rotation - ACTION
+action_S3.mp4_13_.mp4 - ears still - BACKGROUND
+background_S12.mp4_12_.mp4 - ears still - BACKGROUND
+action_S7.mp4_0_.mp4 - ears still - BACKGROUND
