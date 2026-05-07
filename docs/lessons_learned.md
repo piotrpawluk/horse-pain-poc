@@ -555,6 +555,12 @@ S5's variance is ~2.2× S10's, mirroring the within-observer-inconsistency ratio
 
 Forward-pointer: **Step 6 (Light C, always-runs)** synthesizes the labeling-protocol output (FH-only rule, subthreshold-motion threshold gates, single-subject focus) into a one-page document for RHpE field labeling. **Step 7 (Full C, gated by Step 5 strength)** is now triggered: the result is unambiguously coherent and worth a methodology-note writeup integrating this LOSO comparison + Step 6 protocol + Lesson 17 audit findings into Andersen-grade narrative form.
 
+### Step 6 + Step 7 deliverables (added 2026-05-07)
+
+- **[`docs/labeling-protocol-2026-05.md`](../docs/labeling-protocol-2026-05.md) (Step 6 Light C, ~1 page)** — extracted protocol from the 283-example audit. Headline rules: ear motion = visible at normal-speed playback, FH-only multi-subject rule, anatomical scope = ears only, `?` = "would defer to a second opinion," 80.4 % within-observer self-consistency on borderline cases. Calibration relative to EquiFACS made explicit: this protocol is more permissive on subthreshold motion (24 bg → action flips) and stricter on anatomical scope (11 action → bg flips). Use case framing: appropriate for clinical pre-screening; the EquiFACS protocol is appropriate for ethogram-grade coding. Multi-rater κ ≥ 0.7 measurement listed as non-negotiable for RHpE deployment.
+
+- **[`docs/methodology-note-2026-05.md`](../docs/methodology-note-2026-05.md) (Step 7 Full C, ~5 pages)** — internal-record methodology synthesis. Central methodological move: the −13.6 pp / −3.6 pp / −10 pp decomposition (features generalize at modest cost; single-observer κ = 0.586 labels are too noisy for clean LR retraining). **Falsifiable prediction**: if RHpE field labels achieve typical multi-rater EquiFACS-grade κ ≥ 0.7, the retrain-noise component should shrink toward the −3.6 pp eval-mismatch floor. Secondary methodological output: per-source consistency × per-source agreement as a 2-axis diagnostic for source-aware evaluation, validated by the S5/S10 cross-step prediction (within-observer 100 % vs 60 % → LOSO variance 0.048 vs 0.105 = 2.2× ratio matching). External-validation requirements explicitly listed (multi-rater audit on same 283 clips, second-dataset replication, bootstrapped per-source error bars). Calibrated to "internal record + sharable with collaborators for review," not submission-ready.
+
 ---
 
 ## What worked (verified, build on)
