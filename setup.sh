@@ -45,6 +45,20 @@ uv pip install --python .venv/bin/python --prerelease=allow \
     "yt-dlp>=2024.8" \
     "ultralytics>=8.3"
 
+# 3b. mac-only extras — mlx-vlm for Qwen2.5-VL replication on Apple Silicon
+#     (branch experiment/qwen-mlx; see docs/qwen-experiment-spec.md).
+#     Skipped on non-Darwin/non-arm64 to keep the Linux/Colab path green.
+if uname -sm 2>/dev/null | grep -q "Darwin arm64"; then
+    if ! .venv/bin/python -c "import mlx_vlm" >/dev/null 2>&1; then
+        echo "==> [3b/8] Apple Silicon detected — installing mlx-vlm (mac extra)..."
+        uv pip install --python .venv/bin/python "mlx-vlm>=0.5"
+    else
+        echo "==> [3b/8] mlx-vlm already installed, skipping"
+    fi
+else
+    echo "==> [3b/8] Skipping mac extras (Apple Silicon only)"
+fi
+
 # 4. SuperAnimal-Quadruped weights — DLC 3.x lazy-fetches them on the first
 #    `video_inference_superanimal` call. We try proactively so notebook 00 doesn't
 #    stall on the download. Failure here is OK.
