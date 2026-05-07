@@ -1,0 +1,78 @@
+# Step 3 — Within-observer consistency re-watch (66 clips)
+# Generated 2026-05-07 from outputs/piotr_audit_labels.jsonl
+# 56 borderline (?) cases + 10 confident controls (5 ACTION, 5 BACKGROUND, seed=42)
+# Original verdicts intentionally hidden. Fill in below in the same format as the original audit:
+#   <clip basename> - <observation> - <VERDICT>
+# Where VERDICT ∈ {ACTION, BACKGROUND, ACTION?, BACKGROUND?}
+# Wait at least several hours (ideally >12h) since the original audit before doing this re-watch.
+# Watch each clip fresh; do not consult the original audit notes.
+#
+# Clips are in randomized order (no source-grouping or action/bg-grouping cue).
+#
+
+background_S12.mp4_4_.mp4 - 
+background_S2.mp4_6_.mp4 - 
+background_S12.mp4_14_.mp4 - 
+background_S4.mp4_3_.mp4 - 
+action_S3.mp4_16_.mp4 - 
+background_S4.mp4_5_.mp4 - 
+background_S2.mp4_3_.mp4 - 
+background_S2.mp4_8_.mp4 - 
+background_S10.mp4_2_.mp4 - 
+action_S2.mp4_0_.mp4 - 
+background_S2.mp4_2_.mp4 - 
+background_S1.mp4_10_.mp4 - 
+background_S4.mp4_6_.mp4 - 
+background_S10.mp4_4_.mp4 - 
+background_S9.mp4_4_.mp4 - 
+background_S8.mp4_7_.mp4 - 
+background_S10.mp4_1_.mp4 - 
+background_S5.mp4_8_.mp4 - 
+background_S9.mp4_3_.mp4 - 
+background_S8.mp4_4_.mp4 - 
+background_S12.mp4_3_.mp4 - 
+action_S3.mp4_9_.mp4 - 
+background_S11.mp4_6_.mp4 - 
+action_S3.mp4_10_.mp4 - 
+background_S8.mp4_5_.mp4 - 
+background_S10.mp4_3_.mp4 - 
+background_S2.mp4_11_.mp4 - 
+action_S4.mp4_5_.mp4 - 
+background_S3.mp4_0_.mp4 - 
+action_S4.mp4_24_.mp4 - 
+background_S2.mp4_7_.mp4 - 
+action_S8.mp4_4_.mp4 - 
+background_S2.mp4_10_.mp4 - 
+background_S8.mp4_0_.mp4 - 
+background_S2.mp4_12_.mp4 - 
+background_S2.mp4_0_.mp4 - 
+action_S3.mp4_15_.mp4 - 
+background_S12.mp4_5_.mp4 - 
+action_S6.mp4_0_.mp4 - 
+action_S5.mp4_10_.mp4 - 
+background_S12.mp4_11_.mp4 - 
+background_S2.mp4_9_.mp4 - 
+background_S3.mp4_7_.mp4 - 
+action_S5.mp4_11_.mp4 - 
+action_S2.mp4_5_.mp4 - 
+background_S2.mp4_5_.mp4 - 
+background_S8.mp4_1_.mp4 - 
+background_S4.mp4_2_.mp4 - 
+action_S6.mp4_5_.mp4 - 
+background_S3.mp4_6_.mp4 - 
+background_S5.mp4_9_.mp4 - 
+background_S9.mp4_9_.mp4 - 
+background_S8.mp4_6_.mp4 - 
+background_S10.mp4_0_.mp4 - 
+action_S9.mp4_3_.mp4 - 
+background_S7.mp4_5_.mp4 - 
+background_S12.mp4_13_.mp4 - 
+background_S8.mp4_3_.mp4 - 
+background_S5.mp4_3_.mp4 - 
+background_S1.mp4_5_.mp4 - 
+action_S9.mp4_11_.mp4 - 
+action_S3.mp4_14_.mp4 - 
+action_S3.mp4_1_.mp4 - 
+action_S3.mp4_13_.mp4 - 
+background_S12.mp4_12_.mp4 - 
+action_S7.mp4_0_.mp4 - 
