@@ -26,6 +26,22 @@ Same 36-clip stratified subset (3 clips × 12 sources S1–S12, 14 action / 22 b
 
 **Reading vs Gemini.** Qwen 7B v2 sits in the same conservatism regime as Gemini 3.1 Pro Preview at every prompt. Prompt A on v2 (94 % bg-rate after normalization) is slightly less collapsed than Gemini 3.1+A (100 %) but still fails the §4 < 80 % gate. Prompt C on v2 (97 %) matches Gemini 3.1+C (97 %) very closely. The "Qwen-recommended" defaults from the model card (`temperature=1e-6`, `repetition_penalty=1.05`) plus the inlined system instruction `"Do not refuse to commit unless the clip is genuinely uninterpretable"` (inlined into the user-text string per the mlx-vlm 0.5.0 system+video routing bug — see [Lesson 16](../docs/lessons_learned.md)) did **not** mitigate the collapse. The §4 "materially cleaner" gate (agreement ≥ 0.70 AND bg-rate < 80 %) is decisively missed on v2 just as on v1.
 
+### 1a. Same-clip agreement under user-audit labels (added 2026-05-07, Step 1 of `docs/audit-followup-spec.md`)
+
+The project owner's full 283-clip audit (see [Lesson 17](../docs/lessons_learned.md)) lets us recompute agreement against a second label set. **Strict** drops the 5 borderline-`?` clips in the 36-clip subset (31 eligible); **permissive** treats borderline as agreement with RME (all 36 eligible). RME-vs-Piotr disagreement on the subset itself is 3/36 strict (9.7 %), slightly cleaner than the dataset-wide 12.4 %.
+
+| Configuration | vs RME (orig.) | vs Piotr (strict, 31) | vs Piotr (permissive, 36) |
+|---|---|---|---|
+| **Gemini 2.5 Pro · A** *(non-collapsed; bg-rate 33 %)* | 22/36 = 0.611 | **20/31 = 0.645** | **25/36 = 0.694** |
+| Gemini 2.5 Pro · B | 22/36 = 0.611 | 14/31 = 0.452 | 19/36 = 0.528 |
+| Gemini 3.1 Pre · A | 22/36 = 0.611 | 14/31 = 0.452 | 19/36 = 0.528 |
+| Gemini 3.1 Pre · B | 20/34 = 0.588 | 14/29 = 0.483 | 19/34 = 0.559 |
+| Gemini 3.1 Pre · C | 23/36 = 0.639 | 15/31 = 0.484 | 20/36 = 0.556 |
+| **Qwen 7B v2 · A** | 22/36 = 0.611 | 16/31 = 0.516 | 21/36 = 0.583 |
+| **Qwen 7B v2 · C** | 21/36 = 0.583 | 15/31 = 0.484 | 20/36 = 0.556 |
+
+**Reading.** Gemini 2.5 Pro Prompt A — the only configuration in the original §4 comparison where the model did *not* collapse to background (bg-rate 33 %) — jumps from 0.611 against RME to **0.694 against Piotr-permissive**. All bg-collapsed variants lose 5–8 pp under permissive because the audit gives more clips the "action" verdict (Piotr labels 20/36 as action vs RME's 14/36) and bg-collapsing models miss those. Qwen v2 prompt A is roughly flat (–3 pp) — its 2 "action" calls happen to align with two of Piotr's action verdicts. This nuances the §4 row 1 claim **without inverting it**: a model that perceives motion broadly genuinely outperforms refusal-collapsed models on a stricter ground truth, but **no MLLM achieves the §4 "materially cleaner" gate** (≥ 0.70 agreement, < 80 % bg-rate) on either label set. Gemini 2.5 + A is the closest at permissive 0.694 — still below the 0.70 threshold, and its prompt-A bg-rate of 33 % means it overcalls action 2/3 of the time, not a calibrated classifier in any sense. The MLLM-as-classifier track remains closed within the scope tested. **All numbers above are subject to the single-observer caveat in Lesson 17 — pending Step 3 within-observer consistency check.**
+
 ## 2. Cross-rep stability (description-only probe, 5 reps × 10 clips)
 
 Same 10 clips Gemini was probed on. Qwen probe at `temperature=0.7`. Stability = "all 5 reps land in the same motion-vs-still category" under a keyword classifier (motion verbs minus hedges; see `tools/qwen_audit.py`).

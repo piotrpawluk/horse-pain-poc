@@ -388,40 +388,70 @@ The cost of this check is one log line. The cost of skipping it was a published-
 
 **Operational implication.** All Qwen runs on this repo from `fix/qwen-mlx-video-input` forward log `prompt_tokens` and assert >2000 on video probes. The v1 outputs in `outputs/qwen25vl_7b_*.jsonl` (no `_v2` suffix) are kept as diagnostic evidence of the bug, not as model-behavior evidence.
 
-## Lesson 17 — Independent manual review of RME background labels (stub)
+## Lesson 17 — Single-reviewer audit of RME labels (May 2026, full 283-clip dataset; consistency check pending)
 
-> **Status: stub.** Single-reviewer manual inspection. The rigorous version — including action-clip review and permissive vs strict agreement on Qwen v2 + Gemini against reviewer labels — is option B and pending. Treat this lesson as "what we know so far" rather than a settled finding.
+> **Status: numbers below are single-reviewer disagreement-with-published-protocol rates, not "true label noise rates."** Within-observer self-consistency check is in flight per `docs/audit-followup-spec.md` Step 3. This lesson will be tightened (or weakened) once the consistency rate lands. **Read every figure here as "user's audit disagrees with EquiFACS-derived RME labels at this rate," not "RME labels are wrong at this rate."** No second observer; κ unmeasured.
 
-**Scope.** After Qwen v2 results landed on `fix/qwen-mlx-video-input`, the project owner manually reviewed all 22 background-labeled clips in the Read My Ears dataset on 2026-05-07 (21 reviews recorded; one missing without note). One reviewer; not a formal inter-rater study; not a replacement for the EquiFACS-coded labels in `vendor/ReadMyEars_Dataset/data/{train,val,test}.csv`.
+**Scope.** The project owner manually reviewed all 283 clips in the Read My Ears dataset on 2026-05-07 against a personally-applied threshold for "is there visible ear motion within the clip." Reviews recorded as `<clip> — <free-text observation> — <VERDICT>` with VERDICT ∈ {ACTION, BACKGROUND, ACTION?, BACKGROUND?}, where `?` denotes "borderline; would defer to a second opinion." Multi-horse scenes were marked with `fh:` (foreground horse) / `bh:` (background horse) per-subject notation. Audit data structured into `outputs/piotr_audit_labels.jsonl` with categorical labels (`strong_motion`, `slight_motion`, `subthreshold`, `head_only`, `body_only`, `multi_horse_target_focus`, `multi_horse_distractor`, `scene_cut`, `error_frame`, `ears_still`).
 
-**Result.** 18 of the 21 reviewed clips contain visible motion of some kind:
+**Headline.** **35/283 = 12.4 % overall disagreement** with original EquiFACS-derived RME labels. Asymmetric direction: **24 bg → action** (mostly subthreshold motion the reviewer treats as above-threshold) vs **11 action → bg** (mostly head-only / body-only motion or distractor-only motion). 17 disagreements are confidently flipped (no `?`); 18 are borderline.
 
-| Category | Count | Examples | Interpretation |
+**Per-source disagreement (heterogeneous):**
+
+| Source | total | agree | disagree | rate | direction |
+|---|---|---|---|---|---|
+| S6 | 19 | 19 | 0 | **0.0 %** | clean |
+| S7 | 21 | 20 | 1 | 4.8 % | 1 act→bg |
+| S3 | 28 | 26 | 2 | 7.1 % | mixed |
+| S8 | 24 | 22 | 2 | 8.3 % | both bg→act *(but multi-horse load — see below)* |
+| S12 | 23 | 21 | 2 | 8.7 % | both bg→act |
+| S1 | 21 | 19 | 2 | 9.5 % | mixed |
+| S11 | 19 | 17 | 2 | 10.5 % | mixed |
+| S9 | 24 | 21 | 3 | 12.5 % | mostly act→bg |
+| S4 | 32 | 27 | 5 | 15.6 % | mixed *(multi-horse load)* |
+| **S2** | 25 | 20 | 5 | **20.0 %** | mostly bg→act (subthreshold) |
+| **S10** | 22 | 17 | 5 | **22.7 %** | **all 5 bg→act (subthreshold)** |
+| **S5** | 25 | 19 | 6 | **24.0 %** | mostly bg→act (subthreshold) |
+
+**Multi-horse confound: 55/283 = 19.4 %, all in S4 (31 clips) + S8 (24 clips).** The user's `fh:`/`bh:` notation precisely identifies which subject carries the motion in each clip. This **independently confirms [Lesson 9](#lesson-9--background-masking-is-conditional-preprocessing-not-a-global-default)** from a different angle: Lesson 9 derived multi-horse confound from V-JEPA-2's LOSO collapse pattern on S4 + S8 (S8: 0.633 → 0.875 with bg-masking, +24 pp); the audit derived the same conclusion from per-clip observation. Neither analysis informed the other; convergence on S4 + S8 is independent.
+
+**Per-source disagreement correlates with V-JEPA-2's weak-fold pattern.** S5, S10, S2 (highest disagreement) and S4, S8 (multi-horse load) overlap substantially with the sources where V-JEPA-2 LOSO struggled in iter-6.5 sanity runs. This is a strong signal but not a clean attribution: the model could be (a) failing where labels are noisy, (b) failing where the visual task is genuinely harder, or (c) both. Step 2 (B-prime) of the audit-followup spec disambiguates these by comparing V-JEPA-2 predictions against both label sets per-source.
+
+**Overlap with the 36-clip MLLM evaluation subset.** All 36 clips were audited (full coverage). 31 are confident verdicts; 5 are borderline. RME vs Piotr disagreement on the subset is **3/36 strict (9.7 %)** — slightly cleaner than the dataset-wide 12.4 %, partially explaining why the §4 row 1 verdict on Qwen v2 holds across both label sets (see "Qwen v2 + Gemini under user labels" below).
+
+**Implication for V-JEPA-2 LOSO 0.875 (the spine).** If most "subthreshold motion" cases are *correctly* labeled bg per the EquiFACS protocol but contain visible motion the reviewer would call action, then V-JEPA-2 + linear probe is doing something harder than naive labels suggest: discriminating EquiFACS-grade motion from subthreshold/distractor motion on visually similar inputs. The 0.875 result becomes **more impressive under this lens, not less** — the model is learning the duration/intensity threshold implicitly. Whether the model leans toward RME labels (expected) or toward the user's stricter "any visible motion" threshold is the empirical question Step 2 (B-prime) answers.
+
+**Qwen v2 + Gemini under user labels (36-clip subset, May 2026).** Computed at Step 1 of `docs/audit-followup-spec.md`. Strict variant drops 5 borderline clips (31 eligible); permissive treats borderline as agreement with RME (all 36 eligible).
+
+| Configuration | vs RME | vs Piotr (strict, 31 clips) | vs Piotr (permissive, 36 clips) |
 |---|---|---|---|
-| Subthreshold ear motion ("very slight twitch") | 13 | `S2.mp4_5/8/12`, `S3.mp4_1/6`, `S5.mp4_2/7`, `S8.mp4_1/2`, `S10.mp4_3/4/5` | Real motion below the EquiFACS AU intensity/duration threshold. **Correctly labeled bg per the protocol** (EquiFACS coders apply duration/intensity gates), but visible to a casual viewer. |
-| Multi-horse confound | 4 | `S4.mp4_4/7`, `S8.mp4_4/6` | Visible motion is on a non-target horse in the frame. Both source IDs (S4 and S8) are exactly the sources flagged in [Lesson 9](#lesson-9--background-masking-is-conditional-preprocessing-not-a-global-default) as needing conditional bg-masking. **Independent manual confirmation of Lesson 9 from a different angle.** |
-| Above-threshold ear motion (likely mislabeled) | 1 | `S1.mp4_6` ("definitely ears moved") | The one case where the reviewer's call meaningfully diverges from the dataset label. N=1; not a basis for labeling-error rate estimation. |
-| Strong head movement / head-only | 2 | `S9.mp4_9` ("strong head movement"), `S12.mp4_4` ("strong head, ears still") | Head moves, ears stationary. Correctly labeled bg for ear-AU classification; not relevant to ear motion at all. |
-| Scene cut + motion | 1 | `S2.mp4_11` (in our 36-clip subset) | Edit artifact — two overlapping shots of one horse, one shot has ear twitch. Edge case for any classifier. |
+| Gemini 2.5 Pro · A *(non-collapsed; bg-rate 33 %)* | 22/36 = 0.611 | 20/31 = 0.645 | **25/36 = 0.694** |
+| Gemini 2.5 Pro · B | 22/36 = 0.611 | 14/31 = 0.452 | 19/36 = 0.528 |
+| Gemini 3.1 Pre · A | 22/36 = 0.611 | 14/31 = 0.452 | 19/36 = 0.528 |
+| Gemini 3.1 Pre · C | 23/36 = 0.639 | 15/31 = 0.484 | 20/36 = 0.556 |
+| Qwen 7B v2 · A | 22/36 = 0.611 | 16/31 = 0.516 | 21/36 = 0.583 |
+| Qwen 7B v2 · C | 21/36 = 0.583 | 15/31 = 0.484 | 20/36 = 0.556 |
 
-**Overlap with the 36-clip evaluation subset (Qwen + Gemini comparison).** Three of the reviewed clips overlap: `S2.mp4_11` (scene cut + slight twitch), `S4.mp4_7` (multi-horse confound — see Lesson 15 v2 reframing of the v2 false positive), `S10.mp4_3` (subthreshold). The remaining 18 reviewed bg clips are dataset-level context but not directly in the §4 comparison set.
+**Gemini 2.5 Pro Prompt A — the only non-collapsed configuration in the original §4 comparison — jumps from 0.611 against RME to 0.694 against Piotr-permissive labels.** All collapsed variants (every other Gemini configuration plus Qwen v2 prompt C) lose 5–8 pp under permissive because the audit gives more clips the "action" verdict (Piotr labels 20/36 as action vs RME's 14/36) and bg-collapsing models miss those. Qwen v2 prompt A is roughly flat (-3 pp) — its 2 "action" calls happened to align with two of Piotr's action verdicts. This nuances the §4 row 1 claim **without inverting it**: a model that perceives motion broadly (Gemini 2.5 + A) genuinely outperforms refusal-collapsed models on a stricter ground truth, but no MLLM achieves the §4 "materially cleaner" gate (≥ 0.70 agreement, < 80 % bg-rate) on either label set. The MLLM-as-classifier track remains closed within the scope tested.
 
-**Implication for V-JEPA-2 LOSO 0.875 (the spine).** If most "background" clips contain *some* visible motion (just subthreshold or off-target), then V-JEPA-2 + linear probe is doing something harder than naive labels suggest: discriminating EquiFACS-grade motion from subthreshold/distractor motion on visually similar inputs. The 0.875 result becomes **more impressive under this lens, not less.** The model is learning the duration/intensity threshold implicitly, which aligns with what frozen-feature linear probes do well — sharp linear decision boundaries on otherwise nuanced perceptual differences.
+**S4_7 reframing is locked.** Lesson 15 v2 already records: Qwen v2's "false positive" on `background_S4.mp4_7` is target-confusion on a multi-horse clip (the audit confirms `fh: strong head movement, slight left ear rotation, bh: both ears rotation`), not a hallucination. The v2 prompt-A bg-rate of 94 % therefore overstates conservatism by 1 clip on the multi-horse subcase — Qwen perceived real motion, just on the non-target horse.
 
-**Implication for the §4 Qwen verdict.** Unchanged. The pre-registered comparison protocol used the dataset labels as ground truth; both v1 and v2 numbers were computed against those labels; the row 1 outcome holds. What this lesson *adds* is a qualitative reframing of v2's two "false positive" calls: at least 1 (S4_7) is a genuine perception event with target-confusion (Lesson 9 territory), not a hallucination. The bg-rate 94 % on prompt A may overstate Qwen's conservatism by 1 clip — 100 % conservatism would have produced 100 % bg, but on the multi-horse clip Qwen correctly perceives motion just on the wrong horse. The structural-convergence argument for the v1↔v2 per-source vector match strengthens here too: per-source distributions of subthreshold motion may be similar across sources, so models that lean conservative agree at similar per-source rates regardless of perception depth.
+**What changed vs the option-A stub of this lesson.** The stub was based on the user's review of 21 background clips only. This rigorous version is based on all 283 clips (full dataset) plus the dual-label MLLM agreement table. The conclusions (multi-horse 19.4 % all in S4+S8, subthreshold concentration in S5/S10, asymmetric direction) all hold and are now precisely quantified.
 
-**Implication for the broader project.** Two things become important:
-
-1. **Field data collection (`docs/recording-protocol.md`) gets confirmation that single-subject framing is non-negotiable.** Multi-horse scenes contaminate ear-motion labels even in the controlled lab data of Read My Ears (sources S4 + S8 — both with secondary horses or instrumentation in frame). The Lesson 9 conditional bg-masking strategy is necessary; the protocol's "no secondary horses or moving humans visible" rule is necessary at the recording stage.
-2. **The original "label-noise audit" hypothesis from PR #1 (`gemini-augmentation`) was right about the underlying problem.** There IS structured label noise in RME — just not in the way the audit hypothesis assumed (false-positive action calls), and the proposed solution (off-the-shelf MLLM as second opinion) doesn't work (Lessons 14–16). The audit problem is real; the audit *solution* needs different tooling.
+**Hard caveats — single-observer, no κ.**
+- **One reviewer.** No inter-rater agreement measurement. The 12.4 % disagreement could shift up or down with a second reviewer. The Step 3 within-observer consistency check bounds (but does not replace) inter-rater κ.
+- **Reviewer is non-blind.** The reviewer is the project owner who has been thinking about V-JEPA-2 / MLLM behavior on this dataset for months. Possible bias toward labels that "make sense" given the model's outputs.
+- **Subthreshold category is the soft boundary.** Most of the 24 bg→action flips are in the "very slight twitch" / "slight rotation" zone. EquiFACS coders would label these bg by protocol (intensity/duration thresholds); the reviewer would label them action by a more permissive "any visible motion" threshold. This is a definitional difference, not a labeling error.
+- **Multi-horse confound is the hard finding.** The 55 multi-horse clips are observation-grounded, not threshold-disagreement. S4 + S8 carry visible motion on non-target horses in the frame, and that fact is independent of any threshold.
+- **Implication for the §4 Qwen verdict — unchanged.** Row 1 holds under both label sets. The MLLM-as-classifier track stays closed. What changes is the qualitative reading: at least 1 of Qwen v2's 2 "false positive" calls is a Lesson 9 multi-horse confound rather than a hallucination, and the one non-collapsed Gemini configuration (2.5 + A) does materially better on stricter labels.
 
 **What this lesson is not.**
-- Not a labeling-error claim against the original RME annotators. Most "subthreshold motion" cases are *correct* per the EquiFACS coder protocol — coders apply intensity/duration thresholds; fleeting micro-adjustments don't meet AU criteria. The reviewer's "very slight twitch" is consistent with the protocol's "below threshold."
-- Not a basis for re-evaluating Qwen v2 or Gemini at agreement-against-reviewer scores yet. That's option B work — pending action-clip review (14 clips), then permissive vs strict agreement computed against both label sets.
-- Not a multi-reviewer study. Inter-rater agreement (κ) is not measured; conclusions could shift with a second reviewer, especially on the subthreshold category.
-- Not a recommendation to relabel the dataset. The EquiFACS coder protocol is well-established; its threshold judgment calls are part of the annotation methodology, not noise to be removed.
+- Not a claim that "RME labels are wrong." The 12.4 % disagreement reflects threshold differences (subthreshold motion correctly bg per EquiFACS protocol but visible to the reviewer) and known confounds (multi-horse), not annotation errors. EquiFACS coders applied a documented protocol; this audit applied a different threshold.
+- Not a multi-reviewer study; not a κ measurement; not publishable in its current form without inter-rater work.
+- Not a recommendation to relabel `vendor/ReadMyEars_Dataset/`. User labels live in a separate JSONL.
+- Not a basis for any V-JEPA-2 LOSO retraining decision yet. Step 2 (B-prime) is gating that.
 
-**Pending option B (action clips).** When the action-clip review lands, this lesson will be replaced by a richer version that includes: (a) Qwen v2 + Gemini agreement vs reviewer labels (permissive: model correct if matches *either* dataset or reviewer; strict: model correct only if matches reviewer), (b) per-clip qualitative match between Qwen reasoning text and reviewer observation, (c) revised conclusion for cases where Qwen v2's `still`/`background` predictions on subthreshold-motion clips might be the more correct call.
+**Pending Step 3 (within-observer consistency).** When 66-clip re-watch results land, the borderline self-consistency rate (likely ~70-90 %) and confident-case self-consistency rate (must be ≥ 90 % per spec hard-stop gate) will be inserted here as the headline caveat figure. Until then, every quantitative claim above is single-observer-disagreement-with-published-protocol, not an audit reliability claim.
 
 ---
 
