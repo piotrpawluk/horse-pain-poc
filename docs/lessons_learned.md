@@ -325,6 +325,29 @@ Google's recommended parameters + a 3.x-tailored prompt + system instruction →
 
 **What this lesson is not.** It is not evidence that frontier multimodal LLMs are universally unreliable. It is not a claim about Claude / GPT-class models. It is not the methodology paper. It is a documented, scoped, dated observation that the V-JEPA-2 + linear probe pipeline remains the right backbone for this task because the alternative we tested doesn't work in this regime.
 
+## Lesson 15 — Same three failure modes reproduce on open-weight Qwen2.5-VL-7B (May 2026)
+
+**Scope.** Continuation of Lesson 14, same supporting-observation status. Tested whether an open-weight, self-hosted MLLM with a different post-training regime (Alibaba, not Google) avoids the Gemini failure modes. It does not. See `docs/qwen-experiment-spec.md` for the pre-registered protocol and `outputs/qwen_vs_gemini_comparison.md` for the side-by-side numbers.
+
+**Configuration tested.** `mlx-community/Qwen2.5-VL-7B-Instruct-bf16` via mlx-vlm 0.5.0 on M2 Max (96 GB), 2026-05-07. Same 36-clip stratified subset as the Gemini runs (clip paths reconstructed from existing Gemini JSONLs — no re-stratification). Two classification probes (Prompt A at temp=0; Prompt C with system instruction at Qwen's official `temperature=1e-6, repetition_penalty=1.05`) and one description-only probe (5 reps × 10 clips at temp=0.7). All 122 inferences ran without errors; total wall-clock ≈ 10 min, $0.
+
+**Result against pre-registered §4 outcome table.** Row 1: all three failure modes reproduced.
+
+| Failure mode | Gemini 3.1 Pro Preview | **Qwen 7B-bf16** |
+|---|---|---|
+| Refusal-bias collapse (bg-prediction rate) | 35/36 = 97 % (prompt C) | **36/36 = 100 %** (prompt A and prompt C — identical) |
+| Cross-rep instability (5-rep stable / 10) | 1/10 (initial probe) | **0/10** |
+| Perception/classification decoupling | 13/20 = 65 % | **3/10 = 30 %** (lower bound; conservative keyword classifier) |
+| Agreement with truth | 23/36 = 0.639 | **22/36 = 0.611** |
+
+Qwen 7B's per-source agreement vector under both prompts is *element-wise identical* to Gemini 3.1 Pro Preview's — same right-or-wrong on every source. The Qwen-recommended `temperature=1e-6` and the system instruction *"Do not refuse to commit unless the clip is genuinely uninterpretable"* do **not** mitigate the collapse. Prompt C produces a *templated* evidence sentence (*"The ears remain in essentially the same position throughout the clip, with no visible positional changes or movements"*) on virtually every clip with confidence locked at 0.95 — so the system-instruction's evidence-citation request is satisfied syntactically without any clip-conditioned perception driving the citation.
+
+**Generalization, scoped.** Within the scope tested — fine-grained sub-second ear movement on RHpE clips, evaluated on a 36-clip stratified subset of Read My Ears — Lesson 14's three failure modes are not Gemini-family-specific. Two MLLM families with different training regimes, different vision encoders, and different inference paths (cloud API vs local MLX) produce indistinguishable per-source outcomes. We do **not** extrapolate to (a) larger Qwen sizes (32B-4bit was gated and skipped per spec §4), (b) other open-weight MLLM families (InternVL, MiniCPM-V, GLM-V, etc.), (c) Claude or GPT-5-class proprietary models, (d) coarser-grained behaviors where MLLMs are documented to perform well (Animal-Bench NeurIPS 2024).
+
+**Operational implication.** The MLLM-as-classifier approach — both proprietary and open-weight, in the regimes we tested — does not produce a usable label-noise auditor on this task. **V-JEPA-2 + linear probe (LOSO 0.875) remains the spine of the pipeline.** The Qwen branch is a closed track, not a parked one.
+
+**What this lesson is not.** Not a benchmark; N=36 is convenience-sized for tool selection. Not a publication-grade evaluation. Not a claim about MLLMs in general — it is scoped to this task, this dataset, this 5-week window, these two model families.
+
 ---
 
 ## What worked (verified, build on)
