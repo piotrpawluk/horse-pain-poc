@@ -9,41 +9,71 @@
 #
 # Clips are in randomized order (no source-grouping or action/bg-grouping cue).
 #
+# ─────────────────────────────────────────────────────────────────────
+# PROTOCOL CLARIFICATION ADOPTED 2026-05-07 — APPLY THROUGHOUT THIS RE-WATCH
+# ─────────────────────────────────────────────────────────────────────
+#
+# FH-only rule for multi-horse clips:
+#   In multi-horse scenes (two or more horses in frame), the verdict applies
+#   to the FOREGROUND HORSE (FH) only — the principal subject of the framing
+#   (largest, most central, or in focus). Background-horse motion is EXCLUDED
+#   regardless of magnitude.
+#
+#   - If FH ears clearly move      → ACTION (or ACTION? if subtle)
+#   - If FH ears clearly still     → BACKGROUND (regardless of any BH motion)
+#   - If FH cannot be identified, or its ears are not visible → BACKGROUND? or
+#     ACTION? with a note specifying the obstruction
+#
+# Multi-horse clips in this re-watch (14/66 = 21%, all S4+S8) are flagged inline
+# with [MULTI-HORSE]. The original audit's fh:/bh: per-subject notation will not
+# be visible during re-watch — apply the FH-only rule from what you see directly,
+# not from memory.
+#
+# IMPORTANT for the consistency analysis: the FH-only rule is a protocol
+# clarification adopted AFTER the original audit. Some original ? verdicts on
+# multi-horse clips (especially distractor-only-motion cases where FH was still)
+# may legitimately resolve to confident BACKGROUND under this rule — that is
+# protocol clarification, not within-observer inconsistency. The post-re-watch
+# analysis will compute both:
+#   1. Raw self-consistency (re-watch verdict vs original verdict)
+#   2. Protocol-adjusted self-consistency (multi-horse re-classifications
+#      excluded from the variance count when they are explained by FH-only)
+# ─────────────────────────────────────────────────────────────────────
 
 background_S12.mp4_4_.mp4 - 
 background_S2.mp4_6_.mp4 - 
 background_S12.mp4_14_.mp4 - 
-background_S4.mp4_3_.mp4 - 
+background_S4.mp4_3_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 action_S3.mp4_16_.mp4 - 
-background_S4.mp4_5_.mp4 - 
+background_S4.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S2.mp4_3_.mp4 - 
 background_S2.mp4_8_.mp4 - 
 background_S10.mp4_2_.mp4 - 
 action_S2.mp4_0_.mp4 - 
 background_S2.mp4_2_.mp4 - 
 background_S1.mp4_10_.mp4 - 
-background_S4.mp4_6_.mp4 - 
+background_S4.mp4_6_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S10.mp4_4_.mp4 - 
 background_S9.mp4_4_.mp4 - 
-background_S8.mp4_7_.mp4 - 
+background_S8.mp4_7_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S10.mp4_1_.mp4 - 
 background_S5.mp4_8_.mp4 - 
 background_S9.mp4_3_.mp4 - 
-background_S8.mp4_4_.mp4 - 
+background_S8.mp4_4_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S12.mp4_3_.mp4 - 
 action_S3.mp4_9_.mp4 - 
 background_S11.mp4_6_.mp4 - 
 action_S3.mp4_10_.mp4 - 
-background_S8.mp4_5_.mp4 - 
+background_S8.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S10.mp4_3_.mp4 - 
 background_S2.mp4_11_.mp4 - 
-action_S4.mp4_5_.mp4 - 
+action_S4.mp4_5_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S3.mp4_0_.mp4 - 
-action_S4.mp4_24_.mp4 - 
+action_S4.mp4_24_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S2.mp4_7_.mp4 - 
-action_S8.mp4_4_.mp4 - 
+action_S8.mp4_4_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S2.mp4_10_.mp4 - 
-background_S8.mp4_0_.mp4 - 
+background_S8.mp4_0_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S2.mp4_12_.mp4 - 
 background_S2.mp4_0_.mp4 - 
 action_S3.mp4_15_.mp4 - 
@@ -56,18 +86,18 @@ background_S3.mp4_7_.mp4 -
 action_S5.mp4_11_.mp4 - 
 action_S2.mp4_5_.mp4 - 
 background_S2.mp4_5_.mp4 - 
-background_S8.mp4_1_.mp4 - 
-background_S4.mp4_2_.mp4 - 
+background_S8.mp4_1_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
+background_S4.mp4_2_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 action_S6.mp4_5_.mp4 - 
 background_S3.mp4_6_.mp4 - 
 background_S5.mp4_9_.mp4 - 
 background_S9.mp4_9_.mp4 - 
-background_S8.mp4_6_.mp4 - 
+background_S8.mp4_6_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S10.mp4_0_.mp4 - 
 action_S9.mp4_3_.mp4 - 
 background_S7.mp4_5_.mp4 - 
 background_S12.mp4_13_.mp4 - 
-background_S8.mp4_3_.mp4 - 
+background_S8.mp4_3_.mp4 -                                  [MULTI-HORSE — apply FH-only rule]
 background_S5.mp4_3_.mp4 - 
 background_S1.mp4_5_.mp4 - 
 action_S9.mp4_11_.mp4 - 

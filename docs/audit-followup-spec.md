@@ -146,13 +146,15 @@ Establish how internally consistent the user's audit is. The 12.4% disagreement 
 ### Tasks (per pre-flight Conflict 2 resolution: full 56 borderline + 10 confident = 66 clips)
 1. **The user does this step**, not the agent. The agent prepares the materials and analyzes the result.
 2. Agent prepares: a randomized list of **all 56 borderline (`?`)** clips plus 10 clips drawn from confident verdicts (5 ACTION, 5 BACKGROUND, random seed 42) as positive controls. Save the clip list to `outputs/consistency_check_clips.txt` *without* the user's prior verdicts.
-3. User re-watches each clip after a delay of at least several hours (ideally >12 h, definitely with a break since the original audit). Records new verdict and observation.
-4. Agent compares new verdicts to original verdicts. Computes:
-   - Self-consistency overall: % of 66 clips with same verdict.
-   - Self-consistency on borderline cases (the 56): % matching original.
-   - Self-consistency on confident cases (the 10): % matching original (should be ~100% if methodology is sound; if not, broader audit reliability is in question).
-5. If self-consistency on confident cases is <90% (≥1 of 10 wrong), **stop**. Audit reliability is not strong enough to support a writeup claim about label noise. Re-evaluate methodology.
-6. Otherwise, document the self-consistency rate in Lesson 17 and use it as the headline caveat figure: "audit self-consistency X% on borderline cases, Y% on confident cases."
+3. **FH-only protocol clarification (adopted 2026-05-07, before re-watch).** In multi-horse clips, the verdict applies to the foreground horse (FH) only — defined as the principal subject of the framing (largest / most central / in focus). Background-horse motion is excluded regardless of magnitude. If FH cannot be identified or its ears are not visible → ACTION? or BACKGROUND? with an obstruction note. The clip list flags multi-horse clips inline with `[MULTI-HORSE]` and the file header documents the rule. Of the 66 re-watch clips, **14 are multi-horse** (12 borderline + 2 confident controls), all S4 (6) + S8 (8). 7 of the 12 multi-horse borderlines are `multi_horse_distractor` cases (FH ears still, BH moves) — under FH-only these have a predictable protocol-driven flip from `?` to confident `BACKGROUND`. The other 5 multi-horse borderlines are `target_focus` (FH carries subtle motion); their resolution under FH-only depends on FH motion strength, not the rule itself.
+4. User re-watches each clip after a delay of at least several hours (ideally >12 h, definitely with a break since the original audit). Records new verdict and observation. Applies FH-only rule to multi-horse clips.
+5. Agent compares new verdicts to original verdicts. Computes **two** consistency rates per the FH-only protocol clarification:
+   - **Raw self-consistency** (conservative): % of clips where re-watch verdict matches original verdict, including the 7 multi-horse distractor cases that may flip under FH-only.
+   - **Protocol-adjusted self-consistency**: same as raw, but excluding multi-horse re-classifications that are explained by the FH-only rule (i.e., a `?` → `BACKGROUND` flip on a `multi_horse_distractor` clip is counted as protocol clarification, not within-observer inconsistency). Predicted ≤ 7 flips.
+   - Both rates are reported in `outputs/consistency_check_results.md` and inserted into Lesson 17.
+   - Subset-specific rates: borderline (56), confident-control (10), single-horse (52), multi-horse target-focus (5), multi-horse distractor (7).
+6. **Hard-stop gate:** if self-consistency on confident cases is < 90 % (≥ 1 of 10 wrong, raw), **stop**. The 2 multi-horse confident controls (`action_S4.mp4_5_.mp4`, `action_S8.mp4_4_.mp4`) are both target_focus cases with strong FH motion — under FH-only they should still classify as confident `ACTION`; if either flips, that's not an FH-only artifact, it's a real inconsistency. Audit reliability is not strong enough to support a writeup claim about label noise; methodology needs re-evaluation.
+7. Otherwise, document both consistency rates in Lesson 17 and use the protocol-adjusted rate as the headline figure (the raw rate is reported alongside as the conservative bound).
 
 ### Deliverables
 - `outputs/consistency_check_clips.txt` (agent prep, before user re-watch)
