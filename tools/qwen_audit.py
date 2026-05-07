@@ -199,18 +199,30 @@ class QwenRunner:
         temperature: float = 0.0,
         repetition_penalty: Optional[float] = None,
         max_tokens: int = 256,
+        debug_tensors: bool = False,
     ) -> dict:
-        """Single inference. Returns a dict with text + token counts + latency."""
-        content = []
-        content.append({"type": "video", "video": clip_path, "fps": 10})
-        content.append({"type": "text", "text": user_text})
-        messages = []
-        if system_instruction:
-            messages.append({"role": "system", "content": system_instruction})
-        messages.append({"role": "user", "content": content})
-        formatted = self._apply_chat_template(
-            self.processor, self.config, prompt=messages, num_images=0, num_audios=0
+        """Single inference. Returns a dict with text + token counts + latency.
+
+        Per docs/qwen-fix-and-revalidate-spec.md §1a-§2: mlx-vlm 0.5.0's
+        apply_chat_template strips multimodal content when the prompt is a
+        list of messages with structured `{type: video, ...}` content
+        (extract_text_from_content keeps only text items). The string-prompt
+        path with `video=` and `fps=` as kwargs is the canonical Qwen2.5-VL
+        invocation that actually emits `<|vision_start|><|video_pad|><|vision_end|>`
+        placeholders. system_instruction is inlined into the user prompt for
+        the same reason — list-prompt + video-kwarg attaches video tokens to
+        every message in mlx-vlm 0.5.0 (verified empirically; see Lesson 16).
+        """
+        prompt_str = (
+            f"{system_instruction}\n\n{user_text}" if system_instruction else user_text
         )
+        formatted = self._apply_chat_template(
+            self.processor, self.config, prompt=prompt_str,
+            video=clip_path, fps=10.0,
+            num_images=0, num_audios=0, num_videos=1,
+        )
+        if debug_tensors:
+            self._print_debug_tensors(formatted, clip_path)
         kwargs = dict(temperature=temperature, max_tokens=max_tokens, verbose=False)
         if repetition_penalty is not None:
             kwargs["repetition_penalty"] = repetition_penalty
@@ -226,13 +238,55 @@ class QwenRunner:
             "total_tokens": getattr(result, "total_tokens", None),
             "finish_reason": getattr(result, "finish_reason", None),
             "wall_clock_seconds": dt,
+            "formatted_prompt_chars": len(formatted),
+            "has_video_token": "<|video_pad|>" in formatted,
         }
+
+    def _print_debug_tensors(self, formatted: str, clip_path: str) -> None:
+        """Phase 2 verification: inspect what the processor produced.
+
+        Removed before merge — kept here as a diagnostic that runs only when
+        --debug-tensors is passed. See docs/qwen-fix-and-revalidate-spec.md §3 Phase 2.
+        """
+        print(f"[debug] formatted prompt: {len(formatted)} chars, "
+              f"<|video_pad|> present: {'<|video_pad|>' in formatted}", flush=True)
+        try:
+            processed = self.processor(
+                text=[formatted], videos=[clip_path], return_tensors="pt", padding=True
+            )
+            for k, v in processed.items():
+                if hasattr(v, "shape"):
+                    print(f"[debug] {k}: shape={tuple(v.shape)}, dtype={v.dtype}",
+                          flush=True)
+                elif isinstance(v, list) and v and hasattr(v[0], "shape"):
+                    shapes = [tuple(t.shape) for t in v]
+                    print(f"[debug] {k}: list of {len(v)} tensors, shapes={shapes}",
+                          flush=True)
+                else:
+                    s = repr(v)
+                    print(f"[debug] {k}: {type(v).__name__} = "
+                          f"{s if len(s) < 200 else s[:200] + '…'}", flush=True)
+        except Exception as e:
+            print(f"[debug] processor inspection failed: {type(e).__name__}: {e}",
+                  flush=True)
 
 
 # ----- Probe runners ----------------------------------------------------------
 
-def probe_classify(runner: QwenRunner, prompt_id: str) -> None:
-    """Probe 1 (A, t=0) or Probe 2 (C, Qwen defaults). One pass per clip."""
+def probe_classify(
+    runner: QwenRunner,
+    prompt_id: str,
+    *,
+    out_suffix: str = "",
+    rows: Optional[list] = None,
+    out_override: Optional[Path] = None,
+    debug_tensors: bool = False,
+) -> None:
+    """Probe 1 (A, t=0) or Probe 2 (C, Qwen defaults). One pass per clip.
+
+    `rows` defaults to load_36_clip_set(); pass a smaller subset for smoke runs.
+    `out_override` bypasses the standard output_path() naming when set.
+    """
     if prompt_id == "promptA":
         prompt_text = ga.PROMPT_A
         system_instruction = None
@@ -248,8 +302,9 @@ def probe_classify(runner: QwenRunner, prompt_id: str) -> None:
     else:
         raise ValueError(f"unknown prompt_id: {prompt_id}")
 
-    out = output_path(runner.model_size, prompt_id)
-    rows = load_36_clip_set()
+    out = out_override or output_path(runner.model_size, prompt_id, suffix=out_suffix)
+    if rows is None:
+        rows = load_36_clip_set()
     done = already_done(out, key_fields=("clip",))
     todo = [r for r in rows if (r["clip"],) not in done]
     print(f"[probe {prompt_id}] {len(rows)} total, {len(done)} done, {len(todo)} todo → {out.name}",
@@ -261,6 +316,7 @@ def probe_classify(runner: QwenRunner, prompt_id: str) -> None:
                 r["clip"], prompt_text,
                 system_instruction=system_instruction,
                 temperature=temperature, repetition_penalty=rep_penalty,
+                debug_tensors=debug_tensors and i == 1,  # only on first clip
             )
             parsed = parse_qwen_json(res["text"])
             classification = parsed.get("classification")
@@ -306,9 +362,15 @@ def probe_classify(runner: QwenRunner, prompt_id: str) -> None:
               flush=True)
 
 
-def probe_describe(runner: QwenRunner, reps: int = 5, temperature: float = 0.7) -> None:
+def probe_describe(
+    runner: QwenRunner,
+    reps: int = 5,
+    temperature: float = 0.7,
+    *,
+    out_suffix: str = "",
+) -> None:
     """Probe 3: description-only on the 10-clip Gemini probe subset, N reps each."""
-    out = output_path(runner.model_size, "description_probe")
+    out = output_path(runner.model_size, "description_probe", suffix=out_suffix)
     rows = load_10_probe_clips()
     done = already_done(out, key_fields=("clip", "rep_index"))
     plan = [(r, k) for r in rows for k in range(reps) if (r["clip"], k) not in done]
@@ -358,6 +420,35 @@ def probe_describe(runner: QwenRunner, reps: int = 5, temperature: float = 0.7) 
               f"({res['wall_clock_seconds'] or 0:.1f}s) {snippet}", flush=True)
 
 
+# ----- Smoke-test subset (5 clips for fix verification) -----------------------
+
+# Per docs/qwen-fix-and-revalidate-spec.md §3 Phase 3: 3 action clips on sources
+# known for strong ear motion (S3 ×2, S10) + 2 obvious-background clips on
+# stable sources (S1, S12). Selected from the 36-clip Gemini stratified subset.
+SMOKE_TEST_CLIPS_SELECTOR = [
+    ("S3",  "action",     "action_S3.mp4_2_.mp4"),
+    ("S3",  "action",     "action_S3.mp4_8_.mp4"),
+    ("S10", "action",     "action_S10.mp4_0_.mp4"),
+    ("S1",  "background", "background_S1.mp4_11_.mp4"),
+    ("S12", "background", "background_S12.mp4_2_.mp4"),
+]
+
+def load_smoke_clip_set() -> list[dict]:
+    """Pick the 5 spec-defined smoke-test clips out of the 36-clip set."""
+    full = load_36_clip_set()
+    by_basename = {Path(r["clip"]).name: r for r in full}
+    selected = []
+    for src, lbl, name in SMOKE_TEST_CLIPS_SELECTOR:
+        if name not in by_basename:
+            sys.exit(f"ERROR: smoke-test clip {name!r} not in 36-clip set")
+        r = by_basename[name]
+        if r["source"] != src or r["true_label"] != lbl:
+            sys.exit(f"ERROR: smoke-test clip {name!r} mismatch "
+                     f"(expected {src}/{lbl}, got {r['source']}/{r['true_label']})")
+        selected.append(r)
+    return selected
+
+
 # ----- CLI --------------------------------------------------------------------
 
 def main() -> int:
@@ -367,15 +458,38 @@ def main() -> int:
     ap.add_argument("--model-size", default="7B", choices=list(MODEL_PATHS.keys()))
     ap.add_argument("--reps", type=int, default=5, help="probe 3 only")
     ap.add_argument("--describe-temp", type=float, default=0.7, help="probe 3 only")
+    ap.add_argument("--out-suffix", default="",
+                    help="append to output filename (e.g. '_v2' to preserve v1 evidence)")
+    ap.add_argument("--smoke-test", action="store_true",
+                    help="probe 1/2 only: run on the 5-clip smoke set "
+                         "(3 action S3,S3,S10 + 2 bg S1,S12) instead of the full 36; "
+                         "writes to outputs/fix-verification-smoke-test.jsonl regardless of --out-suffix")
+    ap.add_argument("--debug-tensors", action="store_true",
+                    help="print processor tensor shapes on the first clip only — "
+                         "used for Phase 2 fix verification (see fix spec §3)")
     args = ap.parse_args()
 
     runner = QwenRunner(args.model_size)
-    if args.probe == 1:
-        probe_classify(runner, "promptA")
-    elif args.probe == 2:
-        probe_classify(runner, "promptC")
+    if args.probe == 1 or args.probe == 2:
+        prompt_id = "promptA" if args.probe == 1 else "promptC"
+        rows = load_smoke_clip_set() if args.smoke_test else None
+        out_override = (
+            OUTPUTS / "fix-verification-smoke-test.jsonl" if args.smoke_test else None
+        )
+        probe_classify(
+            runner, prompt_id,
+            out_suffix=args.out_suffix,
+            rows=rows,
+            out_override=out_override,
+            debug_tensors=args.debug_tensors,
+        )
     elif args.probe == 3:
-        probe_describe(runner, reps=args.reps, temperature=args.describe_temp)
+        if args.smoke_test:
+            sys.exit("ERROR: --smoke-test only applies to --probe 1 or 2")
+        probe_describe(
+            runner, reps=args.reps, temperature=args.describe_temp,
+            out_suffix=args.out_suffix,
+        )
     return 0
 
 
