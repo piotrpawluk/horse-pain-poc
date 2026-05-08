@@ -4,13 +4,14 @@
 
 This document captures the methodology pattern that ran through the experiment as a reusable playbook for future projects. It is **not** project-specific — the discipline itself is the contribution. Worth reading before starting any preregistration-discipline-required experiment.
 
-## The five-element pattern
+## The six-element pattern
 
 1. **Pre-register thresholds, decision rules, AND exit conditions before any unblinded run.** Lock by SHA-256 hash committed to a versioned audit file. The hash binds content + commit timestamp = tamper-evident proof of "this document existed in this exact state at this exact moment, before the run."
 2. **Pre-commit the failure path AND the ambiguous-zone path, not just the success path.** "If pooled AUC ≥ 0.65 → continue" is half a pre-registration; the full commitment names what happens at 0.55–0.65 and at < 0.55, and explicitly forbids invented-after-the-fact branches.
 3. **Catch implementation bugs in writing, not after the run.** Paste reference code snippets (especially metric-computation logic) in the design review. Let reviewers spot leakage / scaler issues / score-comparability assumptions / parity tautologies before any compute is spent.
 4. **Honor mechanical decisions even on borderline results.** When the point estimate clears the threshold but the CI overlaps chance, the locked rule still applies. Conditioning on CI width or per-fold spread *after seeing the data* is goal-shifting — exactly the failure mode the pre-registration was designed to prevent. Document the borderline framing in the writeup; do not retroactively change the threshold.
 5. **Sequence phases — never amend a closed phase with a new question.** If Phase 3's result raises a follow-up question (precision, replication, second-rater κ), the answer is Phase 4 with its own pre-registration, not a Phase 3 modification. Phases close cleanly; new questions open new phases.
+6. **Empirical-anchor any data-structure-dependent rule before committing to it in pre-registration.** Discussion-stage reasoning generates useful hypotheses but cannot reliably anticipate dataset-specific structure. Run a 5-minute empirical check (distribution sweep, cross-tab, class-by-feature balance) BEFORE locking any rule that depends on those properties. Element 3 protects against process bugs in writing; element 6 protects against reasoning bugs about data that only the data can reveal.
 
 ## Why each element matters
 
@@ -50,6 +51,22 @@ Sequencing prevents a specific pathology: results of one phase silently contamin
 
 Operationally: Phase 3 closes, Phase 4 design begins. Phase 4 pre-registration freezes its own thresholds, hashes its own audit document, and proceeds independently. The Phase 3 audit chain is not edited; the Phase 4 audit chain extends it.
 
+### Empirical-anchor data rules before committing
+
+Reviewers and authors alike can reason confidently about per-instance properties ("a sub-second clip yields compressed temporal sampling under fixed-frame video models") while completely missing dataset-level structure that emerges from the joint distribution of those properties with the labels and the source variable. The fix is not to reason harder; it is to **look at the data before locking the rule**.
+
+A 5-minute empirical check costs nothing and reveals what reasoning cannot:
+
+- Distribution sweep — does the candidate cutoff (or threshold, or filter, or stratification) split the data along the axis you intended, or along an axis correlated with the label/source/feature you didn't want to split on?
+- Cross-tab — at the chosen cutoff, what is the class balance of what you keep vs what you drop? What is the source distribution?
+- Source-by-class balance — does the rule preserve the source-label combinatorics or shift them?
+
+If the empirical check shows the rule has a confound, you have three honest moves: drop the rule (cleanest), redefine the cutoff to a value the data supports, or pre-register the confound explicitly (rare; only when the rule is unavoidable). What you do NOT do is lock the rule first and discover the confound after the run, when removing it costs an invalidated experiment.
+
+*Case study — the sub-second filter in eye-probe Phase 4.* The Phase 4 design initially included a sub-second clip filter as one of three diagnostic-named fixes. Per-clip reasoning was sound: V-JEPA-2's 16-frame sampling against a sub-second native window compresses temporal-feature activation. A 5-minute ffprobe sweep on the 34 clips before pre-registration revealed that ACTION clips were systematically shorter than BACKGROUND clips in this dataset — at a 1.0 s cutoff the dropped set was 87 % ACTION; even at 0.4 s it was 100 % ACTION. The filter would have created a class-balance shift confounding the architecture comparison. The filter was dropped from Phase 4 design before lock-in; the empirical sweep itself became part of the audit. The Phase 4 design improved *because of* the data check, not despite it.
+
+The general principle: prior reasoning is for hypothesis generation; data structure for commitment. Element 3 protection ("catch bugs in writing") covers process bugs that show up in code review; element 6 covers reasoning bugs about data that only the data can reveal.
+
 ## When this pattern applies
 
 - Multi-step ML/methodology experiments where the final claim must defend at peer-review or external-audit scale.
@@ -83,7 +100,8 @@ The remaining three elements (failure-path commits, mechanical-decision honoring
 3. **Open-ended phase amendments.** Phase 3 produces ambiguous result; Phase 3 then expands to "Phase 3 with second observer + extended set." Caught by element 5 — that's Phase 4, with its own pre-registration.
 4. **Silent leakage in production code.** A "scaler refit per fold" comment in the design review masks a `X_scaled = StandardScaler().fit_transform(X)` precomputation in the actual implementation. Caught by element 3 (paste the actual code, not the description of it).
 5. **Cache-tautological parity tests.** A "parity test passed" line that compares cached embedding to itself rather than re-extracting. Caught by element 3 (paste the actual code; reviewer asks "what does the parity_test function actually do?").
+6. **Confidently-wrong dataset assumptions.** Pre-registering a filter, cutoff, or stratification rule based on per-instance reasoning that turns out to interact with dataset-level structure (class-by-feature correlation, source skew, etc.). Caught by element 6 — the 5-minute empirical sweep before lock-in.
 
 ## One-paragraph executive summary
 
-Pre-register thresholds, decision rules, and exit conditions before any unblinded run; lock them by SHA-256 hash committed to a versioned audit file. Pre-commit the failure path and the ambiguous-zone path, not just the success path. Catch implementation bugs in writing by reviewing reference code snippets at design time, not after the run. Honor the mechanical decision even when the result is borderline; the writeup framing carries the nuance, the threshold-cross is the locked outcome. When new questions arise from a closed phase, open a new phase with its own pre-registration — never amend a closed phase. The cost is small at design time; the value is a result that defends itself at peer review, external replication, or audit.
+Pre-register thresholds, decision rules, and exit conditions before any unblinded run; lock them by SHA-256 hash committed to a versioned audit file. Pre-commit the failure path and the ambiguous-zone path, not just the success path. Catch implementation bugs in writing by reviewing reference code snippets at design time, not after the run. Honor the mechanical decision even when the result is borderline; the writeup framing carries the nuance, the threshold-cross is the locked outcome. When new questions arise from a closed phase, open a new phase with its own pre-registration — never amend a closed phase. Empirical-anchor any data-structure-dependent rule with a 5-minute distribution check before locking it; reasoning generates hypotheses but data commits decisions. The cost is small at design time; the value is a result that defends itself at peer review, external replication, or audit.
