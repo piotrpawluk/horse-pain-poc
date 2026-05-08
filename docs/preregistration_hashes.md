@@ -1,6 +1,6 @@
 # Pre-registration audit hashes
 
-The pre-registration documents and per-clip annotation are kept in
+The pre-registration documents and per-clip annotations are kept in
 `poc/outputs/` and so are not versioned in git (per project `.gitignore`
 policy on inference outputs and ad-hoc methodology docs). To keep the
 audit trail real — i.e., to prove the documents existed at a specific
@@ -21,6 +21,7 @@ Verify any time with:
 
 ```bash
 shasum -a 256 poc/outputs/<filename>
+shasum -a 256 poc/docs/<filename>
 ```
 
 ## Frozen documents
@@ -31,9 +32,13 @@ shasum -a 256 poc/outputs/<filename>
 | 2026-05-08 | `fc647963f2b9a8e9d7256811e13a0375c6081ce95beb5bc9f21e8a51aa2003c0` | 5569 | `outputs/expected_diagnostic_minicpm_blink.json` | Pre-committed per-clip predictions for the 6-clip blink sanity test. Frozen BEFORE the MiniCPM run. |
 | 2026-05-08 | `6b3791a49eb84b77d27e450ffed08bee4a807feac97663eb09d18d6c5c355766` | 4813 | `outputs/track_b_phase1_preregistration.md` | Pre-registration for Track B Phase 1 + locked v2 profile-aware fallback rule. Frozen BEFORE the eye-crop pipeline run. |
 | 2026-05-08 (post-review) | `18a5754f9e247b992b9c578e49726cc3cab1c77db28e6eff5bc78ccac41994ea` | 7201 | `outputs/eye_crops_annotations.md` | Per-clip eye-visible Y/N + post-review corrections (drift accounting, threshold disambiguation, parity clarification, embedding-count fix). Frozen BEFORE Phase 3 LOSO LR. |
+| 2026-05-08 | `9b391640ded3aeaf9efaed236756ad1c4a4f53fa7c87a57ef3de480ab08f192a` | 6255 | `outputs/eye_verification_clips.txt` | User-provided eye labels for the 36-clip RME stratified subset (blind verification pass). Frozen post-collection, BEFORE Phase 3 LOSO LR run. |
+| 2026-05-08 | `722b916cc29f46bef33fcb9f8b7bd37ef1acf08ac804affc7b2d11c06c162346` | 7518 | `docs/phase3_auc_method.md` | Phase 3 method + result audit doc — locks pooled-AUC primary, DeLong CI, permutation design, and decision-per-pre-reg. Frozen at run time alongside `outputs/eye_loso_results.json`. |
 
 ## Notes
 
 - The MiniCPM pre-registration and predictions JSON were frozen earlier on the same day as the run; the audit trail for those is "this commit verifies the file was in this state before the LOSO/sanity it gates."
 - The Track B Phase 1 pre-registration was frozen before the Phase 1 pipeline ran. The v2 fallback spec inside it is the binding rule for what happens if Phase 3 LOSO AUC lands in the ambiguous 0.55–0.65 zone.
 - The annotations file was edited once after the initial Phase 2 run to add a corrections section addressing four reviewer findings (count discrepancy, drift accounting, threshold ambiguity, parity-test clarification). The hash here is the post-correction state, frozen before Phase 3.
+- `eye_verification_clips.txt` has been at this content state since the user provided the completed labels before Phase 3 launched. The hash makes the labels-as-given immutable for any future re-run.
+- `docs/phase3_auc_method.md` is unique among these files in that it is versioned (in `docs/`, not `outputs/`). Including its hash here is belt-and-braces — git has the version history but the hash provides the same tamper-evidence as for the gitignored docs.

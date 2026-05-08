@@ -26,39 +26,39 @@
 # Clips in randomized order (seed=43, no source-grouping cue).
 #
 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_2_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_0_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_3_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_6_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_12_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S10.mp4_0_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S8.mp4_12_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S6.mp4_2_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S11.mp4_0_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_3_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_3_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_4_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_10_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_0_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_8_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S9.mp4_8_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_11_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_2_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_11_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_9_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S3.mp4_3_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_15_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S2.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_11_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_2_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S5.mp4_10_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_5_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_2_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_17_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_9_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S4.mp4_7_.mp4 - 
-/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_12_.mp4 - 
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_7_.mp4 - sclera becoming less visible, pupil direction change, muscle tension change above the orbit - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_2_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_0_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_3_.mp4 - muscle tension change above the orbit - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S11.mp4_6_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_12_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S10.mp4_0_.mp4 - muscle tension change above the orbit - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_7_.mp4 - pupil direction change - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S8.mp4_12_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S6.mp4_2_.mp4 - sclera becoming less visible - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S11.mp4_0_.mp4 - blinking, partial eyelid descent - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_3_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_7_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S8.mp4_3_.mp4 - sclera becoming less visible - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S9.mp4_4_.mp4 - pupil direction change - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_10_.mp4 - blinking, pupil direction change - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_0_.mp4 - slight muscle tension change above the orbit - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_8_.mp4 - pupil direction change, sclera becoming more visible - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_7_.mp4 - partial eyelid descent, blinking - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S9.mp4_8_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S2.mp4_11_.mp4 - blinking, sclera becoming more visible, pupil direction change - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S3.mp4_2_.mp4 - eyelid ascend - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_11_.mp4 - sclera becoming more visible, pupil direction change - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_9_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S3.mp4_3_.mp4 - blinking - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S4.mp4_15_.mp4 - eyelid descend - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S2.mp4_7_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S10.mp4_11_.mp4 - eye opening - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S6.mp4_2_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S5.mp4_10_.mp4 - blinking - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_5_.mp4 - gaze change, muscle tension change above the orbit - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/action_S5.mp4_2_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S7.mp4_17_.mp4 - eyes still - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S12.mp4_9_.mp4 - eyelid is closing - ACTION
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S4.mp4_7_.mp4 - eyes closed, head movement - BACKGROUND
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S1.mp4_12_.mp4 - sclera becoming less visible - ACTION
