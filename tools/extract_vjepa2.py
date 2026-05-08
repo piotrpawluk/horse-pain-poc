@@ -86,6 +86,15 @@ def extract_embedding(clip_path: Path, model, processor, device: str,
 
 def parity_test(model, processor, device: str, cached_path: Path,
                 clips_dir: Path) -> bool:
+    """Genuine re-extraction parity: load cached embedding from npz, then
+    invoke the lifted CLI forward pass (extract_embedding) on the SAME source
+    clip, then compare. NOT a cache-to-cache tautology — the only thing taken
+    from the cache is the embedding to compare AGAINST; the comparison
+    embedding is freshly computed by reading frames, running them through the
+    processor, and forwarding through the model in eval+no_grad mode.
+    Bit-exact match (cos = 1.0, ‖Δ‖ = 0) means the lifted forward pass is
+    deterministic and reproduces the notebook output exactly — the strongest
+    parity signal."""
     cached = np.load(cached_path, allow_pickle=True)
     filenames = cached["filenames"]
     embs = cached["embs"]
@@ -95,7 +104,8 @@ def parity_test(model, processor, device: str, cached_path: Path,
         clip_path = clips_dir / str(fn)
         if not clip_path.exists():
             continue
-        print(f"[parity] re-extracting {fn} for parity check...", flush=True)
+        print(f"[parity] re-extracting {fn} via lifted CLI forward pass...",
+              flush=True)
         t0 = time.time()
         fresh = extract_embedding(clip_path, model, processor, device)
         if fresh is None:
@@ -138,6 +148,10 @@ def main() -> int:
                     default=DEFAULT_PARITY_CLIPS)
     ap.add_argument("--skip-parity", action="store_true",
                     help="Skip parity check (NOT recommended; logged in npz)")
+    ap.add_argument("--exclude", action="append", default=[],
+                    help="Filenames to exclude from extraction (repeatable). "
+                         "Used to honor the manual eye-visible exclusion list "
+                         "from outputs/eye_crops_annotations.md.")
     ap.add_argument("--split-tag", default="eye_crops")
     args = ap.parse_args()
 
@@ -165,9 +179,17 @@ def main() -> int:
                   flush=True)
             sys.exit(2)
 
-    clips = sorted(p for p in args.clips_dir.glob("*.mp4"))
-    print(f"[v-jepa2] extracting on {len(clips)} clips in {args.clips_dir}",
+    excluded = set(args.exclude or [])
+    clips_all = sorted(p for p in args.clips_dir.glob("*.mp4"))
+    clips = [p for p in clips_all if p.name not in excluded]
+    n_excluded = len(clips_all) - len(clips)
+    print(f"[v-jepa2] {len(clips_all)} clips in {args.clips_dir} "
+          f"({n_excluded} excluded by --exclude); extracting on {len(clips)}",
           flush=True)
+    if excluded:
+        for fn in sorted(excluded):
+            present = "skipped (found)" if (args.clips_dir / fn).exists() else "skipped (not present)"
+            print(f"  --exclude {fn}: {present}", flush=True)
 
     embs: list[np.ndarray] = []
     labels: list[int] = []
