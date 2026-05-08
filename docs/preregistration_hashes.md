@@ -34,6 +34,8 @@ shasum -a 256 poc/docs/<filename>
 | 2026-05-08 (post-review) | `18a5754f9e247b992b9c578e49726cc3cab1c77db28e6eff5bc78ccac41994ea` | 7201 | `outputs/eye_crops_annotations.md` | Per-clip eye-visible Y/N + post-review corrections (drift accounting, threshold disambiguation, parity clarification, embedding-count fix). Frozen BEFORE Phase 3 LOSO LR. |
 | 2026-05-08 | `9b391640ded3aeaf9efaed236756ad1c4a4f53fa7c87a57ef3de480ab08f192a` | 6255 | `outputs/eye_verification_clips.txt` | User-provided eye labels for the 36-clip RME stratified subset (blind verification pass). Frozen post-collection, BEFORE Phase 3 LOSO LR run. |
 | 2026-05-08 | `722b916cc29f46bef33fcb9f8b7bd37ef1acf08ac804affc7b2d11c06c162346` | 7518 | `docs/phase3_auc_method.md` | Phase 3 method + result audit doc — locks pooled-AUC primary, DeLong CI, permutation design, and decision-per-pre-reg. Frozen at run time alongside `outputs/eye_loso_results.json`. |
+| 2026-05-08 | `915f48d3f94ce1d35b44712a97cb014f2a01c4631a57f69c317d28078fa7e5e9` | 10181 | `outputs/eye_probe_results.md` | Track A writeup — Phase 3 pilot result with locked headline order (AUC → CI → p), per-fold spread as load-bearing diagnostic, claim-scope sentence, reproducibility paragraph. Frozen at writeup commit time. |
+| 2026-05-08 | `99fbe4f3f6625b8a36dcedc06bf4a62a25ca2ac00be53cc72da5e504b4bd3e79` | 11552 | `docs/methodology_discipline_pattern.md` | Five-element discipline pattern (pre-register with hashes / pre-commit failure paths / catch bugs in writing / honor mechanical decisions / sequence phases) — distilled from the eye-probe arc as a generalizable playbook. Versioned in `docs/`; hash recorded for parity. |
 
 ## Notes
 
