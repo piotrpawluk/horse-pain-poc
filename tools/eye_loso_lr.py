@@ -117,10 +117,21 @@ def delong_ci(y_true, y_score, alpha: float = 0.05) -> tuple[float, float, float
     return auc, var, ci_low, ci_high
 
 
-def loso_pooled(X, y, groups, sources):
-    """Single LOSO pass returning pooled (truth, score) and per-fold AUCs."""
+def loso_pooled(X, y, groups, sources, aligned_filenames):
+    """Single LOSO pass returning pooled (truth, score, clip) and per-fold AUCs.
+
+    The clip identity must travel with truth/score to keep per_clip alignment
+    correct. Bug history: an earlier version used aligned_filenames[i] for
+    per_clip while truth[i] came from LOSO-traversal-order accumulation,
+    silently scrambling name↔label pairings (pooled AUC and per-fold AUCs
+    were unaffected because they operate on parallel arrays internally
+    consistent with each other; only the post-loop join was corrupted).
+    Regression covered by tools/test_eye_loso_lr_alignment.py.
+    """
+    aligned_arr = np.array(aligned_filenames)
     all_preds: list[float] = []
     all_truth: list[int] = []
+    all_clips: list[str] = []
     fold_aucs: list[float] = []
     fold_log: list[dict] = []
     for source in sources:
@@ -137,6 +148,7 @@ def loso_pooled(X, y, groups, sources):
 
         all_preds.extend(p.tolist())
         all_truth.extend(y[test_idx].tolist())
+        all_clips.extend(aligned_arr[test_idx].tolist())
 
         n_test = int(test_idx.sum())
         n_pos = int(y[test_idx].sum())
@@ -156,7 +168,8 @@ def loso_pooled(X, y, groups, sources):
             "defined": defined,
             "fold_auc": fold_auc,
         })
-    return np.array(all_preds), np.array(all_truth), fold_aucs, fold_log
+    return (np.array(all_preds), np.array(all_truth),
+            np.array(all_clips), fold_aucs, fold_log)
 
 
 def permutation_test(X, y, groups, sources, observed_auc,
@@ -268,7 +281,9 @@ def main() -> int:
     print(f"[loso] running LOSO with α={ALPHA}, "
           f"class_weight='{CLASS_WEIGHT}'...", flush=True)
     t0 = time.time()
-    preds, truth, fold_aucs, fold_log = loso_pooled(X, y, groups, sources)
+    preds, truth, clips_in_loso_order, fold_aucs, fold_log = loso_pooled(
+        X, y, groups, sources, aligned_filenames
+    )
     pooled_auc, var, ci_low, ci_high = delong_ci(truth, preds)
     print(f"[loso] pooled AUC = {pooled_auc:.4f} "
           f"(95% CI [{ci_low:.4f}, {ci_high:.4f}]) "
@@ -299,14 +314,19 @@ def main() -> int:
     print(f"[loso] decision_per_pre_reg: {decision}", flush=True)
 
     # --- Output JSON ----------------------------------------------------------
+    # per_clip MUST iterate over the LOSO-traversal-order arrays.
+    # All four (clips_in_loso_order, truth, preds, and the source we extract
+    # from the clip name) come from the same LOSO traversal, so the join is
+    # internally consistent. Mixing in aligned_filenames here is the bug
+    # that caused the pre-fix Phase 3 corruption.
     per_clip = [
         {
-            "clip": aligned_filenames[i],
-            "source": groups[i],
+            "clip": str(clips_in_loso_order[i]),
+            "source": extract_source(str(clips_in_loso_order[i])),
             "label": int(truth[i]),
             "score": float(preds[i]),
         }
-        for i in range(len(aligned_filenames))
+        for i in range(len(clips_in_loso_order))
     ]
 
     result = {
