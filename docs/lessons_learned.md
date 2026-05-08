@@ -563,6 +563,72 @@ Forward-pointer: **Step 6 (Light C, always-runs)** synthesizes the labeling-prot
 
 ---
 
+## Lesson 18 — VLM zero-shot on uncropped horse video is structurally insufficient for fine-grained eye perception (May 2026)
+
+Across four prompt × model variants — Qwen2.5-VL-7B-Instruct v1, v2, v3 plus MiniCPM-V 4.5 v3 (the architecturally-right MotionBench-tuned tool) — the open-weight VLM family produces templated outputs detached from clip content. Four distinct surface symptoms, one structural cause: the eye region at ~3–4 % of a 1920×1080 frame becomes ~14–18 px wide after the model's 448×448 internal resize, putting blink-magnitude motion (~5–7 px of eyelid descent at that scale) at the floor of the encoder's receptive resolution.
+
+### Headline evidence — `frames_examined` constancy
+
+In the 6-clip MiniCPM-V 4.5 sanity run (`outputs/eye_probe_minicpm_blink_sanity.jsonl`):
+
+- `frames_examined: 5` reported by the model on **5 of 6** clips
+- `eye_visible_in_frames: [1, 2, 3, 4]` reported on the same 5 clips
+- Actual frame counts (sent at native fps): **6, 8, 10, 15, 17**
+
+The model's reported input metadata is independent of the actual input. This is the cleanest single piece of evidence that the failure is structural rather than a tunable hyperparameter or prompt artifact: temperature, prompt structure, schema strictness, and feature-naming requirements can shift textual output, but none of them can make a model report constant input metadata across structurally different inputs. The encoder is producing the same effective representation regardless of which clip arrives.
+
+### Four flavors of the same collapse
+
+| Variant | Model | Symptom | Distribution |
+|---|---|---|---|
+| v1 | Qwen2.5-VL-7B (generic prose) | "no visible change" generic text | 94–97 % background |
+| v2 | Qwen2.5-VL-7B (negative-anchor template) | All clips emit safe-fallback `frames_compared=[0,1], observed_change="no change", confidence=0.5` verbatim | 100 % background |
+| v3 | Qwen2.5-VL-7B (no-escape-hatches v3 schema) | All clips emit one of two templated evidence sentences; structural validators pass; content is constant | 100 % action |
+| MiniCPM v3 | MiniCPM-V 4.5 Q4_K_M via Ollama | 5/6 clips emit surface-variant template *"the left eye appears more open"*; constant `frames_examined` and `eye_visible_in_frames` metadata | 4/6 action, 2/6 background; classification mostly coincidental with label |
+
+The v3 prompt was designed (after v2's negative-anchor collapse) to make every known templated lazy answer syntactically invalid: required differing frame indices, required a specific eye feature in `observed_change`, required ≥ 3-feature checking before a `background` classification. **All structural validators passed on MiniCPM v3 output.** The content was still templated. Templating happens at a level the prompt cannot reach.
+
+### Why it's not a prompt artifact
+
+- v3 schema with structural validators that catch every prior collapse vector
+- Per-vendor adapted prompt files committed before the run (`tools/prompts/eye_v3_minicpm.txt`)
+- Multiple temperatures tried (0.0, 1e-6 with Qwen; 0.0 with MiniCPM)
+- Both XML and Markdown structures tested across vendors
+- Pre-registered exit condition prevented mid-run prompt edits
+
+### Why it's not a model artifact
+
+- Two model families (Qwen + MiniCPM, both Qwen-LLM-based but with different vision encoders)
+- Three model sizes attempted (Qwen 7B, Qwen3-VL 8B/30B-A3B-MoE, MiniCPM 8B)
+- MiniCPM-V 4.5 is the architecturally-right tool: explicitly benchmarked on MotionBench (fine-grained motion), claims 10 FPS native + 96× video-token compression
+- Pre-flight 1/6 graded correct + 5/6 templated → architecturally-right tool also collapsed
+
+### Geometric reading
+
+Eye region in RHpE clips is ~60–80 × 40–50 px in 1920×1080 native. After SigLIP2's 448×448 resize: ~14–18 px wide eye. A horse blink is ~30–40 % eyelid descent of eye height = ~5–7 px of motion at that scale. This is at or below the receptive resolution of the vision encoder for the eye-ROI-as-percentage-of-frame ratio in uncropped horse video. The model has no signal to differentiate "eye open" from "eye partially closed" and therefore produces templated outputs. The architecturally-right answer is to crop the eye region BEFORE the encoder.
+
+### Pre-registration discipline
+
+The MiniCPM run had a committed pre-flight gate (5/6 correct on user-labeled clips) AND a structural-failure clause (≥ 3 clips share identical `observed_change` → fail regardless of label match). Predictions were committed in `outputs/expected_diagnostic_minicpm_blink.json` BEFORE the run; pre-registration in `outputs/eye_probe_preregistration_minicpm.md`. Both clauses tripped. Stopping here rather than negotiating GLM-4.6V-Flash as a side-door re-entry was the discipline move; one more data point would not have changed the conclusion the Qwen v1/v2/v3 + MiniCPM quartet establishes at high confidence.
+
+### Architectural implication: Track B is the path
+
+For all fine-grained ROI behaviors (eye, ear, mouth, nostril), the architecture is:
+
+1. YOLO ROI crop (face detector + anatomical sub-region heuristic; weights at `vendor/horse-face-ear-detection/yolov8l_horse_face_detection.pt`)
+2. V-JEPA-2 ViT-L embedding on the crop
+3. RidgeClassifier(α=1.0, balanced) + StandardScaler LOSO
+
+This reproduces the Read My Ears 0.8746 ear-track baseline. Eye-track is the same recipe with a different crop region. MLLM zero-shot does not substitute for this architecture and is not on the critical path for any fine-grained RHpE behavior at the current scale of MLLM input geometry support.
+
+### What this lesson does NOT close
+
+- Frontier MLLMs (Gemini 3.1, Claude Opus 4.7 vision, GPT-4o video) on the same task — closed for budget/scope reasons in audit-followup, not by capability test.
+- Larger MoE MLLMs (Qwen3-VL-30B-A3B, etc.) — broadcast errors on mlx-vlm 0.5.0 prevented evidence; the geometric argument suggests they would also collapse but it's not empirically demonstrated.
+- ROI-cropped MLLM zero-shot — fundamentally different task. If the eye is cropped to ~448×448 and given to MiniCPM-V 4.5, the geometric bottleneck disappears. Separate experiment if anyone wants to re-open the question.
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)

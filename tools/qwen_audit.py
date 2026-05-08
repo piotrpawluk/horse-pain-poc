@@ -48,9 +48,22 @@ import gemini_audit as ga  # PROMPT_A, PROMPT_C, SYSTEM_INSTRUCTION_C, PROBE_PRO
 
 
 MODEL_PATHS = {
-    "7B":  "mlx-community/Qwen2.5-VL-7B-Instruct-bf16",
-    "32B": "mlx-community/Qwen2.5-VL-32B-Instruct-4bit",
+    "7B":                 "mlx-community/Qwen2.5-VL-7B-Instruct-bf16",
+    "32B":                "mlx-community/Qwen2.5-VL-32B-Instruct-4bit",
+    "qwen3-30b-a3b-4bit": "mlx-community/Qwen3-VL-30B-A3B-Instruct-4bit",
+    "qwen3-8b-bf16":      "mlx-community/Qwen3-VL-8B-Instruct-bf16",
+    "qwen3-8b":           "mlx-community/Qwen3-VL-8B-Instruct",
 }
+
+# v2 priority chain — first to load AND generate cleanly wins.
+# 2026-05-08: Qwen3-VL on mlx-vlm 0.5.0 has multiple known issues (GitHub
+# #652 broadcast errors, Metal GPU page faults during inference, prose-not-
+# JSON output adherence — all confirmed via WebSearch + empirical probes).
+# Qwen2.5-VL-7B-bf16 with inlined-system mode (Lesson 16) is the working
+# path; v2 applies all prompt-body refinements (Markdown structure, frame
+# indices, sclera, negative anchor, temp=0) on top. Qwen3 variants kept in
+# the chain as evidence — they will be probed and rejected for the record.
+QWEN3_V2_PRIORITY = ["7B", "qwen3-30b-a3b-4bit", "qwen3-8b-bf16", "qwen3-8b"]
 
 # Gemini outputs we mine for clip paths.
 GEMINI_36_SOURCE = OUTPUTS / "gemini_audit_results_gemini-2.5-pro_promptA.jsonl"
@@ -190,6 +203,158 @@ class QwenRunner:
         self._generate = generate
         self._apply_chat_template = apply_chat_template
 
+    # v2 (2026-05-08): system-role-mode resolution. Lesson 16 documented mlx-vlm
+    # 0.5.0 stripping video tokens on messages_list+structured_content. v2
+    # empirically re-verifies on the current mlx-vlm version + the Qwen3-VL
+    # tokenizer (which may use a different video pad token than Qwen2.5).
+    _VISION_MARKER_CANDIDATES = ("<|video_pad|>", "<|vision_pad|>", "<|video_start|>")
+
+    def _resolved_video_marker(self, formatted: str) -> Optional[str]:
+        """Return whichever vision marker (if any) appears in `formatted`."""
+        for cand in self._VISION_MARKER_CANDIDATES:
+            if cand in formatted:
+                return cand
+        return None
+
+    def _format_messages_list(
+        self, clip_path: str, user_text: str, system_instruction: Optional[str]
+    ) -> str:
+        """v2 mode: true `system` role via mlx-vlm structured-content messages."""
+        messages = []
+        if system_instruction:
+            messages.append({
+                "role": "system",
+                "content": [{"type": "text", "text": system_instruction}],
+            })
+        messages.append({
+            "role": "user",
+            "content": [
+                {"type": "video", "video": clip_path},
+                {"type": "text", "text": user_text},
+            ],
+        })
+        return self._apply_chat_template(
+            self.processor, self.config, prompt=messages,
+            video=clip_path, fps=10.0,
+            num_images=0, num_audios=0, num_videos=1,
+        )
+
+    def _format_manual_chatml(
+        self, clip_path: str, user_text: str, system_instruction: Optional[str],
+        *, json_prime: bool = False,
+    ) -> str:
+        """v2 fallback: bypass apply_chat_template, emit Qwen ChatML directly.
+
+        `json_prime=True` appends a `{` after the assistant turn marker so the
+        model is forced to continue from a JSON-object opening. mlx-vlm 0.5.0
+        observed (Qwen3-VL-8B-Instruct-bf16) producing free-form prose
+        descriptions instead of JSON at max_tokens=256 in messages_list mode;
+        priming the assistant turn redirects generation into the JSON path.
+        Caller must re-prepend the `{` to result.text before JSON parsing.
+        """
+        sys_block = (
+            f"<|im_start|>system\n{system_instruction}<|im_end|>\n"
+            if system_instruction else ""
+        )
+        assistant_prime = "{" if json_prime else ""
+        return (
+            sys_block
+            + "<|im_start|>user\n<|vision_start|><|video_pad|><|vision_end|>"
+            + user_text
+            + "<|im_end|>\n<|im_start|>assistant\n"
+            + assistant_prime
+        )
+
+    def _format_inlined(
+        self, clip_path: str, user_text: str, system_instruction: Optional[str]
+    ) -> str:
+        """v1 mode (Lesson 16): inline system into user-text, string prompt path."""
+        prompt_str = (
+            f"{system_instruction}\n\n{user_text}" if system_instruction else user_text
+        )
+        return self._apply_chat_template(
+            self.processor, self.config, prompt=prompt_str,
+            video=clip_path, fps=10.0,
+            num_images=0, num_audios=0, num_videos=1,
+        )
+
+    def _format_for_mode(
+        self, mode: str, clip_path: str, user_text: str,
+        system_instruction: Optional[str], *, json_prime: bool = False,
+    ) -> str:
+        if mode == "messages_list":
+            return self._format_messages_list(clip_path, user_text, system_instruction)
+        if mode == "manual_chatml":
+            return self._format_manual_chatml(
+                clip_path, user_text, system_instruction, json_prime=json_prime,
+            )
+        if mode == "manual_chatml_jsonprime":
+            return self._format_manual_chatml(
+                clip_path, user_text, system_instruction, json_prime=True,
+            )
+        if mode == "inlined":
+            return self._format_inlined(clip_path, user_text, system_instruction)
+        raise ValueError(f"unknown system_role_mode: {mode}")
+
+    def resolve_system_role_mode(
+        self, clip_path: str, user_text: str, system_instruction: Optional[str],
+        *, end_to_end: bool = True, temperature: float = 0.0,
+        repetition_penalty: Optional[float] = 1.05, max_tokens: int = 32,
+    ) -> tuple[str, str]:
+        """Probe each mode on a single clip; return (mode, vision_marker_found).
+
+        Tries (in priority order):
+          1. manual_chatml_jsonprime — manual ChatML with `{` priming on the
+             assistant turn (forces JSON output for Qwen3-VL which otherwise
+             produces prose at max_tokens=256, observed 2026-05-08).
+          2. messages_list — true `system` role via mlx-vlm structured content.
+          3. manual_chatml — manual ChatML without priming.
+          4. inlined — v1 fallback (system in user-text).
+
+        Stops at the first mode that BOTH formats successfully (string
+        contains a vision marker) AND generates without raising. Qwen3-VL on
+        mlx-vlm has been observed to format messages_list cleanly but crash
+        at generate-time with broadcast-shape errors (30B-A3B-4bit) or
+        produce non-JSON prose (8B-bf16), so a string-only probe is
+        insufficient.
+
+        `end_to_end=False` reverts to format-only probe (cheaper but unsafe).
+        """
+        # Order matters: `inlined` is the v1 Lesson-16 known-good path for
+        # Qwen2.5-VL, putting it first ensures Qwen2.5 lands on the proven
+        # mode rather than `manual_chatml_jsonprime` which (observed
+        # 2026-05-08) collapses to empty `{}` when the model treats the
+        # primed `{` as a complete-and-stop signal. messages_list goes second
+        # to test the system-role-split for models that support it cleanly.
+        for mode in (
+            "inlined", "messages_list", "manual_chatml", "manual_chatml_jsonprime",
+        ):
+            try:
+                formatted = self._format_for_mode(
+                    mode, clip_path, user_text, system_instruction,
+                )
+                marker = self._resolved_video_marker(formatted)
+                if not marker:
+                    print(f"[qwen v2] smoke mode={mode}: no vision marker in formatted "
+                          f"prompt; fallthrough.", flush=True)
+                    continue
+                if end_to_end:
+                    kwargs = dict(temperature=temperature, max_tokens=max_tokens,
+                                  verbose=False)
+                    if repetition_penalty is not None:
+                        kwargs["repetition_penalty"] = repetition_penalty
+                    self._generate(
+                        self.model, self.processor, prompt=formatted,
+                        video=clip_path, **kwargs,
+                    )
+                print(f"[qwen v2] smoke mode={mode}: OK marker={marker}", flush=True)
+                return mode, marker
+            except Exception as exc:  # noqa: BLE001 - empirical probe
+                print(f"[qwen v2] smoke mode={mode} raised: "
+                      f"{type(exc).__name__}: {exc}; fallthrough.",
+                      flush=True)
+        return "inlined", "<|video_pad|>"  # last resort
+
     def run(
         self,
         clip_path: str,
@@ -200,26 +365,25 @@ class QwenRunner:
         repetition_penalty: Optional[float] = None,
         max_tokens: int = 256,
         debug_tensors: bool = False,
+        system_role_mode: str = "inlined",
     ) -> dict:
         """Single inference. Returns a dict with text + token counts + latency.
 
-        Per docs/qwen-fix-and-revalidate-spec.md §1a-§2: mlx-vlm 0.5.0's
-        apply_chat_template strips multimodal content when the prompt is a
-        list of messages with structured `{type: video, ...}` content
-        (extract_text_from_content keeps only text items). The string-prompt
-        path with `video=` and `fps=` as kwargs is the canonical Qwen2.5-VL
-        invocation that actually emits `<|vision_start|><|video_pad|><|vision_end|>`
-        placeholders. system_instruction is inlined into the user prompt for
-        the same reason — list-prompt + video-kwarg attaches video tokens to
-        every message in mlx-vlm 0.5.0 (verified empirically; see Lesson 16).
+        v1 (Lesson 16, mlx-vlm 0.5.0 era): inlined-system / string-prompt path
+        was the only one that emitted `<|vision_start|><|video_pad|><|vision_end|>`
+        — list-prompt + video-kwarg attached video tokens to every message.
+        Default `system_role_mode="inlined"` preserves that v1 behavior.
+
+        v2 (2026-05-08): per-vendor research argued true `system` role is the
+        correct Qwen pattern. Callers should call `resolve_system_role_mode()`
+        on a smoke clip first and pass the winning mode here. Modes:
+          - "messages_list"  : structured-content messages with system role
+          - "manual_chatml"  : ChatML string emitted directly (bypasses
+                               apply_chat_template)
+          - "inlined"        : v1 fallback, system in user-text
         """
-        prompt_str = (
-            f"{system_instruction}\n\n{user_text}" if system_instruction else user_text
-        )
-        formatted = self._apply_chat_template(
-            self.processor, self.config, prompt=prompt_str,
-            video=clip_path, fps=10.0,
-            num_images=0, num_audios=0, num_videos=1,
+        formatted = self._format_for_mode(
+            system_role_mode, clip_path, user_text, system_instruction,
         )
         if debug_tensors:
             self._print_debug_tensors(formatted, clip_path)
@@ -231,15 +395,25 @@ class QwenRunner:
             self.model, self.processor, prompt=formatted, video=clip_path, **kwargs
         )
         dt = time.time() - t0
+        marker = self._resolved_video_marker(formatted)
+        text = getattr(result, "text", str(result))
+        # JSON-prime mode prepends `{` to the assistant turn so the model
+        # continues from inside a JSON object. mlx-vlm's `result.text` does
+        # not include the primed prefix, so we re-attach it to produce a
+        # parseable JSON string for downstream consumers.
+        if system_role_mode == "manual_chatml_jsonprime":
+            text = "{" + text
         return {
-            "text": getattr(result, "text", str(result)),
+            "text": text,
             "prompt_tokens": getattr(result, "prompt_tokens", None),
             "candidate_tokens": getattr(result, "generation_tokens", None),
             "total_tokens": getattr(result, "total_tokens", None),
             "finish_reason": getattr(result, "finish_reason", None),
             "wall_clock_seconds": dt,
             "formatted_prompt_chars": len(formatted),
-            "has_video_token": "<|video_pad|>" in formatted,
+            "has_video_token": marker is not None,
+            "video_marker": marker,
+            "system_role_mode_used": system_role_mode,
         }
 
     def _print_debug_tensors(self, formatted: str, clip_path: str) -> None:
