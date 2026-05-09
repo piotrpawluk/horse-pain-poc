@@ -1,0 +1,222 @@
+{
+  "tool": "tools/phase7_wikimedia_parity.py",
+  "stage1_pre_reg_section": "\u00a73",
+  "phase0_reference_path": "outputs/sample_horse_superanimal_quadruped_hrnet_w32_fasterrcnn_resnet50_fpn_v2_before_adapt.json",
+  "phase0_reference_sha256": "481639e97c6b558725e8d5eaca428cc07acb3cf193401b6c82f1d2dc1b940af2",
+  "phase7_new_path": "outputs/phase7_wikimedia_parity_keypoints.json",
+  "phase7_new_sha256": "481639e97c6b558725e8d5eaca428cc07acb3cf193401b6c82f1d2dc1b940af2",
+  "video_path": "data/sample_horse.mp4",
+  "n_frames_ref": 287,
+  "n_frames_new": 287,
+  "n_paired_frames": 287,
+  "n_skipped_no_individual": 0,
+  "gates": {
+    "ideal": 0.999,
+    "acceptable": 0.99,
+    "halt_below": 0.99
+  },
+  "median_cosine_similarity_per_keypoint": 1.0,
+  "min_cosine_similarity_per_keypoint": 0.9999999999999999,
+  "max_cosine_similarity_per_keypoint": 1.0000000000000002,
+  "n_keypoints_below_ideal_0_999": 0,
+  "n_keypoints_below_accept_0_99": 0,
+  "verdict": "PASS_IDEAL",
+  "next_action": "Median \u2265 0.999. Proceed to Step 1.5.",
+  "per_keypoint": {
+    "nose": {
+      "kp_idx": 0,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "upper_jaw": {
+      "kp_idx": 1,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "lower_jaw": {
+      "kp_idx": 2,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "mouth_end_right": {
+      "kp_idx": 3,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "mouth_end_left": {
+      "kp_idx": 4,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "right_eye": {
+      "kp_idx": 5,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "right_earbase": {
+      "kp_idx": 6,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "right_earend": {
+      "kp_idx": 7,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "right_antler_base": {
+      "kp_idx": 8,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "right_antler_end": {
+      "kp_idx": 9,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "left_eye": {
+      "kp_idx": 10,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "left_earbase": {
+      "kp_idx": 11,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "left_earend": {
+      "kp_idx": 12,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "left_antler_base": {
+      "kp_idx": 13,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "left_antler_end": {
+      "kp_idx": 14,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "neck_base": {
+      "kp_idx": 15,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "neck_end": {
+      "kp_idx": 16,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "throat_base": {
+      "kp_idx": 17,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "throat_end": {
+      "kp_idx": 18,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "back_base": {
+      "kp_idx": 19,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "back_end": {
+      "kp_idx": 20,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "back_middle": {
+      "kp_idx": 21,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "tail_base": {
+      "kp_idx": 22,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "tail_end": {
+      "kp_idx": 23,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "front_left_thai": {
+      "kp_idx": 24,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "front_left_knee": {
+      "kp_idx": 25,
+      "n_frames_used": 287,
+      "cosine_sim": 0.9999999999999999
+    },
+    "front_left_paw": {
+      "kp_idx": 26,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "front_right_thai": {
+      "kp_idx": 27,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "front_right_knee": {
+      "kp_idx": 28,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "front_right_paw": {
+      "kp_idx": 29,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "back_left_paw": {
+      "kp_idx": 30,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "back_left_thai": {
+      "kp_idx": 31,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "back_right_thai": {
+      "kp_idx": 32,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "back_left_knee": {
+      "kp_idx": 33,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "back_right_knee": {
+      "kp_idx": 34,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "back_right_paw": {
+      "kp_idx": 35,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "belly_bottom": {
+      "kp_idx": 36,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0000000000000002
+    },
+    "body_middle_right": {
+      "kp_idx": 37,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    },
+    "body_middle_left": {
+      "kp_idx": 38,
+      "n_frames_used": 287,
+      "cosine_sim": 1.0
+    }
+  }
+}
