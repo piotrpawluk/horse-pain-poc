@@ -2,8 +2,9 @@
 
 > Automated RHpE scoring with V-JEPA-2 — methodology-first PoC
 
-[![status](https://img.shields.io/badge/iter_6.5-LOSO_baseline_established-blue)](docs/lessons_learned.md)
+[![status](https://img.shields.io/badge/phase_6-DLC_routed_via_locked_failure_mode-blue)](docs/phase6_audit.md)
 [![baseline](https://img.shields.io/badge/Read_My_Ears_LOSO-0.875-success)](docs/lessons_learned.md)
+[![eye_ceiling](https://img.shields.io/badge/eye_region_v3_LOSO-0.7985-success)](docs/phase5_audit.md)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![python](https://img.shields.io/badge/python-3.10--3.11-blue)](pyproject.toml)
 
@@ -21,12 +22,16 @@ This is a research prototype, **not a diagnostic tool**.
 | Behavior | Approach | LOSO AUC | Status |
 | --- | --- | --- | --- |
 | ear_movement (Read My Ears replication) | V-JEPA-2 + linear probe | **0.875** | ✓ replicates paper claim under source-aware split |
+| eye_region (Phase 3 v1 — heuristic full-upper-frame crop) | V-JEPA-2 + RidgeClassifier LOSO | 0.681 | ⚪ middle band; baseline for Phase 5 cropping intervention |
+| eye_region (Phase 5 v3 — manual gold-standard 3-keyframe + IoU interpolation) | V-JEPA-2 + RidgeClassifier LOSO | **0.7985** | ✓ middle band, ceiling under near-perfect crops; n=34, single-observer (κ unmeasured); bootstrap CI [0.584, 0.964] |
+| eye_region (Phase 6 (b) — face-bbox-positioned automated crop at locked median anatomical position) | YOLOv8l face → fixed (rel_x, rel_y, rel_w, rel_h) | 0.469 | ✗ **DISTRIBUTED_FAIL**: median IoU 0.165 vs Phase 5 manual boxes; locked routing → DLC SuperAnimal-Quadruped is next |
 | head_position | V-JEPA-2 full-frame + LR | 0.561 | ✗ session leakage (LOO 0.898 → LOSO 0.561, Δ −34pp) |
-| eye_expression | V-JEPA-2 + LR | n/a | ✗ all positive sessions from one source — confound, dropped |
+| eye_expression (early iter) | V-JEPA-2 + LR | n/a | ✗ all positive sessions from one source — confound, dropped |
 | ear_position (anchor data) | V-JEPA-2 full-frame + LR | <0.5 | ✗ requires ear-region ROI crop, not full-frame |
 | ear_movement (MLLM-as-classifier on RME 36-clip subset) | Gemini 2.5/3.1 Pro + Qwen2.5-VL-7B | n/a (refusal-bias collapse) | ✗ all 3 Lesson 14 failure modes reproduced cross-vendor — see [Lesson 15](docs/lessons_learned.md). v1 results were invalid due to mlx-vlm video-routing bug; v2 confirms the conclusion legitimately — see [Lesson 16](docs/lessons_learned.md) |
+| eye_region (MLLM-as-classifier zero-shot on RME 36-clip subset, v1 + v2 + v3) | Gemini 2.5/3.1 Pro + Qwen2.5/3-VL | n/a (templated-evidence collapse on uncropped frames) | ✗ Lesson 18: VLM zero-shot structurally insufficient on tiny eye ROI in uncropped video — see [Lesson 18](docs/lessons_learned.md). Confirmed track closure; ROI crop + V-JEPA-2 + LR is the path. |
 
-**Current focus.** Track B — `ear_position` via Read My Ears-style ROI replication on a diverse field dataset. Target: LOSO AUC ≥ 0.70 across ≥ 8 of ≥ 10 sources, with 0.80 strong, 0.85 stretch (see [Lesson 11](docs/lessons_learned.md)). The 53-clip DIY anchor dataset is **not** training data — iteration 6.5 LOSO disproved any per-behavior claim built on it.
+**Current focus.** Phase 7 — DLC SuperAnimal-Quadruped eye-keypoint cropping (eye-region behavior). Phase 6 (b) face-bbox-positioned automated cropping at locked anatomical position failed empirically (AUC 0.469, DISTRIBUTED_FAIL via locked failure-mode attribution rule); DLC is the next tool per pre-registered routing. Phase 5's manual gold-standard cropping (AUC 0.7985 LOSO on 34 clips) is the architecture-ceiling; Phase 6 (a) quantified the prediction-shift mechanism behind v3 vs v1 cropping (9 recovered, 5 lost, ratio 1.80, mixed regime; two non-exclusive mechanisms — off-axis motion stripping + catchlight motion confound). See [`docs/phase5_audit.md`](docs/phase5_audit.md), [`docs/phase6_audit.md`](docs/phase6_audit.md), [`docs/methodology_discipline_pattern.md`](docs/methodology_discipline_pattern.md).
 
 ## Key methodological findings
 
@@ -40,8 +45,9 @@ This is a research prototype, **not a diagnostic tool**.
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline)
 - **Read My Ears protocol** (face mask + ear bbox crop + linear probe) — LOO 0.97, bg-masked LOO 0.91, **LOSO 0.875** (source-invariant on their data)
+- **Manual gold-standard eye-region cropping with 3-keyframe annotation + IoU-based interpolation** (Phase 5 v3) — LOSO **0.7985** at n=34 (middle band, single-observer caveat); intra-rater median IoU 0.765; serves both as Phase 5's cropping intervention AND as the validation set for any automated cropping tool evaluated in Phase 6+
 - **Linear probe + LOO observed AUC + permutation test + LOSO** as a four-layer evaluation stack
-- **Hard pre-committed decision thresholds** for architecture choices (4-level rule before running comparison)
+- **Hard pre-committed decision thresholds** for architecture choices (4-level rule before running comparison) — extended in Phase 5/6 to a [6-element discipline pattern](docs/methodology_discipline_pattern.md): pre-register, pre-commit failure interpretation, catch bugs in writing, honor mechanical decisions, sequence phases, empirical-anchor; Phase 6 (b)'s DISTRIBUTED_FAIL routing to DLC fired mechanically without post-hoc reasoning
 - **Static-frame collapse diagnostic** for distinguishing temporal vs static feature reliance
 - **Conditional background masking** — apply when YOLO detects > 1 subject in frame, skip otherwise
 
@@ -62,8 +68,10 @@ The MLLM-as-classifier track is closed within the scope tested. **V-JEPA-2 + lin
 - **DINOv2 alone as universal backbone** — LOSO 0.514 on Read My Ears, anti-correlated on 4 of 12 sources
 - **Background masking as a global default** — hurts strong sources by ~10pp while helping weak ones; must be conditional
 - **The 53-clip DIY anchor dataset as a training set** for any per-behavior classifier (iter 6.5)
+- **VLM zero-shot on uncropped horse video for eye-region behavior** (v1+v2+v3 prompts across Gemini 2.5 Pro / 3.1 Pro Preview / Qwen 2.5/3-VL) — three flavors of collapse on the same underlying failure mode; eye occupies ~1–2% of pixel area in uncropped frame, no prompt rescues that geometry. Lesson 18.
+- **Face-bbox-positioned crop at single-position median anatomical placement** (Phase 6 (b)) — AUC **0.4689** (below chance, Δ vs Phase 5 = −0.330); median IoU vs Phase 5 manual boxes = **0.165** (23/34 clips off-eye); horse profile orientation gives effectively continuous rel_x distribution that no median preserves. Pre-registered failure-mode attribution routes to DLC (`loss_concentration_pct = 6.2%`, well below 50% orientation-aware threshold). Pipeline robustness wasn't the bottleneck — YOLOv8l face detection succeeded 34/34 clips per-frame at conf=0.5, mean confidence 0.85–0.94, zero interpolation needed; the failure is positional, not detection-based.
 
-Full methodology trail in [`docs/lessons_learned.md`](docs/lessons_learned.md) — 12 lessons across iter 1–6.5, including why LOO is not a safe baseline in this domain and why sample size has to be counted in sessions, not clips.
+Full methodology trail in [`docs/lessons_learned.md`](docs/lessons_learned.md) — 18 lessons across iter 1–6.5 + Phase 1–6 (eye-region track), including why LOO is not a safe baseline, why sample size has to be counted in sessions not clips, and why VLM zero-shot can't substitute for ROI-cropped V-JEPA-2 + linear probe on fine-grained behaviors.
 
 ## How to engage
 
