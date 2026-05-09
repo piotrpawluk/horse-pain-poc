@@ -34,6 +34,7 @@ of display scale.
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -41,10 +42,14 @@ from pathlib import Path
 import cv2
 
 POC = Path(__file__).resolve().parent.parent
-KEYMAP_PATH = POC / "outputs/eye_box_keymap_phase5.json"
 FRAMES_DIR = POC / "outputs/eye_box_frames"
-OUTPUT_PATH = POC / "outputs/eye_boxes_phase5a.json"
 DISPLAY_MAX_W = 1400
+
+# Default = Phase 5a primary annotation; --phase5b switches to intra-rater paths
+KEYMAP_5A = POC / "outputs/eye_box_keymap_phase5.json"
+OUTPUT_5A = POC / "outputs/eye_boxes_phase5a.json"
+KEYMAP_5B = POC / "outputs/eye_box_keymap_phase5b.json"
+OUTPUT_5B = POC / "outputs/eye_boxes_phase5b.json"
 
 
 class State:
@@ -99,16 +104,36 @@ def save_box(annotations, uuid, label, box, scale):
         ]
 
 
-def write_json(annotations):
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, "w") as f:
+def write_json(annotations, output_path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w") as f:
         json.dump(annotations, f, indent=2, sort_keys=True)
 
 
 def main() -> int:
-    if not KEYMAP_PATH.exists():
-        sys.exit(f"missing keymap: {KEYMAP_PATH}")
-    keymap = json.load(open(KEYMAP_PATH))["keymap"]
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument(
+        "--phase5b", action="store_true",
+        help="Re-annotation pass for intra-rater check (5 clips × 3 frames). "
+             "Uses outputs/eye_box_keymap_phase5b.json + saves to "
+             "outputs/eye_boxes_phase5b.json. Default is Phase 5a primary.",
+    )
+    args = ap.parse_args()
+
+    if args.phase5b:
+        keymap_path = KEYMAP_5B
+        output_path = OUTPUT_5B
+        phase_label = "5b"
+    else:
+        keymap_path = KEYMAP_5A
+        output_path = OUTPUT_5A
+        phase_label = "5a"
+    print(f"[annotator] phase {phase_label}: keymap={keymap_path.name}",
+          flush=True)
+
+    if not keymap_path.exists():
+        sys.exit(f"missing keymap: {keymap_path}")
+    keymap = json.load(open(keymap_path))["keymap"]
 
     tasks = []
     for u in keymap:
@@ -120,14 +145,14 @@ def main() -> int:
           f"{len(keymap)} clips", flush=True)
 
     annotations: dict = {}
-    if OUTPUT_PATH.exists():
+    if output_path.exists():
         try:
-            annotations = json.load(open(OUTPUT_PATH))
+            annotations = json.load(open(output_path))
             n_done = sum(1 for u, lab, _ in tasks if task_done(annotations, u, lab))
             print(f"[annotator] resuming with {n_done}/{len(tasks)} already done",
                   flush=True)
         except json.JSONDecodeError:
-            print(f"[annotator] WARNING: existing {OUTPUT_PATH.name} is "
+            print(f"[annotator] WARNING: existing {output_path.name} is "
                   f"unparseable; starting fresh", flush=True)
             annotations = {}
 
@@ -215,7 +240,7 @@ def main() -> int:
                 state.box = None
             elif key == ord('s'):
                 save_box(annotations, u, label, state.box, scale)
-                write_json(annotations)
+                write_json(annotations, output_path)
                 n_done = sum(1 for tu, tlab, _ in tasks
                              if task_done(annotations, tu, tlab))
                 print(f"  [save] {n_done}/{len(tasks)} done", flush=True)
@@ -223,11 +248,11 @@ def main() -> int:
         # Action handling — save on next/quit, just navigate on prev
         if action in ("next", "quit"):
             save_box(annotations, u, label, state.box, scale)
-            write_json(annotations)
+            write_json(annotations, output_path)
         elif action == "prev":
             # Save what's been drawn so back-navigation doesn't lose it
             save_box(annotations, u, label, state.box, scale)
-            write_json(annotations)
+            write_json(annotations, output_path)
 
         if action == "next":
             idx += 1
@@ -240,7 +265,7 @@ def main() -> int:
 
     n_done = sum(1 for tu, tlab, _ in tasks if task_done(annotations, tu, tlab))
     print(flush=True)
-    print(f"=== {n_done}/{len(tasks)} annotations in {OUTPUT_PATH.name} ===",
+    print(f"=== {n_done}/{len(tasks)} annotations in {output_path.name} ===",
           flush=True)
     if n_done == len(tasks):
         print("All frames annotated.", flush=True)

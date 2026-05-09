@@ -1,0 +1,12 @@
+{
+  "mask_seed": 46,
+  "intra_rater_subset_seed": 46,
+  "n_subset": 5,
+  "keymap": {
+    "4b4cae9b-b956-434c-8c44-93d7fa68aa84": "action_S11.mp4_0_.mp4",
+    "04b4135b-e6b0-4f4f-b1e3-65cd76a55dce": "action_S3.mp4_8_.mp4",
+    "e5c5f960-ed51-4594-909f-9a15548369af": "action_S6.mp4_2_.mp4",
+    "4dade728-ff61-4b88-8133-bf8ce1b5a841": "background_S8.mp4_3_.mp4",
+    "77288c54-4b6e-4d1f-a23b-96f9dfae6bb8": "background_S7.mp4_9_.mp4"
+  }
+}
