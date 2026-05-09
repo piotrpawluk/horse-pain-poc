@@ -66,6 +66,36 @@ These match what Phase 0's sample artifact was generated with. SHA-256
 of weight files will be added to the hash chain in stage 2 alongside
 the new tool's hash.
 
+**Cosmetic-only parameter deviation from Phase 0** (LOCKED, with
+empirical verification):
+
+`create_labeled_video=False` in `tools/dlc_inference.py` and
+`tools/phase7_run_dlc_on_rme.py`. Phase 0's notebook used the DLC
+default `True`. Reason: DLC 3.0.0rc13's `create_labeled_video` step
+calls pandas `DataFrame.groupby(level=..., axis=1)`, but `axis=` was
+removed from `groupby` in pandas 2.x. The labeled-video creation
+crashes with `TypeError: DataFrame.groupby() got an unexpected
+keyword argument 'axis'`. In Phase 0's notebook this same crash was
+silent (labeled.mp4 was 257 bytes, essentially empty header) because
+the .json/.h5 keypoint outputs are written BEFORE the labeled-video
+step. In a batched call across 34 clips, the exception aborts the
+entire batch on the first video.
+
+**Empirical verification** (mandatory before locking the deviation):
+re-ran Wikimedia inference with `create_labeled_video=False`. Output
+JSON SHA-256 = `481639e97c6b558725e8d5eaca428cc07acb3cf193401b6c82f1d2dc1b940af2`,
+**bit-identical** to the Wikimedia parity output produced with the
+default `True`. The parameter is purely cosmetic for the keypoint
+.json/.h5 outputs that all downstream Phase 7 work consumes. The
+labeled .mp4 is not used anywhere in the audit chain.
+
+This deviation is **locked here** (not a stage-2 amendment) so the
+phase 7 chain is internally consistent: every DLC inference run
+through Phase 7 tooling uses `create_labeled_video=False`. Phase 0's
+sample JSON (which serves as the parity reference) was generated with
+`True` but is bit-equivalent to the `False` output, so this asymmetry
+is benign.
+
 ## Section 2 — DLC keypoint catalogue (verified, LOCKED)
 
 SuperAnimal-Quadruped emits **39 keypoints per individual**. Verified

@@ -42,6 +42,12 @@ MODEL_NAME = "hrnet_w32"
 DETECTOR_NAME = "fasterrcnn_resnet50_fpn_v2"
 VIDEO_ADAPT = False
 PSEUDO_THRESHOLD = 0.1
+# DLC 3.0.0rc13's create_labeled_video step uses pandas API removed in
+# pandas 2.x (DataFrame.groupby axis= kwarg). Disabled — cosmetic only,
+# does not affect keypoint .json/.h5 outputs (which are written before
+# this step). Verified by Wikimedia parity re-run (PASS_IDEAL with both
+# True and False, identical .json hash).
+CREATE_LABELED_VIDEO = False
 
 
 def sha256(p: Path) -> str:
@@ -94,6 +100,7 @@ def main() -> int:
         video_adapt=VIDEO_ADAPT,
         dest_folder=str(args.out_dir),
         pseudo_threshold=PSEUDO_THRESHOLD,
+        create_labeled_video=CREATE_LABELED_VIDEO,
     )
     elapsed = time.time() - t0
     print(f"[dlc] inference complete in {elapsed:.1f}s", flush=True)
