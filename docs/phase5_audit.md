@@ -92,6 +92,33 @@ This shifts the Phase 6 question:
 
 Pre-registered Phase 6 instrumentation: per-clip diff between Phase 3 and Phase 5 primary predictions. Which clips did Phase 3 get right that v3 lost? Which clips did v3 newly recover? The mechanism behind the prediction-shift is the next-tier diagnostic; Phase 6 carries it.
 
+### Phase 6 (a) result — prediction-shift quantified (post-Phase-5)
+
+Pre-registered diagnostic ran 2026-05-09. Output: `outputs/phase6a_per_clip_prediction_diff.{json,md}`, tool: `tools/phase6_per_clip_diff.py`.
+
+Under the directly-decomposable label set (Set B = `eye_verification_clips.txt`, the labels Phase 5 primary trained AND was evaluated against):
+
+| Category | n | Share |
+|---|---:|---:|
+| BOTH_RIGHT | 18 | 53% |
+| BOTH_WRONG | 2 | 6% |
+| V3_NEWLY_RECOVERED | 9 | 26% |
+| V3_NEWLY_LOST | 5 | 15% |
+
+Net shift +4 clips, ratio recovered/lost = 1.80. **Mixed regime** — neither uniform improvement nor balanced. The +0.117 AUC delta decomposes into (9 recoveries) − (5 losses), confirming the prediction-shift framing of the DeLong gap.
+
+**Robust to label-tightening, not to behavior-mismatch.** Set C (tightened-rubric relabel, `eye_relabel_unmasked.txt`) gives identical aggregate counts (9/5/+4/1.80). Set A (RME filename taxonomy) collapses to net zero (7/7/+0/1.00) — expected since RME labels target a different behavior (ear motion); this is a noise-floor calibration, not a counter-finding.
+
+**Two non-exclusive mechanisms are consistent with the V3_NEWLY_LOST set:**
+
+1. **Off-axis motion stripping** — 4/5 newly-lost clips are ACTION clips that v3's tight eye-region crop pushed into negative scores (`action_S9.mp4_4_` Δ −1.036, `action_S5.mp4_5_` Δ −0.937, `bg_S8.mp4_3_` Δ −1.240, `bg_S3.mp4_3_` Δ −0.353). Phase 3's full-upper-frame crop captured whole-body / off-axis motion cues that v3 explicitly excludes. Phase 7+ implication: loosen crop scope. Phase 6 (b) face-bbox tests this directly — face-bbox keeps more contextual area than v3 tight crop.
+
+2. **Catchlight motion confound** (pre-registered in margin-curve discussion below) — tight crop → catchlight occupies larger fraction of visible eye area → head-pose-driven catchlight motion gets mistaken for eye-state change. `bg_S8.mp4_3_` (lowest intra-rater IoU at 0.587, the audit's named perceptual-floor clip) confidently flips to BACKGROUND with score −0.940 under v3, consistent with this mechanism. Phase 7+ implication: explicit catchlight masking as preprocessing — testable in a separate ablation, *not* Phase 6 (b).
+
+The two mechanisms predict *similar* Phase 6 (b) outcomes (looser crop helps both off-axis-action and catchlight-dilution clips), but diverge on what Phase 7+ should investigate. They should not be collapsed into one narrative.
+
+**Label-reference subtlety.** The (a) diagnostic uses Set B as the primary correctness reference because Phase 5 primary's reported AUC of 0.7985 is computed against it. Sets A and C are reported as supplementary. Categorization under each set differs at the clip level — under Set A's RME taxonomy `bg_S8_3` is BACKGROUND (so v3's correct prediction makes it V3_NEWLY_RECOVERED, not V3_NEWLY_LOST). The Set B framing is operationally relevant for the (b) gate (which inherits Set B), but the dependency on label-source is now explicit and the directional finding (recovered > lost) holds across both Piotr-grade label sets B and C.
+
 ## Sensitivity 1 — rubric-tax under good crops
 
 | v3+tightened | v3+original | Δ | Locked verdict |
@@ -106,6 +133,16 @@ This is a meaningful finding. Phase 4 showed tightened-rubric labels HURT by ~0.
 - **Mechanism (b)**: 7 reflagged clips are low-confidence on v3 regardless of label assignment; relabel is neutral by virtue of v3 not strongly committing on them. Implication: rubric tightening generalization depends on whether *new* clips at *new* labeling-protocol scopes also fall into v3's low-confidence regime. Less generalizable.
 
 The data don't distinguish (a) from (b) at n=34. Both predict similar Phase 6 ablation outcomes only if "good crops" generalize from the 34-clip dataset to broader Phase 6 data. The distinction matters mainly if v3 is hard to scale — at which point the (b) mechanism would show up as rubric-tightening hurting AUC again on harder scopes.
+
+### Reread under Phase 6 (a) — partial reopen
+
+Phase 6 (a) result (above) reopens part of the locked Sensitivity 1 verdict's interpretation, though not the verdict itself. Two of the V3_NEWLY_LOST clips (`bg_S8.mp4_3_`, `bg_S3.mp4_3_`) are exactly the type of clips that the eye-region rubric reclassified ACTION — flipped from BACKGROUND-by-RME-filename to ACTION-by-Piotr's eye-rubric. v3 confidently predicts BACKGROUND on both (scores −0.940 and −0.325). So:
+
+- v3 + RME filename labels (Set A): `bg_S8_3` and `bg_S3_3` → correctly BACKGROUND.
+- v3 + Piotr verification (Set B) or tightened (Set C): same clips → incorrect.
+- The Sensitivity 1 +0.019 delta v3+tightened vs v3+original is **partly a structural near-cancellation** — flipping the labels of clips v3 is wrong on (in opposite directions on different clips) approximately balances the AUC, regardless of whether the rubric is intrinsically clean.
+
+The honest reread: "tightened rubric is observationally neutral under v3" remains true; the *mechanism* may be partly that v3 happens to be wrong-but-consistently on the relabeled clips, not that the rubric is intrinsically clean. The locked verdict was correctly applied per pre-reg — but the deeper interpretation has more room for Mechanism (b) (low-confidence-on-relabeled-clips, less generalizable) than the original framing acknowledged. Phase 6 (b) will partially distinguish (a) vs (b): if face-bbox cropping shifts the V3_NEWLY_LOST set away from the relabeled clips while preserving Sensitivity 1's ≈ neutrality on a face-bbox + tightened rerun, Mechanism (a) is favored; if neutrality persists *because* face-bbox is also wrong on the same relabeled clips, Mechanism (b) is favored. Recording the option here so the analysis is available without post-hoc construction.
 
 ## Sensitivity 2 — margin curve {10, 15, 40, 80} %
 
