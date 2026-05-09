@@ -1,0 +1,14 @@
+{
+  "sanity_check": 4,
+  "description": "DINOv2 bg-masked ear_movement (vs V-JEPA-2 Sanity 2)",
+  "n_clips": 283,
+  "observed_auc": 0.8088955522238881,
+  "p_value": 0.0,
+  "perm_mean": 0.4959505247376312,
+  "perm_std": 0.04270379633446035,
+  "comparison": {
+    "vjepa2_bgmasked": 0.911,
+    "vjepa2_unmasked": 0.97,
+    "delta_vs_vjepa2_bgmasked": -0.10210444777611194
+  }
+}

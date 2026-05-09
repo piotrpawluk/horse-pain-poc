@@ -1,0 +1,73 @@
+{
+  "model": "facebook/vjepa2-vitl-fpc16-256-ssv2",
+  "method": "head-crop YOLOv8l face \u2192 V-JEPA-2 \u2192 leave-one-out cosine similarity",
+  "iteration": 3,
+  "detection_weights": "vendor/horse-face-ear-detection/horse_face_detection/yolov8l_horse_face_detection.pt",
+  "detect_frames_per_clip": 4,
+  "head_margin": 0.3,
+  "target_crop_size": 256,
+  "n_total": 53,
+  "n_failed": 0,
+  "failed_clips": [],
+  "detection_per_behavior": {
+    "ear_position": {
+      "detected": 13,
+      "fallback": 4
+    },
+    "head_position": {
+      "detected": 3,
+      "fallback": 9
+    },
+    "mouth_open": {
+      "detected": 3,
+      "fallback": 0
+    },
+    "tail_movement": {
+      "detected": 3,
+      "fallback": 6
+    },
+    "eye_expression": {
+      "detected": 11,
+      "fallback": 1
+    }
+  },
+  "overall_accuracy": 0.3018867924528302,
+  "per_behavior": {
+    "ear_position": {
+      "n": 17,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "head_position": {
+      "n": 12,
+      "correct": 6,
+      "accuracy": 0.5
+    },
+    "mouth_open": {
+      "n": 3,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "tail_movement": {
+      "n": 9,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "eye_expression": {
+      "n": 12,
+      "correct": 10,
+      "accuracy": 0.8333333333333334
+    }
+  },
+  "comparison_iter2_full_frame": {
+    "ear_position": 0.0,
+    "head_position": 0.5,
+    "mouth_open": 0.333,
+    "tail_movement": 0.0,
+    "eye_expression": 1.0
+  },
+  "reference": {
+    "paper_claim_alves_2025_ear_movement": 0.875,
+    "vjepa2_linear_probe_ear_movement_phase1": 0.854
+  }
+}

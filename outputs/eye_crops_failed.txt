@@ -1,0 +1,1 @@
+/Users/peterpawluk/horse-training/poc/vendor/ReadMyEars_Dataset/data/videos/background_S4.mp4_7_.mp4	no_detection_static

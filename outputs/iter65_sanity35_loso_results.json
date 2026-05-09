@@ -1,0 +1,94 @@
+{
+  "sanity_check": "3.5",
+  "description": "LOSO CV for all 5 anchor behaviors",
+  "embedding_source": "outputs/iter6_caches/anchor_ssv2_motion.npz",
+  "n_unique_sessions_total": 11,
+  "per_behavior": {
+    "ear_position": {
+      "loo_auc": 0.2369281045751634,
+      "loso_auc": 0.494281045751634,
+      "delta": 0.2573529411764706,
+      "n_total": 53,
+      "n_pos": 17,
+      "n_pos_sessions": 5,
+      "pos_session_counts": {
+        "padma_6ot7_qOwJac": 2,
+        "padma_3ulkLHqHZ3g": 5,
+        "padma_nbn0b0W_isQ": 1,
+        "padma_hrZgtrqbMVI": 5,
+        "personal_ears": 4
+      },
+      "verdict": "\u274c LEAKAGE"
+    },
+    "head_position": {
+      "loo_auc": 0.8983739837398375,
+      "loso_auc": 0.5609756097560976,
+      "delta": -0.33739837398373984,
+      "n_total": 53,
+      "n_pos": 12,
+      "n_pos_sessions": 4,
+      "pos_session_counts": {
+        "padma_0mnugKMKwiQ": 1,
+        "padma_eg5yUaP9APA": 3,
+        "padma_PpEMHTQCpuA": 2,
+        "personal_head": 6
+      },
+      "verdict": "\u274c LEAKAGE"
+    },
+    "mouth_open": {
+      "loo_auc": 0.74,
+      "loso_auc": 0.5133333333333333,
+      "delta": -0.22666666666666668,
+      "n_total": 53,
+      "n_pos": 3,
+      "n_pos_sessions": 2,
+      "pos_session_counts": {
+        "padma_3ulkLHqHZ3g": 2,
+        "personal_mouth": 1
+      },
+      "verdict": "\u274c LEAKAGE"
+    },
+    "tail_movement": {
+      "loo_auc": 0.7474747474747475,
+      "loso_auc": 0.2525252525252525,
+      "delta": -0.49494949494949503,
+      "n_total": 53,
+      "n_pos": 9,
+      "n_pos_sessions": 3,
+      "pos_session_counts": {
+        "padma_eg5yUaP9APA": 2,
+        "padma_hrZgtrqbMVI": 1,
+        "personal_tail": 6
+      },
+      "verdict": "\u274c LEAKAGE"
+    },
+    "eye_expression": {
+      "loo_auc": 0.3943089430894309,
+      "loso_auc": 0.7733739837398375,
+      "delta": 0.3790650406504066,
+      "n_total": 53,
+      "n_pos": 12,
+      "n_pos_sessions": 4,
+      "pos_session_counts": {
+        "padma_6ot7_qOwJac": 2,
+        "padma_hrZgtrqbMVI": 6,
+        "padma_3ulkLHqHZ3g": 3,
+        "padma_nbn0b0W_isQ": 1
+      },
+      "verdict": "\u26a0 PARTIAL"
+    }
+  },
+  "summary": {
+    "robust": [],
+    "partial": [
+      "eye_expression"
+    ],
+    "leakage": [
+      "ear_position",
+      "head_position",
+      "mouth_open",
+      "tail_movement"
+    ],
+    "mean_drop": -0.08451931075460486
+  }
+}

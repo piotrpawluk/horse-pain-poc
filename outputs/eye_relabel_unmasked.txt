@@ -1,0 +1,40 @@
+# Phase 4 unmasked re-label — 34 viable clips
+# Format: <real_filename> - <observation> - <VERDICT>
+# Source: outputs/eye_relabel_blind.txt (user filled under tightened rubric)
+# Mapping: outputs/eye_relabel_keymap.json (sha256 2ee51a27...)
+#
+
+action_S10.mp4_0_.mp4 - still eyes - BACKGROUND
+action_S11.mp4_0_.mp4 - head moves, eyes still - BACKGROUND
+action_S11.mp4_6_.mp4 - still eyes - BACKGROUND
+action_S2.mp4_7_.mp4 - still eyes - BACKGROUND
+action_S3.mp4_2_.mp4 - head rotates, eyelid ascends - ACTION
+action_S3.mp4_8_.mp4 - head rotates, gaze change, sclera becoming more visible - ACTION
+action_S4.mp4_0_.mp4 - head moves, eyes still - BACKGROUND
+action_S4.mp4_15_.mp4 - eyelid drops - ACTION
+action_S5.mp4_2_.mp4 - still eyes - BACKGROUND
+action_S5.mp4_5_.mp4 - head moving up, eyes still - BACKGROUND
+action_S6.mp4_2_.mp4 - head moves, sclera becoming slightly less visible, no gaze change - BACKGROUND
+action_S8.mp4_12_.mp4 - still eyes - BACKGROUND
+action_S9.mp4_4_.mp4 - gaze change - ACTION
+action_S9.mp4_7_.mp4 - head movement, eyes still - BACKGROUND
+background_S1.mp4_12_.mp4 - head rotates, sclera becoming less visible because of the head movement - BACKGROUND
+background_S1.mp4_7_.mp4 - still eyes - BACKGROUND
+background_S10.mp4_11_.mp4 - opening eyes, rotating head - ACTION
+background_S10.mp4_3_.mp4 - slight muscle tension increase above the orbit - BACKGROUND
+background_S11.mp4_0_.mp4 - head rotates, blinking, gaze change - ACTION
+background_S12.mp4_2_.mp4 - still eyes - BACKGROUND
+background_S12.mp4_7_.mp4 - eyelids descent, blink - ACTION
+background_S12.mp4_9_.mp4 - blinking - ACTION
+background_S2.mp4_10_.mp4 - blinking, gaze change - ACTION
+background_S2.mp4_11_.mp4 - blinking, gaze change - ACTION
+background_S3.mp4_3_.mp4 - blinking - ACTION
+background_S5.mp4_10_.mp4 - head turned away from the camera, rotates towards the camera, blink - ACTION
+background_S6.mp4_2_.mp4 - still eyes - BACKGROUND
+background_S6.mp4_3_.mp4 - still eyes - BACKGROUND
+background_S7.mp4_12_.mp4 - still eyes - BACKGROUND
+background_S7.mp4_17_.mp4 - still eyes - BACKGROUND
+background_S7.mp4_9_.mp4 - still eyes - BACKGROUND
+background_S8.mp4_3_.mp4 - sclera becoming less visible, gaze change - ACTION
+background_S8.mp4_7_.mp4 - eyelid descents - ACTION
+background_S9.mp4_8_.mp4 - still eyes - BACKGROUND

@@ -1,0 +1,48 @@
+{
+  "model": "facebook/vjepa2-vitl-fpc16-256-ssv2",
+  "method": "leave-one-out cosine similarity",
+  "iteration": 2,
+  "n_total": 53,
+  "n_failed": 0,
+  "failed_clips": [],
+  "overall_accuracy": 0.3584905660377358,
+  "per_behavior": {
+    "ear_position": {
+      "n": 17,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "head_position": {
+      "n": 12,
+      "correct": 6,
+      "accuracy": 0.5
+    },
+    "mouth_open": {
+      "n": 3,
+      "correct": 1,
+      "accuracy": 0.3333333333333333
+    },
+    "tail_movement": {
+      "n": 9,
+      "correct": 0,
+      "accuracy": 0.0
+    },
+    "eye_expression": {
+      "n": 12,
+      "correct": 12,
+      "accuracy": 1.0
+    }
+  },
+  "reference": {
+    "paper_claim_alves_2025_ear_movement": 0.875,
+    "vjepa2_linear_probe_ear_movement_phase1": 0.854,
+    "iter1_36clips_padma_only": {
+      "ear_position": 0.0,
+      "head_position": 0.0,
+      "mouth_open": 0.0,
+      "tail_movement": 0.0,
+      "eye_expression": 0.0,
+      "overall": 0.0
+    }
+  }
+}

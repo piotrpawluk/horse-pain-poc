@@ -1,0 +1,51 @@
+# Phase 4 blind re-label — 34 viable clips
+# Seed: 44 (different from Phase 3's 43 to avoid order-cue carryover)
+# Filenames masked as clip_M001 ... clip_M034
+# Real-name mapping in outputs/eye_relabel_keymap.json (hash-locked)
+#
+# RUBRIC (locked, do not deviate):
+#   ACTION = visible eye-region change at native 1920x1080 resolution
+#            at normal-speed playback. No zoom, no frame-stepping.
+#   BACKGROUND = no perceptible change at native resolution at
+#            normal-speed playback. Includes 'change visible only via
+#            zoom or frame-stepping' — these are NOT ACTION.
+#   ACTION? / BACKGROUND? allowed for borderline; excluded from LOSO.
+#
+# Format: <masked_id> - <observation> - <VERDICT>
+# Fill in observation + VERDICT for each. Save and tell agent when done.
+#
+
+clip_M001 - still eyes - BACKGROUND
+clip_M002 - head movement, eyes still - BACKGROUND
+clip_M003 - still eyes - BACKGROUND
+clip_M004 - still eyes - BACKGROUND
+clip_M005 - blinking, gaze change - ACTION
+clip_M006 - gaze change - ACTION
+clip_M007 - eyelids descent, blink - ACTION
+clip_M008 - still eyes - BACKGROUND
+clip_M009 - still eyes - BACKGROUND
+clip_M010 - head turned away from the camera, rotates towards the camera, blink - ACTION
+clip_M011 - opening eyes, rotating head - ACTION
+clip_M012 - head moving up, eyes still - BACKGROUND
+clip_M013 - eyelid descents - ACTION
+clip_M014 - still eyes - BACKGROUND
+clip_M015 - sclera becoming less visible, gaze change - ACTION
+clip_M016 - still eyes - BACKGROUND
+clip_M017 - head rotates, eyelid ascends - ACTION
+clip_M018 - still eyes - BACKGROUND
+clip_M019 - head moves, sclera becoming slightly less visible, no gaze change - BACKGROUND
+clip_M020 - still eyes - BACKGROUND
+clip_M021 - still eyes - BACKGROUND
+clip_M022 - blinking - ACTION
+clip_M023 - blinking - ACTION
+clip_M024 - still eyes - BACKGROUND
+clip_M025 - still eyes - BACKGROUND
+clip_M026 - blinking, gaze change - ACTION
+clip_M027 - head rotates, blinking, gaze change - ACTION
+clip_M028 - slight muscle tension increase above the orbit - BACKGROUND
+clip_M029 - still eyes - BACKGROUND
+clip_M030 - head rotates, gaze change, sclera becoming more visible - ACTION
+clip_M031 - head moves, eyes still - BACKGROUND
+clip_M032 - head rotates, sclera becoming less visible because of the head movement - BACKGROUND
+clip_M033 - head moves, eyes still - BACKGROUND
+clip_M034 - eyelid drops - ACTION

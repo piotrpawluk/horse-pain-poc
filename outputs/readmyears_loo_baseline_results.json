@@ -1,0 +1,38 @@
+{
+  "iteration": 4,
+  "dataset": "joaomalves/read-my-ears (local at vendor/ReadMyEars_Dataset)",
+  "task": "binary ear_movement (action vs background)",
+  "model": "facebook/vjepa2-vitl-fpc16-256-ssv2",
+  "n_clips": 283,
+  "n_failed": 0,
+  "class_balance": {
+    "action": 138,
+    "background": 145
+  },
+  "embedding_dim": 1024,
+  "embed_time_seconds": 381.5623378753662,
+  "method_a_loo_cosine_k5": {
+    "accuracy": 0.7102473498233216,
+    "precision": 0.7258064516129032,
+    "recall": 0.6521739130434783,
+    "f1": 0.6870229007633588
+  },
+  "method_a_loo_cosine_k1": {
+    "accuracy": 0.7561837455830389
+  },
+  "method_b_linear_probe_5fold": {
+    "accuracy": 0.8939929328621908,
+    "precision": 0.8970588235294118,
+    "recall": 0.8840579710144928,
+    "f1": 0.8905109489051095,
+    "auc": 0.9478760619690155
+  },
+  "auc_cosine_prototype": 0.7204897551224388,
+  "cross_check": {
+    "phase1_linear_probe_accuracy": 0.854,
+    "paper_claim_alves_2025": 0.875,
+    "iter4_vs_phase1_delta": 0.039992932862190855
+  },
+  "decision": "MIXED",
+  "rationale": "V-JEPA-2 features clusterable but probe needed for stable accuracy"
+}

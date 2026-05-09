@@ -1,0 +1,14 @@
+{
+  "sanity_check": 2,
+  "description": "bg-masked ear_movement on RME 283 clips",
+  "embed_frames": 16,
+  "detection_rate": 0.9944787985865724,
+  "n_clips": 283,
+  "observed_auc": 0.9114942528735632,
+  "perm_mean": 0.503254872563718,
+  "perm_std": 0.04551736430297011,
+  "p_value": 0.0,
+  "unmasked_baseline_iter6": 0.97,
+  "auc_drop": -0.05850574712643675,
+  "verdict": "SIGNAL_IN_EAR"
+}

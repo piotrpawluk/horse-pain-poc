@@ -1,0 +1,116 @@
+{
+  "total_clips": 36,
+  "scored_clips": 36,
+  "errors": 0,
+  "overall_agreement": 0.6111111111111112,
+  "per_source": {
+    "S1": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S1.mp4_11_.mp4",
+        "videos/background_S1.mp4_7_.mp4"
+      ]
+    },
+    "S10": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 1.0,
+      "disagreement_clips": [
+        "videos/action_S10.mp4_0_.mp4"
+      ]
+    },
+    "S11": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S11.mp4_0_.mp4"
+      ]
+    },
+    "S12": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.95,
+      "disagreement_clips": [
+        "videos/background_S12.mp4_9_.mp4",
+        "videos/background_S12.mp4_7_.mp4"
+      ]
+    },
+    "S2": {
+      "n": 3,
+      "agreement_rate": 1.0,
+      "disagreement_count": 0,
+      "mean_confidence_on_disagreements": 0.0,
+      "disagreement_clips": []
+    },
+    "S3": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S3.mp4_3_.mp4",
+        "videos/action_S3.mp4_8_.mp4"
+      ]
+    },
+    "S4": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S4.mp4_7_.mp4"
+      ]
+    },
+    "S5": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S5.mp4_10_.mp4"
+      ]
+    },
+    "S6": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S6.mp4_3_.mp4"
+      ]
+    },
+    "S7": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S7.mp4_12_.mp4",
+        "videos/background_S7.mp4_17_.mp4"
+      ]
+    },
+    "S8": {
+      "n": 3,
+      "agreement_rate": 1.0,
+      "disagreement_count": 0,
+      "mean_confidence_on_disagreements": 0.0,
+      "disagreement_clips": []
+    },
+    "S9": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.9,
+      "disagreement_clips": [
+        "videos/background_S9.mp4_8_.mp4"
+      ]
+    }
+  }
+}

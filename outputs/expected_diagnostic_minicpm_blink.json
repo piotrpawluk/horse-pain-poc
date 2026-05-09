@@ -1,0 +1,77 @@
+{
+  "metadata": {
+    "frozen_at": "2026-05-08",
+    "predictor": "Claude (Opus 4.7), pre-run, blind to MiniCPM output",
+    "purpose": "Pre-committed predictions for the 6-clip blink sanity test. Compared against MiniCPM v3 outputs after the run to prevent post-hoc 'plausibility' rationalization.",
+    "user_labels_source": "User hand-audit, 2026-05-08, 3 verified blink + 3 verified no-blink",
+    "frame_extraction_policy_for_sanity": "All native frames sent (fps_native = 25), NOT fps=10. Reason: removes frame-count as a confound for the architecturally-right model on the pre-flight test. The 36-clip run will use fps=10 for parity with prior Qwen/Gemini runs.",
+    "visual_inspection_done": true,
+    "visual_inspection_notes": "Extracted middle frames at fps=10 and viewed via Read tool. action_S2.mp4_8 frame 2 visually shows eye nearly closed (blink confirmed visually). action_S4.mp4_4 middle frames show eye open but the 7-frame window contains the blink. No-blink clips show steady open eye in inspected frames. Eye region is ~3-4% of 1920x1080 frame area in all clips."
+  },
+  "clips": {
+    "action_S2.mp4_2_.mp4": {
+      "user_label": "blink",
+      "expected_classification": "action",
+      "expected_features_in_observed_change": ["eyelid", "blink", "lid", "closure"],
+      "expected_evidence_pattern": "eyelid descent / partial closure between two frames within the 6-frame window",
+      "frame_count_native": 15,
+      "frame_count_at_fps10": 6,
+      "setup_notes": "S2 profile, light wall background, eye visible right-side"
+    },
+    "action_S2.mp4_8_.mp4": {
+      "user_label": "blink",
+      "expected_classification": "action",
+      "expected_features_in_observed_change": ["eyelid", "blink", "lid", "closure"],
+      "expected_evidence_pattern": "eyelid descent CONFIRMED VISUALLY in mid-clip frame at native fps. Model should detect open->closed->open or partial closure.",
+      "frame_count_native": 10,
+      "frame_count_at_fps10": 4,
+      "setup_notes": "S2 profile. The unambiguous blink — if MiniCPM misses this, structural insufficiency is essentially certain."
+    },
+    "action_S4.mp4_4_.mp4": {
+      "user_label": "blink",
+      "expected_classification": "action",
+      "expected_features_in_observed_change": ["eyelid", "blink", "lid", "closure"],
+      "expected_evidence_pattern": "eyelid descent across the 17-frame native window — longest blink clip, most likely detected if model can detect any blink at this geometry",
+      "frame_count_native": 17,
+      "frame_count_at_fps10": 7,
+      "setup_notes": "S4 frontal stable setup, both eyes potentially visible"
+    },
+    "action_S4.mp4_2_.mp4": {
+      "user_label": "no_blink",
+      "expected_classification_acceptable": ["action", "background"],
+      "expected_features_NOT_in_observed_change": ["eyelid descent", "blink", "lid closure", "partial closure"],
+      "acceptable_evidence_pattern": "if action: gaze shift / micro-movement / asymmetry change naming a non-blink feature; if background: explicit check of >=3 features all stable",
+      "failure_mode_to_watch": "false-positive blink: classification=action with eyelid/blink/lid-descent language across frames where no blink occurred",
+      "frame_count_native": 10,
+      "frame_count_at_fps10": 4,
+      "setup_notes": "S4 frontal stable, no blink in user audit"
+    },
+    "action_S2.mp4_7_.mp4": {
+      "user_label": "no_blink",
+      "expected_classification_acceptable": ["action", "background"],
+      "expected_features_NOT_in_observed_change": ["eyelid descent", "blink", "lid closure", "partial closure"],
+      "acceptable_evidence_pattern": "if action: non-blink feature; if background: explicit feature checking",
+      "failure_mode_to_watch": "false-positive blink language (template inheritance from blink clips); also: collapse:same_frame if model has trouble with the 6 native frames",
+      "frame_count_native": 6,
+      "frame_count_at_fps10": 2,
+      "setup_notes": "SHORTEST clip — 6 native frames. At fps=10 only 2 frames, hence sanity uses native fps."
+    },
+    "action_S4.mp4_10_.mp4": {
+      "user_label": "no_blink",
+      "expected_classification_acceptable": ["action", "background"],
+      "expected_features_NOT_in_observed_change": ["eyelid descent", "blink", "lid closure", "partial closure"],
+      "acceptable_evidence_pattern": "if action: non-blink feature; if background: explicit feature checking",
+      "failure_mode_to_watch": "false-positive blink language",
+      "frame_count_native": 8,
+      "frame_count_at_fps10": 3,
+      "setup_notes": "S4 frontal, no blink"
+    }
+  },
+  "pass_criteria": {
+    "definition_of_correct_blink_clip": "classification=action AND observed_change contains any of {eyelid, blink, lid, closure} AND most_changed_frame_pair has i!=j",
+    "definition_of_correct_noblink_clip": "EITHER (a) classification=background AND observed_change names features that were checked, OR (b) classification=action AND observed_change names a non-blink feature (gaze/asymmetry/tension/sclera-change-without-eyelid-descent). NOT correct: action with eyelid/blink/lid-descent language.",
+    "structural_failure_overrides_pass": "Any clip with i==j, no feature named, OR with observed_change identical to >=2 other clips is counted as INCORRECT regardless of classification match (template hallucination).",
+    "minimum_correct_for_proceed": "5 of 6 clips correct (binomial p approx 0.11 vs random)",
+    "stop_if_below": "<5 of 6 -> stop, no 36-clip run, document as Lesson 19 evidence of structural insufficiency"
+  }
+}

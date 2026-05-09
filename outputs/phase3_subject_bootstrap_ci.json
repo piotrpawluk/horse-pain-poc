@@ -1,0 +1,18 @@
+{
+  "method": "subject-bootstrap-with-replacement",
+  "n_sources_resampled_per_iteration": 12,
+  "n_iterations_attempted": 2000,
+  "n_iterations_kept": 2000,
+  "seed": 42,
+  "phase3_pooled_auc": 0.6813186813186813,
+  "bootstrap_mean": 0.6709746677180976,
+  "bootstrap_median": 0.6764705882352942,
+  "bootstrap_ci_95": [
+    0.41378778203490846,
+    0.8979608619763695
+  ],
+  "delong_ci_for_comparison": [
+    0.48660500163115294,
+    0.8760323610062097
+  ]
+}

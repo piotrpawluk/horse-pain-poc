@@ -1,0 +1,19 @@
+{
+  "n_clips": 48,
+  "precision": 0.5238,
+  "recall": 1.0,
+  "f1": 0.6875,
+  "accuracy": 0.5833,
+  "confusion_matrix": [
+    [
+      6,
+      20
+    ],
+    [
+      0,
+      22
+    ]
+  ],
+  "paper_claim_accuracy": 0.875,
+  "paper_delta": -0.2917
+}

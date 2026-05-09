@@ -1,0 +1,117 @@
+{
+  "sanity_check": 5,
+  "description": "LOSO leave-one-source-out on Read My Ears 283 clips",
+  "n_clips": 283,
+  "n_unique_sources": 12,
+  "sources": [
+    "S1",
+    "S10",
+    "S11",
+    "S12",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9"
+  ],
+  "clips_per_source": {
+    "S2": 25,
+    "S6": 19,
+    "S3": 28,
+    "S4": 32,
+    "S1": 21,
+    "S12": 23,
+    "S9": 24,
+    "S5": 25,
+    "S8": 24,
+    "S10": 22,
+    "S7": 21,
+    "S11": 19
+  },
+  "configs": {
+    "ssv2_motion": {
+      "backbone": "ssv2",
+      "mode": "motion",
+      "n": 283,
+      "loo_auc": 0.9696151924037981,
+      "loso_auc": 0.8746126936531734,
+      "delta": -0.09500249875062472,
+      "perm_p_value": 0.0,
+      "perm_mean": 0.5030152423788106,
+      "perm_std": 0.04303510941127371,
+      "verdict": "\u2713 ROBUST"
+    },
+    "pt_motion": {
+      "backbone": "pt",
+      "mode": "motion",
+      "n": 283,
+      "loo_auc": 0.9696151924037981,
+      "loso_auc": 0.8746126936531734,
+      "delta": -0.09500249875062472,
+      "perm_p_value": 0.0,
+      "perm_mean": 0.5030152423788106,
+      "perm_std": 0.04303510941127371,
+      "verdict": "\u2713 ROBUST"
+    },
+    "dinov2_motion": {
+      "backbone": "dinov2",
+      "mode": "motion",
+      "n": 283,
+      "loo_auc": 0.7804097951024488,
+      "loso_auc": 0.5141929035482259,
+      "delta": -0.2662168915542229,
+      "perm_p_value": 0.335,
+      "perm_mean": 0.5010824587706147,
+      "perm_std": 0.042230790535116226,
+      "verdict": "\u274c LEAKAGE"
+    },
+    "concat_motion": {
+      "backbone": "concat",
+      "mode": "motion",
+      "n": 283,
+      "loo_auc": 0.9693153423288356,
+      "loso_auc": 0.746576711644178,
+      "delta": -0.2227386306846576,
+      "perm_p_value": 0.0,
+      "perm_mean": 0.5019605197401299,
+      "perm_std": 0.04435322703535069,
+      "verdict": "\u26a0 PARTIAL"
+    },
+    "ssv2_bgmasked": {
+      "backbone": "ssv2",
+      "mode": "bgmasked",
+      "n": 283,
+      "loo_auc": 0.9114942528735632,
+      "loso_auc": 0.7642678660669666,
+      "delta": -0.1472263868065966,
+      "perm_p_value": 0.0,
+      "perm_mean": 0.503254872563718,
+      "perm_std": 0.04551736430297011,
+      "verdict": "\u26a0 PARTIAL"
+    },
+    "dinov2_bgmasked": {
+      "backbone": "dinov2",
+      "mode": "bgmasked",
+      "n": 283,
+      "loo_auc": 0.8088955522238881,
+      "loso_auc": 0.5139430284857571,
+      "delta": -0.29495252373813097,
+      "perm_p_value": 0.365,
+      "perm_mean": 0.4959505247376312,
+      "perm_std": 0.04270379633446035,
+      "verdict": "\u274c LEAKAGE"
+    }
+  },
+  "best_config": {
+    "name": "ssv2_motion",
+    "loso_auc": 0.8746126936531734
+  },
+  "reference_baselines": {
+    "paper_claim_alves_2025": 0.875,
+    "our_loo_unmasked_iter6": 0.97,
+    "our_loo_bgmasked_sanity2": 0.911
+  }
+}

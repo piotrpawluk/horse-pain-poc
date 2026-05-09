@@ -1,0 +1,386 @@
+{
+  "mode": "ablation_a",
+  "pooled_auc": 0.5857142857142857,
+  "delta_vs_phase3": -0.0956043956043956,
+  "regression_vs_phase3": true,
+  "auc_95_ci_delong": [
+    0.39025505074680156,
+    0.7811735206817699
+  ],
+  "auc_95_ci_subject_bootstrap": [
+    0.3824185463659148,
+    0.7884814049586777
+  ],
+  "bootstrap_mean": 0.5931574251734539,
+  "bootstrap_n_kept": 2000,
+  "p_value": 0.23376623376623376,
+  "n_permutations": 1000,
+  "permutation_null_mean": 0.48895000000000005,
+  "permutation_seed": 42,
+  "fold_dist": {
+    "min": 0.0,
+    "median": 0.75,
+    "max": 1.0,
+    "n_defined": 8,
+    "n_skipped": 4
+  },
+  "fold_log": [
+    {
+      "source": "S1",
+      "n_test": 2,
+      "n_pos": 0,
+      "n_neg": 2,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S2",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S3",
+      "n_test": 3,
+      "n_pos": 3,
+      "n_neg": 0,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S4",
+      "n_test": 2,
+      "n_pos": 1,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 0.0
+    },
+    {
+      "source": "S5",
+      "n_test": 3,
+      "n_pos": 1,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 0.5
+    },
+    {
+      "source": "S6",
+      "n_test": 3,
+      "n_pos": 0,
+      "n_neg": 3,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S7",
+      "n_test": 3,
+      "n_pos": 0,
+      "n_neg": 3,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S8",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S9",
+      "n_test": 3,
+      "n_pos": 1,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 0.5
+    },
+    {
+      "source": "S10",
+      "n_test": 3,
+      "n_pos": 1,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S11",
+      "n_test": 3,
+      "n_pos": 1,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 0.5
+    },
+    {
+      "source": "S12",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 1.0
+    }
+  ],
+  "n_aligned": 34,
+  "n_dropped_no_embedding": 0,
+  "alignment_log": [],
+  "decision_per_pre_reg": "0.55-0.65",
+  "factor_d_suppression": null,
+  "config": {
+    "classifier": "RidgeClassifier",
+    "alpha": 1.0,
+    "class_weight": "balanced",
+    "scaler": "StandardScaler refit per fold",
+    "primary_metric": "pooled-prediction AUC",
+    "permutation_design": "global label shuffle, full LOSO per permutation",
+    "p_value_form": "(sum(null >= observed) + 1) / (n + 1)",
+    "ci_method_primary": "DeLong (1988) analytical",
+    "ci_method_companion": "subject-bootstrap with replacement, n=2000"
+  },
+  "embeddings_path": "outputs/vjepa2_embeddings_eye.npz",
+  "labels_path": "outputs/eye_relabel_unmasked.txt",
+  "phase3_pooled_auc_reference": 0.6813186813186813,
+  "regression_threshold": 0.6313186813186813,
+  "per_clip": [
+    {
+      "clip": "background_S1.mp4_12_.mp4",
+      "parent_clip": "background_S1.mp4_12_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.326712965965271
+    },
+    {
+      "clip": "background_S1.mp4_7_.mp4",
+      "parent_clip": "background_S1.mp4_7_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.6847289204597473
+    },
+    {
+      "clip": "action_S2.mp4_7_.mp4",
+      "parent_clip": "action_S2.mp4_7_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.7657421827316284
+    },
+    {
+      "clip": "background_S2.mp4_10_.mp4",
+      "parent_clip": "background_S2.mp4_10_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": -0.6745321750640869
+    },
+    {
+      "clip": "background_S2.mp4_11_.mp4",
+      "parent_clip": "background_S2.mp4_11_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 1.1917990446090698
+    },
+    {
+      "clip": "action_S3.mp4_2_.mp4",
+      "parent_clip": "action_S3.mp4_2_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.6433161497116089
+    },
+    {
+      "clip": "action_S3.mp4_8_.mp4",
+      "parent_clip": "action_S3.mp4_8_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.1434718370437622
+    },
+    {
+      "clip": "background_S3.mp4_3_.mp4",
+      "parent_clip": "background_S3.mp4_3_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.23156924545764923
+    },
+    {
+      "clip": "action_S4.mp4_0_.mp4",
+      "parent_clip": "action_S4.mp4_0_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.5347672700881958
+    },
+    {
+      "clip": "action_S4.mp4_15_.mp4",
+      "parent_clip": "action_S4.mp4_15_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": -0.33000171184539795
+    },
+    {
+      "clip": "action_S5.mp4_2_.mp4",
+      "parent_clip": "action_S5.mp4_2_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": 1.0307661294937134
+    },
+    {
+      "clip": "action_S5.mp4_5_.mp4",
+      "parent_clip": "action_S5.mp4_5_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": 0.22106416523456573
+    },
+    {
+      "clip": "background_S5.mp4_10_.mp4",
+      "parent_clip": "background_S5.mp4_10_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.4827464818954468
+    },
+    {
+      "clip": "action_S6.mp4_2_.mp4",
+      "parent_clip": "action_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.510213315486908
+    },
+    {
+      "clip": "background_S6.mp4_2_.mp4",
+      "parent_clip": "background_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": 0.24689747393131256
+    },
+    {
+      "clip": "background_S6.mp4_3_.mp4",
+      "parent_clip": "background_S6.mp4_3_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": 0.573240339756012
+    },
+    {
+      "clip": "background_S7.mp4_12_.mp4",
+      "parent_clip": "background_S7.mp4_12_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.3727748394012451
+    },
+    {
+      "clip": "background_S7.mp4_17_.mp4",
+      "parent_clip": "background_S7.mp4_17_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.5814881324768066
+    },
+    {
+      "clip": "background_S7.mp4_9_.mp4",
+      "parent_clip": "background_S7.mp4_9_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.7957501411437988
+    },
+    {
+      "clip": "action_S8.mp4_12_.mp4",
+      "parent_clip": "action_S8.mp4_12_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": -1.991470217704773
+    },
+    {
+      "clip": "background_S8.mp4_3_.mp4",
+      "parent_clip": "background_S8.mp4_3_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": -1.3869352340698242
+    },
+    {
+      "clip": "background_S8.mp4_7_.mp4",
+      "parent_clip": "background_S8.mp4_7_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": -1.2735154628753662
+    },
+    {
+      "clip": "action_S9.mp4_4_.mp4",
+      "parent_clip": "action_S9.mp4_4_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.37720829248428345
+    },
+    {
+      "clip": "action_S9.mp4_7_.mp4",
+      "parent_clip": "action_S9.mp4_7_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 2.1161301136016846
+    },
+    {
+      "clip": "background_S9.mp4_8_.mp4",
+      "parent_clip": "background_S9.mp4_8_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.13008412718772888
+    },
+    {
+      "clip": "action_S10.mp4_0_.mp4",
+      "parent_clip": "action_S10.mp4_0_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.39449945092201233
+    },
+    {
+      "clip": "background_S10.mp4_11_.mp4",
+      "parent_clip": "background_S10.mp4_11_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": -0.15179795026779175
+    },
+    {
+      "clip": "background_S10.mp4_3_.mp4",
+      "parent_clip": "background_S10.mp4_3_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -1.381722092628479
+    },
+    {
+      "clip": "action_S11.mp4_0_.mp4",
+      "parent_clip": "action_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": 0.5629592537879944
+    },
+    {
+      "clip": "action_S11.mp4_6_.mp4",
+      "parent_clip": "action_S11.mp4_6_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -0.19668909907341003
+    },
+    {
+      "clip": "background_S11.mp4_0_.mp4",
+      "parent_clip": "background_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.06018231809139252
+    },
+    {
+      "clip": "background_S12.mp4_2_.mp4",
+      "parent_clip": "background_S12.mp4_2_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.1641167253255844
+    },
+    {
+      "clip": "background_S12.mp4_7_.mp4",
+      "parent_clip": "background_S12.mp4_7_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 1.3453010320663452
+    },
+    {
+      "clip": "background_S12.mp4_9_.mp4",
+      "parent_clip": "background_S12.mp4_9_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 0.3260761499404907
+    }
+  ],
+  "timestamp": "2026-05-09T00:38:15+0200"
+}

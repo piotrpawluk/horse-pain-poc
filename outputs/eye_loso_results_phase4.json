@@ -1,0 +1,441 @@
+{
+  "mode": "primary",
+  "pooled_auc": 0.5854341736694678,
+  "delta_vs_phase3": -0.09588450764921352,
+  "regression_vs_phase3": true,
+  "auc_95_ci_delong": [
+    0.39453984529730507,
+    0.7763285020416306
+  ],
+  "auc_95_ci_subject_bootstrap": [
+    0.2939346590909091,
+    0.8068783068783069
+  ],
+  "bootstrap_mean": 0.5701163665318421,
+  "bootstrap_n_kept": 2000,
+  "p_value": 0.23476523476523475,
+  "n_permutations": 1000,
+  "permutation_null_mean": 0.49403361344537816,
+  "permutation_seed": 42,
+  "fold_dist": {
+    "min": 0.0,
+    "median": 0.25,
+    "max": 1.0,
+    "n_defined": 8,
+    "n_skipped": 4
+  },
+  "fold_log": [
+    {
+      "source": "S1",
+      "n_test": 2,
+      "n_pos": 0,
+      "n_neg": 2,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S2",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S3",
+      "n_test": 4,
+      "n_pos": 4,
+      "n_neg": 0,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S4",
+      "n_test": 2,
+      "n_pos": 1,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 0.0
+    },
+    {
+      "source": "S5",
+      "n_test": 4,
+      "n_pos": 2,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 0.0
+    },
+    {
+      "source": "S6",
+      "n_test": 3,
+      "n_pos": 0,
+      "n_neg": 3,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S7",
+      "n_test": 3,
+      "n_pos": 0,
+      "n_neg": 3,
+      "defined": false,
+      "fold_auc": null
+    },
+    {
+      "source": "S8",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S9",
+      "n_test": 3,
+      "n_pos": 1,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 0.5
+    },
+    {
+      "source": "S10",
+      "n_test": 4,
+      "n_pos": 2,
+      "n_neg": 2,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S11",
+      "n_test": 4,
+      "n_pos": 1,
+      "n_neg": 3,
+      "defined": true,
+      "fold_auc": 0.0
+    },
+    {
+      "source": "S12",
+      "n_test": 3,
+      "n_pos": 2,
+      "n_neg": 1,
+      "defined": true,
+      "fold_auc": 0.0
+    }
+  ],
+  "n_aligned": 38,
+  "n_dropped_no_embedding": 0,
+  "alignment_log": [],
+  "decision_per_pre_reg": "0.55-0.65",
+  "factor_d_suppression": {
+    "persistent_bg_clips": [
+      {
+        "clip": "action_S5.mp4_2_.mp4",
+        "score": 0.18855319917201996,
+        "label_in_phase4": 0,
+        "below_median": false
+      },
+      {
+        "clip": "background_S6.mp4_2_.mp4",
+        "score": -0.9742013216018677,
+        "label_in_phase4": 0,
+        "below_median": true
+      },
+      {
+        "clip": "background_S6.mp4_3_.mp4",
+        "score": -0.8314075469970703,
+        "label_in_phase4": 0,
+        "below_median": true
+      }
+    ],
+    "median_bg_score": -0.1376011073589325,
+    "n_bg_clips_aggregated_to_parent": 20,
+    "n_targets_below_median": 2,
+    "n_targets_total": 3,
+    "verdict": "suppressed",
+    "criterion": "\u22652 of 3 persistent BG-target clips score strictly below median of all Phase 4 BG-labeled clips' decision_function scores (parent-clip max convention) \u2192 suppressed; \u22641 \u2192 persistent"
+  },
+  "config": {
+    "classifier": "RidgeClassifier",
+    "alpha": 1.0,
+    "class_weight": "balanced",
+    "scaler": "StandardScaler refit per fold",
+    "primary_metric": "pooled-prediction AUC",
+    "permutation_design": "global label shuffle, full LOSO per permutation",
+    "p_value_form": "(sum(null >= observed) + 1) / (n + 1)",
+    "ci_method_primary": "DeLong (1988) analytical",
+    "ci_method_companion": "subject-bootstrap with replacement, n=2000"
+  },
+  "embeddings_path": "outputs/vjepa2_embeddings_eye_v2.npz",
+  "labels_path": "outputs/eye_relabel_unmasked.txt",
+  "phase3_pooled_auc_reference": 0.6813186813186813,
+  "regression_threshold": 0.6313186813186813,
+  "per_clip": [
+    {
+      "clip": "background_S1.mp4_12_.mp4",
+      "parent_clip": "background_S1.mp4_12_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": 0.20877817273139954
+    },
+    {
+      "clip": "background_S1.mp4_7_.mp4",
+      "parent_clip": "background_S1.mp4_7_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": 0.2551957666873932
+    },
+    {
+      "clip": "action_S2.mp4_7_.mp4",
+      "parent_clip": "action_S2.mp4_7_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.7340683937072754
+    },
+    {
+      "clip": "background_S2.mp4_10_.mp4",
+      "parent_clip": "background_S2.mp4_10_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": -1.0900057554244995
+    },
+    {
+      "clip": "background_S2.mp4_11_.mp4",
+      "parent_clip": "background_S2.mp4_11_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 0.5114400386810303
+    },
+    {
+      "clip": "action_S3.mp4_2_.mp4",
+      "parent_clip": "action_S3.mp4_2_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.8591889142990112
+    },
+    {
+      "clip": "action_S3.mp4_8___left.mp4",
+      "parent_clip": "action_S3.mp4_8_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 1.2347915172576904
+    },
+    {
+      "clip": "action_S3.mp4_8___right.mp4",
+      "parent_clip": "action_S3.mp4_8_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 1.213852047920227
+    },
+    {
+      "clip": "background_S3.mp4_3_.mp4",
+      "parent_clip": "background_S3.mp4_3_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.19729061424732208
+    },
+    {
+      "clip": "action_S4.mp4_0_.mp4",
+      "parent_clip": "action_S4.mp4_0_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.7889368534088135
+    },
+    {
+      "clip": "action_S4.mp4_15_.mp4",
+      "parent_clip": "action_S4.mp4_15_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": -1.5804754495620728
+    },
+    {
+      "clip": "action_S5.mp4_2_.mp4",
+      "parent_clip": "action_S5.mp4_2_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": 0.18855319917201996
+    },
+    {
+      "clip": "action_S5.mp4_5_.mp4",
+      "parent_clip": "action_S5.mp4_5_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": 0.7784972190856934
+    },
+    {
+      "clip": "background_S5.mp4_10___left.mp4",
+      "parent_clip": "background_S5.mp4_10_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": -0.3627634048461914
+    },
+    {
+      "clip": "background_S5.mp4_10___right.mp4",
+      "parent_clip": "background_S5.mp4_10_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": -0.4739440083503723
+    },
+    {
+      "clip": "action_S6.mp4_2_.mp4",
+      "parent_clip": "action_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.607579231262207
+    },
+    {
+      "clip": "background_S6.mp4_2_.mp4",
+      "parent_clip": "background_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.9742013216018677
+    },
+    {
+      "clip": "background_S6.mp4_3_.mp4",
+      "parent_clip": "background_S6.mp4_3_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.8314075469970703
+    },
+    {
+      "clip": "background_S7.mp4_12_.mp4",
+      "parent_clip": "background_S7.mp4_12_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.3529729843139648
+    },
+    {
+      "clip": "background_S7.mp4_17_.mp4",
+      "parent_clip": "background_S7.mp4_17_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.3382028341293335
+    },
+    {
+      "clip": "background_S7.mp4_9_.mp4",
+      "parent_clip": "background_S7.mp4_9_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.9404571652412415
+    },
+    {
+      "clip": "action_S8.mp4_12_.mp4",
+      "parent_clip": "action_S8.mp4_12_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": -1.93916654586792
+    },
+    {
+      "clip": "background_S8.mp4_3_.mp4",
+      "parent_clip": "background_S8.mp4_3_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": -1.4102905988693237
+    },
+    {
+      "clip": "background_S8.mp4_7_.mp4",
+      "parent_clip": "background_S8.mp4_7_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": -1.4200921058654785
+    },
+    {
+      "clip": "action_S9.mp4_4_.mp4",
+      "parent_clip": "action_S9.mp4_4_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.5810665488243103
+    },
+    {
+      "clip": "action_S9.mp4_7_.mp4",
+      "parent_clip": "action_S9.mp4_7_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 0.05964785814285278
+    },
+    {
+      "clip": "background_S9.mp4_8_.mp4",
+      "parent_clip": "background_S9.mp4_8_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 1.841475009918213
+    },
+    {
+      "clip": "action_S10.mp4_0_.mp4",
+      "parent_clip": "action_S10.mp4_0_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.1162601113319397
+    },
+    {
+      "clip": "background_S10.mp4_11___left.mp4",
+      "parent_clip": "background_S10.mp4_11_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.051612138748169
+    },
+    {
+      "clip": "background_S10.mp4_11___right.mp4",
+      "parent_clip": "background_S10.mp4_11_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.1509006023406982
+    },
+    {
+      "clip": "background_S10.mp4_3_.mp4",
+      "parent_clip": "background_S10.mp4_3_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -1.0968378782272339
+    },
+    {
+      "clip": "action_S11.mp4_0_.mp4",
+      "parent_clip": "action_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -0.3348500728607178
+    },
+    {
+      "clip": "action_S11.mp4_6___left.mp4",
+      "parent_clip": "action_S11.mp4_6_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": 0.7613319158554077
+    },
+    {
+      "clip": "action_S11.mp4_6___right.mp4",
+      "parent_clip": "action_S11.mp4_6_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": 0.20976859331130981
+    },
+    {
+      "clip": "background_S11.mp4_0_.mp4",
+      "parent_clip": "background_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.6146751642227173
+    },
+    {
+      "clip": "background_S12.mp4_2_.mp4",
+      "parent_clip": "background_S12.mp4_2_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": 0.8152874708175659
+    },
+    {
+      "clip": "background_S12.mp4_7_.mp4",
+      "parent_clip": "background_S12.mp4_7_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 0.11056514084339142
+    },
+    {
+      "clip": "background_S12.mp4_9_.mp4",
+      "parent_clip": "background_S12.mp4_9_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 0.26027607917785645
+    }
+  ],
+  "timestamp": "2026-05-09T00:37:23+0200"
+}

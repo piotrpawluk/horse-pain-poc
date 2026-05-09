@@ -1,0 +1,114 @@
+{
+  "total_clips": 36,
+  "scored_clips": 36,
+  "errors": 0,
+  "overall_agreement": 0.6388888888888888,
+  "per_source": {
+    "S1": {
+      "n": 3,
+      "agreement_rate": 1.0,
+      "disagreement_count": 0,
+      "mean_confidence_on_disagreements": 0.0,
+      "disagreement_clips": []
+    },
+    "S10": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.99,
+      "disagreement_clips": [
+        "videos/action_S10.mp4_0_.mp4"
+      ]
+    },
+    "S11": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 1.0,
+      "disagreement_clips": [
+        "videos/action_S11.mp4_0_.mp4",
+        "videos/action_S11.mp4_6_.mp4"
+      ]
+    },
+    "S12": {
+      "n": 3,
+      "agreement_rate": 1.0,
+      "disagreement_count": 0,
+      "mean_confidence_on_disagreements": 0.0,
+      "disagreement_clips": []
+    },
+    "S2": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 1.0,
+      "disagreement_clips": [
+        "videos/action_S2.mp4_7_.mp4"
+      ]
+    },
+    "S3": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 1.0,
+      "disagreement_clips": [
+        "videos/action_S3.mp4_8_.mp4"
+      ]
+    },
+    "S4": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.975,
+      "disagreement_clips": [
+        "videos/action_S4.mp4_15_.mp4",
+        "videos/action_S4.mp4_0_.mp4"
+      ]
+    },
+    "S5": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 0.995,
+      "disagreement_clips": [
+        "videos/action_S5.mp4_5_.mp4",
+        "videos/action_S5.mp4_2_.mp4"
+      ]
+    },
+    "S6": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.99,
+      "disagreement_clips": [
+        "videos/action_S6.mp4_2_.mp4"
+      ]
+    },
+    "S7": {
+      "n": 3,
+      "agreement_rate": 1.0,
+      "disagreement_count": 0,
+      "mean_confidence_on_disagreements": 0.0,
+      "disagreement_clips": []
+    },
+    "S8": {
+      "n": 3,
+      "agreement_rate": 0.6666666666666666,
+      "disagreement_count": 1,
+      "mean_confidence_on_disagreements": 0.99,
+      "disagreement_clips": [
+        "videos/action_S8.mp4_12_.mp4"
+      ]
+    },
+    "S9": {
+      "n": 3,
+      "agreement_rate": 0.3333333333333333,
+      "disagreement_count": 2,
+      "mean_confidence_on_disagreements": 1.0,
+      "disagreement_clips": [
+        "videos/action_S9.mp4_7_.mp4",
+        "videos/action_S9.mp4_4_.mp4"
+      ]
+    }
+  }
+}
