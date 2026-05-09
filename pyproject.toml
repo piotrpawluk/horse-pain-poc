@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "Methodology-first PoC for automated RHpE single-behavior classification with V-JEPA-2 — open-source stack sanity check."
 requires-python = ">=3.10,<3.12"
 dependencies = [
-    "deeplabcut[modelzoo]>=3.0.0rc14",
+    "deeplabcut[modelzoo]>=3.0.0rc13",
     "torch>=2.3",
     "torchvision",
     "huggingface_hub>=0.24",

@@ -31,7 +31,7 @@ fi
 # 3. dependencies from pyproject.toml
 echo "==> [3/6] Installing dependencies (DLC, torch, HF, jupyter)..."
 uv pip install --python .venv/bin/python --prerelease=allow \
-    "deeplabcut[modelzoo]>=3.0.0rc14" \
+    "deeplabcut[modelzoo]>=3.0.0rc13" \
     "torch>=2.3" \
     "torchvision" \
     "huggingface_hub>=0.24" \
