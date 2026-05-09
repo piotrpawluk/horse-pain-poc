@@ -629,6 +629,45 @@ This reproduces the Read My Ears 0.8746 ear-track baseline. Eye-track is the sam
 
 ---
 
+## Lesson 19 — Percentile-based confidence thresholding can disproportionately remove diagnostic-rich cases (May 2026, Phase 7)
+
+Stage 1 §7 of Phase 7's pre-registration locked a confidence-threshold meta-rule: `threshold = max(0.5, p25_pooled_observed)`. The intent was adaptive — raise the bar when DLC is uniformly confident, fall to a 0.5 floor when DLC is unconfident. The implementation conflated *percentile* with *quality signal*.
+
+**Empirical falsification (Phase 7 Step 1.5)**: pooled DLC target-eye-keypoint confidence on 34 RME clips × 891 frames had p25 = 0.8872, median 0.9190. Mechanical application would set threshold at 0.8872 — and by construction, ~25% of pooled frames are at-or-below the 25th percentile. Per-clip recomputation: **8/34 clips would be DROPPED** from LOSO (>50% frame failure) and **3/34 more would fall to single-keypoint fallback** (>25% but ≤50%).
+
+**The non-coincidence**: 4 of the 8 dropped clips are V3_NEWLY_RECOVERED — exactly the clips Phase 5 manual annotation specifically rescued because they're harder cases (occlusion, profile angles, perceptual-floor motion). The same difficulty correlated with lower DLC keypoint confidence. **Case difficulty correlates with model confidence**, which means percentile thresholding disproportionately removes the highest-information clips.
+
+**Generalizable observation**: a percentile is a positional statistic, not a quality measure. On unimodal high-confidence distributions, the lower 25% is *not* the unreliable subset — it is the lower 25% by definition. The meta-rule's adaptive intent works only when the distribution is bimodal (a meaningful low-confidence cluster distinct from the high-confidence body). Verify bimodality before reusing percentile-based thresholds; otherwise, use a quality-anchored value (a hard floor calibrated against known-bad detections, or an explicit cluster-boundary detection).
+
+**Resolution (Phase 7 Stage 2 amendment v1, user adjudicated Option B)**: hard-lock threshold at 0.5; reframe §7 as future-phase consideration. Anti-pattern lock added: future agents must NOT mechanically reapply `max(0.5, p25_pooled)` to a different dataset. See `docs/phase7_audit.md` and `outputs/track_b_phase7_preregistration_stage2_amendment.md`.
+
+The discipline pattern caught this empirically: the Step 1.5 instrumentation reported the threshold preview alongside the per-clip drop-count consequence, surfaced via user-approval checkpoint, and routed to Stage 2 amendment without entering the LOSO-running stage with the broken rule.
+
+---
+
+## Lesson 20 — Keypoint naming convention follows training-set anatomy, not image-side geometry (May 2026, Phase 7)
+
+Stage 1 §4 of Phase 7's pre-registration locked an eye-side assignment rule: manual eye box on image-RIGHT of face center → DLC `right_eye` keypoint; manual eye box on image-LEFT → DLC `left_eye`. The anatomical reasoning (which DLC keypoint corresponds to the visible eye in a horse profile) was inverted.
+
+**Empirical falsification (Phase 7 broken-rule run + side-assignment review)**:
+
+- Broken-rule LOSO on 34 RME clips: AUC 0.5788 (G1 fail). Mean DLC target-eye-keypoint confidence on DLC_NEWLY_LOST clips = 0.89 (DLC was confident); median IoU vs Phase 5 manual eye boxes = 0.000 (DLC was confidently wrong). Locked Stage 1 §9 routing matrix predicted exactly this combination → CONFIDENT_MISPLACEMENT_FAIL with prescribed next-step "side-assignment review."
+- Counterfactual on all 34 clips: 24/34 had higher IoU under flipped rule. Mean IoU 0.17 (locked) vs 0.42 (flipped) — 2.5×.
+- Phase 0 Wikimedia confirmation (231/287 frames where both eyes are confidently localized): `right_eye_x < left_eye_x` in 131 frames; `left_eye_x < right_eye_x` in 1. Confirms DLC's labeling is **horse-anatomical** (right_eye = horse's anatomical right eye, which appears image-LEFT of left_eye when the horse faces toward camera — mirror).
+
+**The §4 reasoning error**: profile-LEFT horse (head pointing image-LEFT) — the camera sees the horse's *LEFT* side (not right; the horse's body is image-right of the head, which means the camera is on the opposite side from the horse's right). Visible eye is anatomical LEFT → DLC `left_eye`. The §4 lock had the camera-facing-side reasoning inverted.
+
+**Generalizable observation**: DLC keypoint names follow training-set anatomical convention (horse's anatomical right = `right_eye`), not image-side geometry. SuperAnimal-Quadruped is trained with anatomical labels because they're invariant to viewer position. Before locking any side-assignment rule on a new dataset:
+
+1. Verify convention empirically. Run the model on a small set of frames where both eyes are visible (frontal/3-quarter view) and compare relative x-coordinates: anatomical right is image-LEFT for horses facing the camera (mirror).
+2. Don't rely on intuitive anatomical reasoning. Even after the inversion was diagnosed, the underlying logical error required deliberate reconstruction to articulate. Empirical verification is cheaper than re-deriving the anatomical chain.
+
+**Resolution (Phase 7 Stage 2 amendment v2, user adjudicated Option B)**: flip the side-assignment mapping (`right_of_face_center → left_eye`, `left_of_face_center → right_eye`); ambiguous-clip rule unchanged; side counts (23/5/6) unchanged — only the target keypoint name flips. Phase 7 corrected re-run: AUC 0.8462, OUTPERFORM_PHASE_5_AUC_ONLY. See `docs/phase7_audit.md` and `outputs/track_b_phase7_preregistration_stage2_amendment_v2.md`.
+
+The discipline pattern caught this through its locked routing matrix: CONFIDENT_MISPLACEMENT_FAIL → "Geometry/side-assignment review first" was pre-registered before any Phase 7 compute. The empirical investigation IS that review. The matrix correctly anticipated and routed.
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
