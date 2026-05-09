@@ -1,0 +1,79 @@
+{
+  "n_frames_compared": 15,
+  "n_clips_compared": 5,
+  "iou_distribution": {
+    "min": 0.5325757575757576,
+    "median": 0.7653383934218849,
+    "mean": 0.7273139432971524,
+    "max": 0.8774578651685393
+  },
+  "per_clip": [
+    {
+      "clip": "action_S11.mp4_0_.mp4",
+      "ious_per_frame": [
+        0.5906283280085197,
+        0.7726190476190476,
+        0.7971014492753623
+      ],
+      "mean": 0.7201162749676433
+    },
+    {
+      "clip": "action_S3.mp4_8_.mp4",
+      "ious_per_frame": [
+        0.8774578651685393,
+        0.7333333333333333,
+        0.84
+      ],
+      "mean": 0.8169303995006242
+    },
+    {
+      "clip": "action_S6.mp4_2_.mp4",
+      "ious_per_frame": [
+        0.7653383934218849,
+        0.5965806838632274,
+        0.7758620689655172
+      ],
+      "mean": 0.7125937154168765
+    },
+    {
+      "clip": "background_S7.mp4_9_.mp4",
+      "ious_per_frame": [
+        0.7964900438744515,
+        0.7569180683667933,
+        0.8459972862957937
+      ],
+      "mean": 0.7998017995123462
+    },
+    {
+      "clip": "background_S8.mp4_3_.mp4",
+      "ious_per_frame": [
+        0.5325757575757576,
+        0.6947368421052632,
+        0.5340699815837937
+      ],
+      "mean": 0.5871275270882715
+    }
+  ],
+  "all_ious": [
+    0.5906283280085197,
+    0.7726190476190476,
+    0.7971014492753623,
+    0.8774578651685393,
+    0.7333333333333333,
+    0.84,
+    0.7653383934218849,
+    0.5965806838632274,
+    0.7758620689655172,
+    0.7964900438744515,
+    0.7569180683667933,
+    0.8459972862957937,
+    0.5325757575757576,
+    0.6947368421052632,
+    0.5340699815837937
+  ],
+  "locked_gate_threshold": 0.6,
+  "verdict": "OK",
+  "phase5a_hash_ref": "9a4c1673...",
+  "intra_rater_protocol": "\u22654-6h gap, same observer, distinct UUID masks (5a seed=45, 5b seed=46)",
+  "limitation_acknowledged": "\u226548h gap is the methodologically ideal; \u22654-6h is the locked compromise given solo+fast Phase 5 constraints, deferred to Phase 6 for proper validation."
+}

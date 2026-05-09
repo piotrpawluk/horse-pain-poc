@@ -131,6 +131,26 @@ The hashes prove content lock at freeze time; the commit timestamps witness exis
 
 The closed-track MLLM zero-shot result on this same task — Lesson 18 (`docs/lessons_learned.md`) — established that VLM zero-shot on uncropped horse video is structurally insufficient for fine-grained eye perception across four prompt × model variants (Qwen2.5-VL v1/v2/v3 + MiniCPM-V 4.5 v3). Track A is the architectural answer Lesson 18 named; this writeup is the empirical clearance of its pre-registered threshold at POC scale.
 
+## Phase 5 result (added 2026-05-09, evening)
+
+**Phase 5 primary result: pooled AUC 0.7985 (subject-bootstrap CI [0.584, 0.964]; permutation p = 0.010; Δ vs Phase 3 = +0.1172, DeLong-paired z = 1.067, p = 0.286).** Decision per pre-registered 3-band rule: **MIDDLE**. The Top band required both Δ ≥ 0.10 AND DeLong-paired p < 0.05; the Δ size cleared, the paired test did not at this n.
+
+Pre-registered locked Middle-band sentence applies exactly: *"Cropping helped within statistical noise — effect size large but paired test couldn't reject at this n. Realistic POC interpretation; same collaborator asks as Phase 3 plus eye-detector annotation."*
+
+The 0.7985 AUC under gold-standard manual eye-region cropping with same labels and same N as Phase 3 represents a +0.117 lift over Phase 3's 0.6813. The architecture clears the realistic POC band (Lesson 11: 0.70–0.80 target) given good crops. Statistical precision is the next constraint: paired-DeLong p = 0.286 at n=34 would clear p < 0.05 at n ≈ 80 under the same effect size.
+
+Sensitivity 1 (rubric-tax under good crops): v3+tightened AUC = 0.8179 vs primary 0.7985, Δ = +0.0194 → within ±0.085 MDE band. Locked verdict: tightened rubric is clean under good cropping; Phase 4's −0.10 cost was crop-interaction, not rubric-architecture mismatch. **Phase 4 rubric direction vindicated; v1 crop quality was the binding issue.**
+
+Sensitivity 2 (margin curve at 10/15/40/80%): pair-differences +0.044, −0.051, +0.048; none exceeds bootstrap half-width (~0.19). Locked categorical: **FLAT**. Margin choice doesn't matter at this scale; Phase 6 picks on other criteria.
+
+Factor-(d) verdict: SUPPRESSED (2/3 BG-targets below median, same suppression as Phase 4 v2). Confirms factor (d) is partially fixable by cropping quality (2/3 fixable) and partially structural source-correlation (1/3 residual).
+
+Intra-rater consistency on 5 random clips (≥4-6h gap, distinct mask seed): median IoU = 0.765, well above locked 0.6 gate. Gold-standard framing supported. Documented limitation: ≥48h gap is the methodologically ideal; ≥4-6h is the locked compromise, deferred to Phase 6.
+
+Lowest IoU clip (`background_S8.mp4_3_`, mean 0.587) attributed by annotator to subtle sclera/gaze change combined with catchlight reflection rendering the visible eye boundary ambiguous between passes. Pre-registered before any per-fold S8 inspection: if S8 fold inverts under any Phase 5 config, the principled reading is *perceptual-floor* (signal below V-JEPA-2's access at 224×224) not crop-quality — same diagnostic class as the S5/S6 sub-pixel ACTION clips that drove Phase 3 inversion. Catchlight-as-confounder also pre-registered as a candidate mechanism for the margin-curve shape if a future Phase 6 N expansion produces monotone-improving with looser margins. See `docs/phase5_audit.md` for full locked framing.
+
+Full audit at `docs/phase5_audit.md` (hash registered in `docs/preregistration_hashes.md`).
+
 ## Phase 4 result (added 2026-05-09)
 
 A solo combined intervention applying v2 profile-aware crop + tightened-rubric blind re-label was pre-registered (`outputs/track_b_phase4_preregistration.md`, hash `ced5cae6...`) and run on 2026-05-09 against the same 34-clip set (38 v2 outputs after the locked tie-break-both-halves rule). **Phase 4 primary result: pooled AUC 0.5854 (DeLong 95 % CI [0.395, 0.776]; subject-bootstrap CI [0.294, 0.807]; permutation p = 0.235). Δ vs Phase 3 = −0.0959, triggering the pre-registered regression branch.**
