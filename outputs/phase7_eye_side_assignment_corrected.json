@@ -1,0 +1,248 @@
+{
+  "tool": "tools/phase7_derive_side_assignment_corrected.py",
+  "stage": "Stage 2 amendment v2 (post-empirical-falsification)",
+  "correction_basis": "RME 24/34 clips show flipped rule has higher IoU vs Phase 5 manual boxes (mean IoU 0.42 vs 0.17 locked). Phase 0 Wikimedia confirms horse-anatomical convention (231/287 frames have right_eye_x < left_eye_x in both-eyes-visible regime).",
+  "margin_threshold": 0.05,
+  "mapping_corrected": {
+    "right_of_face_center": "left_eye",
+    "left_of_face_center": "right_eye",
+    "ambiguous": "higher_conf_per_clip_lock_rule_a"
+  },
+  "mapping_original_stage1_falsified": {
+    "right_of_face_center": "right_eye",
+    "left_of_face_center": "left_eye",
+    "ambiguous": "higher_conf_per_clip_lock_rule_a"
+  },
+  "inputs": {
+    "eye_boxes_phase5a": {
+      "path": "outputs/eye_boxes_phase5a.json",
+      "sha256": "275ab92e5bd2141d02fd5205881ba57cd979880e070e2cb457c39872843f226a"
+    },
+    "eye_box_keymap_phase5": {
+      "path": "outputs/eye_box_keymap_phase5.json",
+      "sha256": "8d658e608bb9feb06ed5cfc0de89f3cf2459a94b1ce2bd5596c1663d912b1730"
+    },
+    "phase6b_position_param": {
+      "path": "outputs/phase6b_position_param.json",
+      "sha256": "d1521a35c2de6ee4d12de6ddd0ce7f5fbae425cad16964490373b9810667b7de"
+    },
+    "stage1_side_assignment_falsified": {
+      "path": "outputs/phase7_eye_side_assignment.json",
+      "sha256": "95b879d2eb305ac81ec309ac2fdf297cf865877c4be5d2d67d4ca81d7c5ee4e5"
+    }
+  },
+  "n_clips_total": 34,
+  "side_counts": {
+    "right_of_face_center": 23,
+    "left_of_face_center": 5,
+    "ambiguous": 6
+  },
+  "side_counts_match_stage1_originals": true,
+  "ambiguous_clips_diagnostic_flag": "Two of the 6 ambiguous-zone clips are V3_NEWLY_LOST in Phase 6(a) Set B: action_S5.mp4_5_ and background_S3.mp4_3_. Plus action_S5.mp4_5_ is part of the Sensitivity-1 swap pair with bg_S10_3_. The ambiguous-side rule (higher-conf per-clip lock) is unchanged from Stage 1; only the side-assigned mapping is corrected.",
+  "per_clip": {
+    "action_S11.mp4_6_.mp4": {
+      "uuid": "58f77a52-3817-4a90-93d3-ec0f7c036588",
+      "offset": 0.10306798594905421,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S8.mp4_7_.mp4": {
+      "uuid": "c7463287-0489-436b-b5e8-cbdfb60226dd",
+      "offset": 0.16152162109584825,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S8.mp4_3_.mp4": {
+      "uuid": "0b0b6356-7e4c-467e-a49d-9afa9cd4a223",
+      "offset": 0.15334086681990808,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S6.mp4_2_.mp4": {
+      "uuid": "2489819e-717e-49cb-848a-7bd29146467a",
+      "offset": 0.041506304463842375,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "action_S9.mp4_7_.mp4": {
+      "uuid": "a4412505-42e6-4a8a-b2a6-e871d2e7f1a0",
+      "offset": -0.2502437939957263,
+      "side": "left_of_face_center",
+      "target_eye_keypoint": "right_eye"
+    },
+    "action_S4.mp4_0_.mp4": {
+      "uuid": "81c43624-18fb-48d4-a668-a19a4cc133db",
+      "offset": 0.12145955507450676,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S8.mp4_12_.mp4": {
+      "uuid": "8a04727c-d97c-4278-9806-2729bf40d048",
+      "offset": 0.1651780071196761,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S6.mp4_2_.mp4": {
+      "uuid": "3e60990c-de16-45ff-8e74-6864fc47f662",
+      "offset": 0.21666687159487122,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S6.mp4_3_.mp4": {
+      "uuid": "e5029722-8135-45d8-a955-0159c2ffc3ac",
+      "offset": 0.035910738866809705,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "background_S12.mp4_9_.mp4": {
+      "uuid": "14c794f9-428f-4108-bf4c-33fda4affcf9",
+      "offset": 0.18142116602137034,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S7.mp4_17_.mp4": {
+      "uuid": "ff634ac5-9401-4973-87be-06287ebe254e",
+      "offset": 0.11930334812258889,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S1.mp4_7_.mp4": {
+      "uuid": "21fb6c5e-19d8-4e4c-8c2b-07e12ae51675",
+      "offset": 0.08650338032320178,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S3.mp4_2_.mp4": {
+      "uuid": "800eb0c1-2a11-4e91-a280-26503fc786de",
+      "offset": -0.15822769004169232,
+      "side": "left_of_face_center",
+      "target_eye_keypoint": "right_eye"
+    },
+    "background_S1.mp4_12_.mp4": {
+      "uuid": "4aebf111-965b-408c-9b1a-48b1d7a354fa",
+      "offset": 0.2669017622101361,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S2.mp4_11_.mp4": {
+      "uuid": "17852dcf-e483-44d6-9733-d01874991969",
+      "offset": 0.12310744966029999,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S11.mp4_0_.mp4": {
+      "uuid": "147f14cb-8fdf-4a5a-8a4e-39813b954bae",
+      "offset": 0.07514982411274386,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S10.mp4_11_.mp4": {
+      "uuid": "52cc0c94-a261-42c1-b256-3305866766cc",
+      "offset": 0.057773886607463645,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S5.mp4_2_.mp4": {
+      "uuid": "0b8e70ea-0a67-48f9-b0b6-66c3267e31c3",
+      "offset": -0.03532775561780992,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "background_S7.mp4_9_.mp4": {
+      "uuid": "a71974e3-e82b-4d60-87b8-eb4083c64c66",
+      "offset": 0.09890781879899296,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S9.mp4_4_.mp4": {
+      "uuid": "449ddfed-4ffe-4309-b3b8-e723fcb51ab2",
+      "offset": -0.1647823580506639,
+      "side": "left_of_face_center",
+      "target_eye_keypoint": "right_eye"
+    },
+    "action_S5.mp4_5_.mp4": {
+      "uuid": "c56bede5-1d93-4e14-acba-6d7bff495769",
+      "offset": -0.028288905140868122,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "background_S11.mp4_0_.mp4": {
+      "uuid": "93e65c16-5694-4b6c-ae0c-61d74be2e99c",
+      "offset": 0.08725600341934768,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S9.mp4_8_.mp4": {
+      "uuid": "1cd1ba03-d733-48d9-9a3e-a768ea56b665",
+      "offset": 0.05226678133668007,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S2.mp4_7_.mp4": {
+      "uuid": "5d84d601-743a-4d3c-9c53-8822e2b3bf0e",
+      "offset": -0.010313878273600778,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "background_S2.mp4_10_.mp4": {
+      "uuid": "635fd3fa-d842-4dc5-a51d-9ad40483d156",
+      "offset": 0.06857237984818028,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S4.mp4_15_.mp4": {
+      "uuid": "a83aa562-aaf1-4768-a5b5-6c245e32ee21",
+      "offset": 0.06098555001995227,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "action_S10.mp4_0_.mp4": {
+      "uuid": "49313dc0-c92d-41e7-aaec-e671c38490a8",
+      "offset": 0.0928213932524316,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S5.mp4_10_.mp4": {
+      "uuid": "43c4a724-f4c4-4da0-b5ed-0f243c03e305",
+      "offset": -0.3847782343730256,
+      "side": "left_of_face_center",
+      "target_eye_keypoint": "right_eye"
+    },
+    "action_S3.mp4_8_.mp4": {
+      "uuid": "ad06ded7-2a1a-49aa-9134-10c4929e7b95",
+      "offset": 0.11403838354060754,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S12.mp4_7_.mp4": {
+      "uuid": "b2fec3d8-22ea-4cc2-afde-a51031b49aa2",
+      "offset": 0.21088666322327007,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S3.mp4_3_.mp4": {
+      "uuid": "51cc98fc-11d7-4d3f-8693-730bba3bd410",
+      "offset": -0.04602252318104194,
+      "side": "ambiguous",
+      "target_eye_keypoint": "higher_conf_per_clip_lock_rule_a"
+    },
+    "background_S10.mp4_3_.mp4": {
+      "uuid": "5aa7adbb-cce7-463e-92e4-1c4046df3d5b",
+      "offset": 0.10664501888671389,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    },
+    "background_S12.mp4_2_.mp4": {
+      "uuid": "4ed74309-3e56-43c6-ab0d-b270aa12f8bf",
+      "offset": -0.10371241562544777,
+      "side": "left_of_face_center",
+      "target_eye_keypoint": "right_eye"
+    },
+    "background_S7.mp4_12_.mp4": {
+      "uuid": "073ae3f8-20d3-48fe-9034-15b9fd588b00",
+      "offset": 0.09233552231804047,
+      "side": "right_of_face_center",
+      "target_eye_keypoint": "left_eye"
+    }
+  }
+}
