@@ -6,16 +6,42 @@ amendments (Stage 2 v1 §7 confidence threshold; Stage 2 v2 §4
 side-assignment mapping). Both amendments adjudicated by user (Option B
 both times: in-phase correction with point-fix scope).
 
+> **⚠️ RETRACTION NOTICE (2026-05-10, post-Phase-8a)**
+>
+> The verdict OUTPERFORM_PHASE_5_AUC_ONLY claimed in this document has
+> been **RETRACTED** to **UNDERPOWERED_INDISTINGUISHABLE** per the
+> locked Phase 8a Stage 1 retraction procedure
+> (`outputs/track_b_phase8a_preregistration_stage1.md` Test 1, hash
+> `c0bf2bdca8d5...`).
+>
+> Phase 8a's subject-bootstrap CI on Δ AUC produced LB = −0.1304 ≤
+> −0.02, firing the locked retraction trigger. Median Δ_bootstrap =
+> +0.0386 > −0.01 selected UNDERPOWERED_INDISTINGUISHABLE as the
+> mechanical replacement verdict.
+>
+> **The retraction is about the COMPARATIVE CLAIM, not the empirical
+> result.** Phase 7's measurements (AUC 0.8462 on the 34 RME clips,
+> per-clip categorizations, gate verdicts G1/G2 PASS) all stand. What
+> is retracted is the claim that DLC keypoint-anchored cropping
+> *outperforms* Phase 5 manual at this scale.
+>
+> The original verdict text below is preserved as struck-through. See
+> the appended retraction section at the end of this document for full
+> details and references to Phase 8a's evidence.
+
 ## Summary
 
-| Run | Side mapping | AUC | Verdict |
+| Run | Side mapping | AUC | Verdict (original — see retraction) |
 |---|---|---:|---|
 | **Broken-rule baseline** (Stage 1 §4 as-locked) | right→right_eye, left→left_eye | **0.5788** | CONFIDENT_MISPLACEMENT_FAIL → routing-prescribed side review |
-| **Corrected-rule final** (Stage 2 v2 §4) | right→left_eye, left→right_eye | **0.8462** | **OUTPERFORM_PHASE_5_AUC_ONLY** |
+| **Corrected-rule final** (Stage 2 v2 §4) | right→left_eye, left→right_eye | **0.8462** | ~~**OUTPERFORM_PHASE_5_AUC_ONLY**~~ → **UNDERPOWERED_INDISTINGUISHABLE** (retracted 2026-05-10) |
 
 Phase 5 manual ceiling: 0.7985. Phase 6(b) face-bbox: 0.4689.
-Corrected DLC: 0.8462 — clears Phase 5 by Δ +0.048 (paired DeLong
-p=0.62, AUC-only OUTPERFORM per G2 asymmetry).
+Corrected DLC: 0.8462 — ~~clears Phase 5 by Δ +0.048 (paired DeLong
+p=0.62, AUC-only OUTPERFORM per G2 asymmetry).~~ **Retracted: see Phase
+7 Retraction section below.** The empirical result stands; the
+comparative-superiority claim is retracted to UNDERPOWERED_INDISTINGUISHABLE
+per Phase 8a Test 1.
 
 ## Two structural findings surfaced by the discipline pattern
 
@@ -302,3 +328,140 @@ firing on observation: each empirical falsification was anticipated
 by Stage 1 routing categories, and the corrections are traceable to
 specific Stage 2 amendments. No post-hoc reasoning entered the audit
 chain — the discipline pattern held across both structural findings.
+
+---
+
+## Phase 7 Retraction (per Phase 8a Stage 1 Test 1)
+
+**Locked: 2026-05-10 per Phase 8a pre-reg retraction procedure
+(`outputs/track_b_phase8a_preregistration_stage1.md` §"Retraction
+procedure (LOCKED)", hash `c0bf2bdca8d5...`).**
+
+### What is retracted
+
+The verdict ~~**OUTPERFORM_PHASE_5_AUC_ONLY**~~ claimed throughout
+this Phase 7 audit document is **RETRACTED** and replaced with
+**UNDERPOWERED_INDISTINGUISHABLE**.
+
+### What is NOT retracted
+
+- Phase 7's empirical AUC result (0.8462 on 34 RME clips) stands as
+  recorded.
+- The locked gate verdicts G1 PASS (0.8462 ≥ 0.70) and G2 load-bearing
+  PASS (0.8462 ≥ 0.7485) stand.
+- The structural findings about Stage 1 §7 (percentile-as-quality-
+  signal conflation) and Stage 1 §4 (anatomical-mapping inversion)
+  stand.
+- Stage 2 amendments v1 (§7 hard-lock at 0.5) and v2 (§4 mapping flip)
+  stand as locked corrections.
+- Per-clip categories vs Phase 5 + Phase 6(b), named-clip outcomes,
+  and methodology trail all stand.
+- The discipline-pattern demonstration (locked routing matrix
+  correctly anticipating both structural failures) stands — and is
+  *strengthened* by this retraction, not weakened.
+
+### Why the retraction fires
+
+Phase 8a Test 1 ran subject-bootstrap CI on Δ AUC = AUC_v4_corrected
+− AUC_v3_manual at parent-clip-resampling level (B=10000, seed=42):
+
+```
+Bootstrap distribution of Δ AUC:
+  mean:      +0.0408
+  median:    +0.0386
+  std:        0.10
+  95% CI:    [-0.1304, +0.2754]
+  P(Δ ≤ 0):  ~0.34
+```
+
+The 95% CI lower bound is **−0.1304**, which is ≤ −0.02 — firing the
+pre-registered retraction trigger. The replacement-verdict rule
+(median Δ_bootstrap > −0.01 → UNDERPOWERED_INDISTINGUISHABLE; median
+≤ −0.01 → PHASE_7_FAVORABLE_BY_CHANCE) selects
+**UNDERPOWERED_INDISTINGUISHABLE** because median Δ_bootstrap =
++0.0386.
+
+### Mechanism
+
+Phase 7 Stage 1 §8 G2 supportive (paired DeLong p=0.619) was already
+"inconclusive" — Phase 5 audit had identified the SE-inflation pattern
+where weak prediction-pairing between distinct cropping pipelines
+inflates the paired SE. That finding correctly anticipated the test
+might be uninformative.
+
+Phase 8a's subject-bootstrap CI is a more direct precision estimator
+than paired DeLong. It revealed that at n=12 sources, the bootstrap
+distribution of Δ has wide tails — some bootstrap iterations draw
+multiple copies of the 2 negative-Δ sources and few copies of the 10
+positive-Δ sources, producing Δ values well below 0.
+
+**The retraction's substantive content**: Phase 7's +0.048 advantage
+*at this dataset* is empirically real (Phase 8a Test 2: 10/12 sources
+contribute positive Δ when individually dropped). But generalizing
+that advantage to the population of horse-eye-region datasets is
+unsupported at n=12 sources scale. We can claim DLC keypoint-anchored
+cropping achieves AUC 0.8462 on this 34-clip RME subset; we cannot
+claim DLC outperforms Phase 5 manual cropping in expectation on
+horse-eye-region behavior.
+
+### How the discipline pattern handled it
+
+Per the locked Phase 8a Stage 1 §"Retraction procedure (LOCKED)":
+
+(a) ✓ The OUTPERFORM_PHASE_5_AUC_ONLY verdict is **explicitly retracted**
+    above and in the headline summary.
+(b) ✓ The replacement verdict **UNDERPOWERED_INDISTINGUISHABLE** is
+    chosen mechanically (median Δ_bootstrap = +0.0386 > −0.01).
+(c) ✓ The original verdict text is **preserved as struck-through**
+    inline; not erased.
+(d) The original Phase 7 audit doc hash (`d838ddd3dc07...`) remains
+    valid as the pre-retraction historical artifact. This retraction
+    adds a new hash to the chain (post-retraction Phase 7 audit doc,
+    chain entry annotates the supersession with retraction notation).
+(e) Phase 8b is **BLOCKED** until this retraction commit lands.
+
+The procedural moves were pre-determined; cognitive load under
+falsification did not enter the decision. That is what the
+discipline pattern is for.
+
+### Phase 9 entry conditions (revised)
+
+Per Phase 8a pre-reg routing matrix:
+
+> 8a outcome (LB ≤ −0.02 retraction) × 8b outcome (any) → "Halt forward
+> work; Phase 7 retraction amendment + project-narrative revision."
+
+The retraction commit IS the first step. Subsequent path is user-decided
+post-retraction:
+- (A) Halt Phase 8b indefinitely; commit retraction; revise project
+  narrative
+- (B) Commit retraction; proceed with Phase 8b under modified gates
+  (cross-behavior generalization on RME ear data is still informative
+  even with the eye-region verdict retracted; if Phase 8b clears its
+  gates strongly, the methodology still demonstrates value despite
+  Phase 7's eye-specific claim being retracted)
+- (C) Other path informed by user judgment
+
+### What this retraction means for the methodology trail
+
+Phase 7's discipline-pattern arc is now: pre-register → run → empirical
+falsification of two structural findings (§7, §4) → in-phase Stage 2
+amendments → corrected-rule re-run → claimed verdict → Phase 8a
+empirical falsification of the comparative claim → mechanical retraction
+per pre-locked procedure.
+
+The methodology trail through Phases 4 → 5 → 6 → 7 → 8a is **stronger**
+because of this retraction, not weaker. The locked routing matrices
+correctly anticipated and routed both Phase 7's structural failures
+AND its overstated comparative claim. Pre-registration with locked
+procedures protected the audit chain from negotiation under cognitive
+load when the favorable verdict was empirically falsified.
+
+A future reader can reconstruct: what was claimed, when, on what
+evidence, what was empirically falsified, and what the corrected
+end-state is — including the empirical falsification itself. The
+audit chain is the witness.
+
+See `docs/phase8a_audit.md` for full Phase 8a evidence (5 tests,
+diagnostic cross-checks, threshold-heuristic discussion). See
+`outputs/phase8a_results.json` for raw test outputs.
