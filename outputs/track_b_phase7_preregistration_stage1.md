@@ -101,8 +101,13 @@ parity check **must reproduce on the same video, not on RME clips**.
 3. **Gate**: median per-keypoint cosine similarity ≥ **0.999** is
    ideal; ≥ **0.99** is acceptable IF the deviation mechanism is
    documented (e.g., MPS vs CPU floating-point drift, model-zoo
-   determinism issue). Below 0.99 → integration fails; halt before
-   running on RME clips.
+   determinism issue). Below 0.99 → **halts the entire Phase 7,
+   pending user investigation** — not just the parity check; the
+   integration is suspect and proceeding to RME inference would
+   burn compute on questionable infrastructure. The phase resumes
+   only after user explicitly approves either (a) a fix to the
+   integration or (b) a documented exception with explicit
+   acknowledgment that downstream results inherit the parity gap.
 
 Rationale: validates the new integration doesn't introduce silent
 drift versus the known-good Phase 0 reference, BEFORE any RME compute
@@ -393,6 +398,16 @@ Reported alongside gates, not gated themselves:
    incidence (per-frame eye-swap / per-clip-locked-eye-from-§4-rule /
    single-keypoint-clip / drop), mean confidence, n_frames_proxy_failed
    (head-bbox <6 confident kps).
+
+9. **Tracked-property: ambiguous-clip rate** (6/34 ≈ 18% at lock time).
+   Phase 7 audit must report this as a **stable property of the
+   dataset**, not just a per-experiment count. If Phase 8 ever scales
+   N, this fraction is operationally informative — at N=200 the
+   expected ambiguous count is ~35 clips, which is a meaningful chunk
+   to operate per-clip-locked-fallback on. Tracking the rate across
+   phases makes it visible whether the side-assignment rule generalizes
+   or whether dataset-level orientation distribution shifts the
+   fraction.
 
 ## Section 11 — Anti-patterns (LOCKED)
 
