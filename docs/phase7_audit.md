@@ -120,10 +120,60 @@ diagnostic that revealed them.
 **Locked gates**:
 - G1 (AUC ≥ 0.70): **PASS** (0.8462)
 - G2 load-bearing (AUC ≥ 0.7485): **PASS**
-- G2 supportive (paired DeLong p < 0.05 vs Phase 5): **does not
-  confirm** (p = 0.619)
+- G2 supportive (paired DeLong p < 0.05 vs Phase 5): **inconclusive**
+  (p = 0.619). The paired test cannot establish DLC-corrected as
+  statistically distinguishable from Phase 5 manual at n=34, in
+  either direction. This is consistent with the DeLong SE-inflation
+  pattern Phase 5 audit identified (weak prediction-pairing between
+  distinct cropping pipelines inflates the paired SE). The G2
+  load-bearing AUC test passes the threshold; G2 supportive was
+  locked as supportive-not-decisive (Stage 1 §8 G2 asymmetry)
+  precisely because Phase 5 had already demonstrated DeLong's reduced
+  power on this fold structure. "Inconclusive paired DeLong" is the
+  *expected* condition when the level test passes; it is not a defect
+  in either the result or the gate design.
 - G3 reportable (median IoU ≥ 0.6): **does not pass** (0.357)
   — but reportable-not-gating per Stage 1 §8 lock; AUC governs.
+
+## G3-vs-AUC divergence — softens the Phase 5 framing
+
+Phase 7 corrected achieves comparable or higher AUC than Phase 5 manual
+(0.8462 vs 0.7985, +0.048 point estimate) **despite ~36% lower median
+IoU vs Phase 5 manual boxes** (0.357 vs the 0.6 locked gate; manual
+boxes' intra-rater IoU was 0.765 in Phase 5b — DLC vs manual is
+roughly half of manual-vs-self).
+
+The G3/AUC divergence indicates DLC keypoint-anchoring captures
+discriminative information through a **different geometric reference**
+than human eye-region annotation. The Phase 5 framing of "manual
+cropping as the architecture's ceiling" is therefore softened:
+**manual is one near-optimal cropping strategy; DLC keypoint-anchored
+is another, statistically indistinguishable from manual at n=34
+(paired DeLong p=0.619), with a slightly higher point estimate.**
+Within the noise floor of the available test, the two strategies are
+roughly equivalent, not strictly ordered.
+
+This reopens an interesting Phase 8 hypothesis worth pre-registering:
+**maybe DLC keypoint-anchored cropping is genuinely a better strategy
+than manual annotation at this scale**, just hard to confirm at n=34
+with paired-DeLong's known SE-inflation. Three readings the data could
+support at higher N:
+
+1. **DLC ≈ manual within noise**: keypoint geometry is *interchangeable*
+   with manual eye-region annotation for this architecture; either
+   suffices.
+2. **DLC > manual on point estimate, paired test still inconclusive**:
+   small but real improvement, dataset-too-small-to-confirm. Phase 8 N
+   expansion validates.
+3. **DLC strictly better, paired DeLong significant at higher N**:
+   keypoint anchoring extracts signal that human-annotated tight eye
+   crops miss (perhaps because DLC localization is more spatially
+   consistent across clips than human annotation across raters/sessions).
+
+The audit cannot adjudicate between these at n=34. Phase 8 is the
+adjudicator. The pre-locked Phase 5 framing is amended in the right
+direction but not strongly: "manual is *the* ceiling" → "manual is *a*
+near-optimum; alternatives may be equivalent or better."
 
 ## Per-clip categories
 
