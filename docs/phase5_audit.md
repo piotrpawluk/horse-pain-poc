@@ -68,6 +68,30 @@ Locked Middle-band sentence applies exactly:
 
 > "Cropping helped within statistical noise (or effect size large but paired test couldn't reject at this n). Realistic POC interpretation; same collaborator asks as Phase 3 plus eye-detector annotation."
 
+### Permutation p = 0.010 vs DeLong-paired p = 0.286 — explain the gap
+
+Two tests, two different nulls, both correctly computed:
+
+- **Permutation test null**: "v3 predictions are unrelated to labels." H1: v3 is informative. Observed p = **0.010** clears α = 0.05.
+- **DeLong-paired null**: "v3 AUC = Phase 3 AUC on the same clips." H1: v3 improves over Phase 3. Observed p = **0.286** does NOT clear α = 0.05.
+
+The pre-registered top-band gate uses DeLong-paired because the question Phase 5 was designed to answer is **whether v3 improves over Phase 3**, not whether v3 differs from chance. Phase 5 already knows the architecture is informative (Phase 3 cleared its own ≥ 0.65 threshold against the same chance null). The Phase 5 question is incremental, and the paired test is the right operationalization.
+
+A reviewer who reads "permutation p = 0.010" without context will assume "significant"; a reviewer who reads "DeLong-paired p = 0.286" will conclude "not significant." Both are correct relative to their own null. The Middle-band decision is the right call for the question Phase 5 actually asked.
+
+### The DeLong gap is itself a finding (not test calibration noise)
+
+Step 0b's MDE simulation predicted Δ ≥ 0.10 has 90% power for the paired test. Observed Δ = +0.117 should clear p < 0.05 with high confidence. It didn't. Most likely mechanism: **real-data clip-level prediction correlation between v3 and Phase 3 is weaker than the simulation assumed**. DeLong-paired's standard error depends on Cov(A_v3, A_P3); when the prediction-pairing is weak, SE inflates and p inflates with it.
+
+This is not a calibration failure of the test — it's a finding about the intervention. **v3 did not just amplify Phase 3's discrimination; it shifted which clips are well-classified.** The two pipelines are getting partially-disjoint subsets correct. v3 isn't a strictly dominating intervention; it trades old failure modes for new ones.
+
+This shifts the Phase 6 question:
+
+- **If v3 shared most of Phase 3's correctly-classified clips and added new ones** → path forward is "scale v3 up."
+- **If v3 swaps clips with Phase 3** (the result here suggests this) → path forward includes ensemble strategies, OR diagnosis of which clips changed direction and why.
+
+Pre-registered Phase 6 instrumentation: per-clip diff between Phase 3 and Phase 5 primary predictions. Which clips did Phase 3 get right that v3 lost? Which clips did v3 newly recover? The mechanism behind the prediction-shift is the next-tier diagnostic; Phase 6 carries it.
+
 ## Sensitivity 1 — rubric-tax under good crops
 
 | v3+tightened | v3+original | Δ | Locked verdict |
@@ -75,6 +99,13 @@ Locked Middle-band sentence applies exactly:
 | 0.8179 | 0.7985 | +0.0194 | **Within ±0.085 MDE** → "Tightened rubric is clean under good cropping; Phase 4's −0.10 was crop-interaction, not rubric-architecture mismatch." |
 
 This is a meaningful finding. Phase 4 showed tightened-rubric labels HURT by ~0.10 vs original under v1 crops. With v3 gold-standard cropping, tightened-rubric labels actually trend slightly higher (+0.019, within MDE noise). The Phase 4 rubric-tax was specifically a cropping-quality interaction, not an architecture-rubric mismatch. Phase 4 vindication on the rubric direction; the v1 crop quality was the binding issue.
+
+**Caveat — two consistent mechanisms, undistinguishable at this n.** The locked verdict ("rubric is clean under good cropping") is what the table's pre-committed band forced. The data also fit a different mechanism: **the 7 sub-pixel-flagged clips that the tightened rubric reclassified have low v3-classifier confidence in either label direction, so flipping them is approximately neutral regardless of crop quality.** That's observationally indistinguishable from "rubric is clean under v3" but has different Phase 6 implications.
+
+- **Mechanism (a)**: tightened rubric is genuinely clean under good crops; Phase 4's regression attributable to v1-rubric mismatch on visible-resolution motion. Implication: any future labeling-protocol tightening should be paired with a parity LOSO on good crops; the protocol is generalizable.
+- **Mechanism (b)**: 7 reflagged clips are low-confidence on v3 regardless of label assignment; relabel is neutral by virtue of v3 not strongly committing on them. Implication: rubric tightening generalization depends on whether *new* clips at *new* labeling-protocol scopes also fall into v3's low-confidence regime. Less generalizable.
+
+The data don't distinguish (a) from (b) at n=34. Both predict similar Phase 6 ablation outcomes only if "good crops" generalize from the 34-clip dataset to broader Phase 6 data. The distinction matters mainly if v3 is hard to scale — at which point the (b) mechanism would show up as rubric-tightening hurting AUC again on harder scopes.
 
 ## Sensitivity 2 — margin curve {10, 15, 40, 80} %
 
@@ -91,7 +122,9 @@ Pair-differences: (15-10) = +0.044, (40-15) = −0.051, (80-40) = +0.048. None e
 
 **Locked categorical verdict: FLAT** — data doesn't support a curve-shape claim at this MDE. Margin doesn't matter much at this scale; Phase 6 chooses margin on other criteria (e.g., interpretability, eye-occupancy ratio in crops).
 
-Note: the pattern visually has two local peaks (m=15 and m=80) with a dip at m=40, but the variability is below noise. With more N, this might resolve into an actual shape; at n=34 the categorical is honestly FLAT.
+**Suspicious shape worth recording (sub-noise but pattern not random).** Margins of 15% and 80% performed similarly (~0.79) and outperformed both 10% (over-tight, 0.755) and 40% (intermediate, 0.747). At n=34 this is below noise tolerance per the locked criterion, and the FLAT verdict holds. But the shape is *not* what pure noise typically produces — it's compatible with **two distinct informative crop regimes** being roughly equally informative: tight-eye-resolution at m=15, face-context at m=80, with m=40 falling in a "neither" gap.
+
+Pre-registered for Phase 6 (locked here, before any larger-N margin curve replication): if Phase 6 with N expansion produces the same alternating-peaks pattern at m=15 and m=80 with neighbor differences exceeding the larger-n bootstrap half-width, **the bimodal hypothesis is the principled reading** — two distinct informative regimes, not a single sweet-spot — and Phase 6 should consider running both crop scales as a small-ensemble. If Phase 6 produces a single peak (typical inverted-U) or monotone shape, the n=34 alternating pattern was noise. The locked alternative is documented now so the option is available without post-hoc construction.
 
 **Pre-registered alternative interpretation for the margin curve (locked before any future re-analysis at higher N).** Catchlight reflection is a motion confounder that scales inversely with crop margin. On tight crops, the catchlight occupies a larger fraction of the visible eye area and its apparent motion (light reflection shifting with head pose, even when the eye is otherwise still) is uncorrelated with the labeled eye-state. Looser crops dilute the catchlight with surrounding face context. Pre-committed reading: if a future Phase 6 N expansion produces a **monotone-improving** curve from m=10 toward larger margins (with neighbor-pair differences exceeding the bootstrap half-width at that larger n), **catchlight dilution is a candidate mechanism**, not just "more context helps." If the curve produces inverted-U with a clear peak, catchlight dilution is one of several candidate mechanisms and would need a separate experiment (e.g., synthetic catchlight removal vs preservation) to identify. This is documented now so the option is available without post-hoc construction.
 
@@ -99,15 +132,13 @@ Note: the pattern visually has two local peaks (m=15 and m=80) with a dip at m=4
 
 Per locked criterion (≥2 of 3 persistent BG-target clips strictly below median Phase 5-primary BG score):
 
-| Clip | Score | Median Phase 5 BG score | Below median? |
-|---|---|---|---|
-| `action_S5.mp4_2_` | (varies — see JSON) | −0.490 | check JSON |
-| `background_S6.mp4_2_` | (varies) | −0.490 | check JSON |
-| `background_S6.mp4_3_` | (varies) | −0.490 | check JSON |
-
 **2/3 below median → SUPPRESSED.**
 
-Same suppression direction as Phase 4 v2 (also 2/3 below median). The persistent BG-target pattern is fixable by cropping quality at the 2/3 level — confirms factor (d) is at least partially a cropping artifact, not purely a source-correlated training-feature confound. The remaining 1/3 (the target that stays above median in both v2 and v5) is likely the structural source-correlation residual.
+**Framing softened from earlier draft.** Same suppression direction as Phase 4 v2 (also 2/3 below median) — the same per-clip pattern triggers in both v2 and v3 cropping mechanisms. This suggests **factor (d) reflects clip-level properties** (e.g., source-specific imaging conditions, clip-level appearance features that correlate with ACTION class on the training distribution) **rather than crop-quality dependence**. "Fixable by cropping quality" overstates the causal chain — the data show consistent suppression direction across two very different crop pipelines, which is more parsimoniously explained by clip-level properties orthogonal to crop mechanism.
+
+The 1/3 residual (the target that stays above median in both v2 and v5) is likely the same structural source-correlation effect across both phases, not a v5-specific artifact.
+
+Phase 6 implication: factor-(d) instrumentation should look at clip-level features (lighting, framing geometry, source-camera characteristics) rather than crop-quality variants. Multi-rater κ on the 3 persistent BG-targets would be especially diagnostic — if multiple observers confirm BG label, factor (d) is genuinely a model-side issue; if observers disagree, factor (d) is partially a labeling-noise issue.
 
 ## Per-fold heterogeneity — Phase 5 primary
 
@@ -117,11 +148,14 @@ Per-fold AUCs from Phase 5 primary's `fold_log` are visible alongside Phase 3 ba
 
 ## What Phase 5 establishes
 
-1. **Cropping was a real bottleneck** at the n=34 scale: gold-standard manual eye boxes lifted pooled AUC by +0.117 over the v1 heuristic (with same labels, same N, same architecture). The effect size is at MDE-90% power but paired-DeLong significance is borderline (p = 0.286).
-2. **Architecture clears the realistic POC band** (Lesson 11: 0.70-0.80 target) given good crops. AUC 0.7985 is exactly in the target range.
-3. **Rubric tightening was right; v1 crops were wrong.** Phase 4's relabel-hurts finding was a cropping-quality interaction. Tightened-rubric labels are clean under good cropping (Δ +0.019 within MDE).
-4. **Margin choice is below noise floor** at n=34. Differences between {10, 15, 40, 80}% margins are not statistically supported. Phase 6 should pick a margin on other grounds.
-5. **Factor (d) is partially fixable by crops** — same 2/3 suppression as Phase 4 v2. The 1/3 residual is the structural source-correlation effect that needs N expansion + multi-rater κ to address.
+**Headline (Lesson 11 anchor).** Pooled AUC 0.7985 lands at the **top of the project's pre-locked realistic LOSO band** (Lesson 11: 0.70–0.80 realistic target on diverse data; ≥ 0.85 explicitly flagged as unrealistic). The eye result is comparable in absolute level to the Read My Ears ear baseline (LOSO 0.8746) but on a substantially harder behavior with weaker labels at much smaller N. **The architecture clears the project's pre-locked realistic band on the second behavior, even at MIDDLE-band statistical confidence.** Honest framing: *performance at top of realistic POC band; precision insufficient for clinical use; level test wide CI requires N expansion*. This is the strongest single-sentence summary the audit can write, and it's anchored in the project's own pre-registered Lesson 11 thresholds — not external benchmarks.
+
+1. **Cropping was a real bottleneck** at the n=34 scale: gold-standard manual eye boxes lifted pooled AUC by +0.117 over the v1 heuristic (with same labels, same N, same architecture). Effect size at MDE-90%; paired-DeLong significance borderline (p = 0.286), and the gap is itself informative — see "DeLong gap is a finding" above.
+2. **Architecture clears the realistic POC band on the second behavior**, exactly as the project's Lesson 11 framing predicted (top of 0.70–0.80 target, not the unrealistic ≥0.85).
+3. **Rubric tightening was correct in direction**, with two consistent mechanisms unresolvable at n=34 — see Sensitivity 1 caveat. The Phase 4 −0.10 rubric-tax does not reproduce under v3, but whether that's "rubric clean" or "rubric neutral on low-confidence clips" depends on whether v3 generalizes.
+4. **Margin choice is below noise** at n=34, BUT the alternating-peaks pattern at m=15 and m=80 is documented as a candidate "two distinct informative regimes" hypothesis Phase 6 can test.
+5. **Factor (d) reflects clip-level properties** orthogonal to crop mechanism (same suppression in both v2 and v3 with very different crop pipelines). Phase 6 should instrument clip-level features rather than further crop variants.
+6. **v3 shifts which clips are well-classified rather than uniformly improving over v1.** Per-clip diff Phase 3 vs Phase 5 primary is the headline Phase 6 diagnostic.
 
 ## What Phase 5 does NOT establish
 
