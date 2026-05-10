@@ -1,0 +1,1843 @@
+{
+  "mode": "phase8b_ear_dlc",
+  "pooled_auc": 0.9008495752123938,
+  "delta_vs_phase3": 0.2195308938937125,
+  "regression_vs_phase3": false,
+  "auc_95_ci_delong": [
+    0.8660919870679062,
+    0.9356071633568814
+  ],
+  "auc_95_ci_subject_bootstrap": [
+    0.8608364012094513,
+    0.9406117519281442
+  ],
+  "bootstrap_mean": 0.9014722857814308,
+  "bootstrap_n_kept": 10000,
+  "p_value_permutation": 0.000999000999000999,
+  "permutation_null_mean": 0.5010069215392304,
+  "n_permutations": 1000,
+  "fold_dist": {
+    "min": 0.75,
+    "median": 0.8943452380952381,
+    "max": 1.0,
+    "n_defined": 12,
+    "n_skipped": 0
+  },
+  "fold_log": [
+    {
+      "source": "S1",
+      "n_test": 21,
+      "n_pos": 7,
+      "n_neg": 14,
+      "defined": true,
+      "fold_auc": 0.7959183673469388
+    },
+    {
+      "source": "S2",
+      "n_test": 25,
+      "n_pos": 10,
+      "n_neg": 15,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S3",
+      "n_test": 28,
+      "n_pos": 16,
+      "n_neg": 12,
+      "defined": true,
+      "fold_auc": 0.96875
+    },
+    {
+      "source": "S4",
+      "n_test": 32,
+      "n_pos": 24,
+      "n_neg": 8,
+      "defined": true,
+      "fold_auc": 0.8958333333333334
+    },
+    {
+      "source": "S5",
+      "n_test": 25,
+      "n_pos": 14,
+      "n_neg": 11,
+      "defined": true,
+      "fold_auc": 0.974025974025974
+    },
+    {
+      "source": "S6",
+      "n_test": 19,
+      "n_pos": 9,
+      "n_neg": 10,
+      "defined": true,
+      "fold_auc": 0.8222222222222223
+    },
+    {
+      "source": "S7",
+      "n_test": 21,
+      "n_pos": 1,
+      "n_neg": 20,
+      "defined": true,
+      "fold_auc": 0.75
+    },
+    {
+      "source": "S8",
+      "n_test": 24,
+      "n_pos": 16,
+      "n_neg": 8,
+      "defined": true,
+      "fold_auc": 0.984375
+    },
+    {
+      "source": "S9",
+      "n_test": 24,
+      "n_pos": 13,
+      "n_neg": 11,
+      "defined": true,
+      "fold_auc": 0.8321678321678322
+    },
+    {
+      "source": "S10",
+      "n_test": 22,
+      "n_pos": 10,
+      "n_neg": 12,
+      "defined": true,
+      "fold_auc": 1.0
+    },
+    {
+      "source": "S11",
+      "n_test": 19,
+      "n_pos": 11,
+      "n_neg": 8,
+      "defined": true,
+      "fold_auc": 0.7954545454545454
+    },
+    {
+      "source": "S12",
+      "n_test": 23,
+      "n_pos": 7,
+      "n_neg": 16,
+      "defined": true,
+      "fold_auc": 0.8928571428571428
+    }
+  ],
+  "n_aligned": 283,
+  "decision_per_pre_reg_aux": ">=0.65",
+  "factor_d_suppression": null,
+  "delong_paired_vs_phase3": null,
+  "config": {
+    "classifier": "RidgeClassifier",
+    "alpha": 1.0,
+    "class_weight": "balanced",
+    "scaler": "StandardScaler refit per fold",
+    "primary_metric": "pooled-prediction AUC",
+    "ci_level_test": "subject-bootstrap with replacement, B=10000",
+    "ci_method_companion": "DeLong (1988) analytical",
+    "delta_test": null
+  },
+  "embeddings_path": "outputs/vjepa2_embeddings_ear_v4.npz",
+  "labels_path": "outputs/phase8b_rme_labels.txt",
+  "phase3_pooled_auc_reference": 0.6813186813186813,
+  "regression_threshold": 0.6313186813186813,
+  "per_clip": [
+    {
+      "clip": "action_S1.mp4_0_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": 0.42005428671836853
+    },
+    {
+      "clip": "action_S1.mp4_1_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": -1.1611602306365967
+    },
+    {
+      "clip": "action_S1.mp4_2_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": -0.38107648491859436
+    },
+    {
+      "clip": "action_S1.mp4_3_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": 0.3543183505535126
+    },
+    {
+      "clip": "action_S1.mp4_4_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": -0.930855393409729
+    },
+    {
+      "clip": "action_S1.mp4_5_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": -0.1574968844652176
+    },
+    {
+      "clip": "action_S1.mp4_6_.mp4",
+      "source": "S1",
+      "label": 1,
+      "score": -0.5294963717460632
+    },
+    {
+      "clip": "background_S1.mp4_0_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.10649126023054123
+    },
+    {
+      "clip": "background_S1.mp4_10_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -2.4435510635375977
+    },
+    {
+      "clip": "background_S1.mp4_11_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.5082550048828125
+    },
+    {
+      "clip": "background_S1.mp4_12_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.3496673107147217
+    },
+    {
+      "clip": "background_S1.mp4_13_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.002389669418335
+    },
+    {
+      "clip": "background_S1.mp4_1_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.1485612541437149
+    },
+    {
+      "clip": "background_S1.mp4_2_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.5699530839920044
+    },
+    {
+      "clip": "background_S1.mp4_3_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.034989356994629
+    },
+    {
+      "clip": "background_S1.mp4_4_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.5584074854850769
+    },
+    {
+      "clip": "background_S1.mp4_5_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.7757695913314819
+    },
+    {
+      "clip": "background_S1.mp4_6_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -0.8531614542007446
+    },
+    {
+      "clip": "background_S1.mp4_7_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.8789680004119873
+    },
+    {
+      "clip": "background_S1.mp4_8_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -1.3031607866287231
+    },
+    {
+      "clip": "background_S1.mp4_9_.mp4",
+      "source": "S1",
+      "label": 0,
+      "score": -2.280444622039795
+    },
+    {
+      "clip": "action_S2.mp4_0_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 0.9705087542533875
+    },
+    {
+      "clip": "action_S2.mp4_1_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 2.2379744052886963
+    },
+    {
+      "clip": "action_S2.mp4_2_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 0.967644453048706
+    },
+    {
+      "clip": "action_S2.mp4_3_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 1.0232986211776733
+    },
+    {
+      "clip": "action_S2.mp4_4_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 2.602982759475708
+    },
+    {
+      "clip": "action_S2.mp4_5_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 0.9053854942321777
+    },
+    {
+      "clip": "action_S2.mp4_6_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 1.1954213380813599
+    },
+    {
+      "clip": "action_S2.mp4_7_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 0.9372539520263672
+    },
+    {
+      "clip": "action_S2.mp4_8_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 1.9889296293258667
+    },
+    {
+      "clip": "action_S2.mp4_9_.mp4",
+      "source": "S2",
+      "label": 1,
+      "score": 1.02060067653656
+    },
+    {
+      "clip": "background_S2.mp4_0_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.932746171951294
+    },
+    {
+      "clip": "background_S2.mp4_10_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.998235821723938
+    },
+    {
+      "clip": "background_S2.mp4_11_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.3140957355499268
+    },
+    {
+      "clip": "background_S2.mp4_12_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.1384872198104858
+    },
+    {
+      "clip": "background_S2.mp4_13_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.4610298871994019
+    },
+    {
+      "clip": "background_S2.mp4_14_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.3739733695983887
+    },
+    {
+      "clip": "background_S2.mp4_1_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.2679500579833984
+    },
+    {
+      "clip": "background_S2.mp4_2_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.9203451871871948
+    },
+    {
+      "clip": "background_S2.mp4_3_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.7978829145431519
+    },
+    {
+      "clip": "background_S2.mp4_4_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.3493485450744629
+    },
+    {
+      "clip": "background_S2.mp4_5_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": 0.27347254753112793
+    },
+    {
+      "clip": "background_S2.mp4_6_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.006708087399601936
+    },
+    {
+      "clip": "background_S2.mp4_7_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.39859235286712646
+    },
+    {
+      "clip": "background_S2.mp4_8_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -0.6449912786483765
+    },
+    {
+      "clip": "background_S2.mp4_9_.mp4",
+      "source": "S2",
+      "label": 0,
+      "score": -1.070242166519165
+    },
+    {
+      "clip": "action_S3.mp4_10_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.12986774742603302
+    },
+    {
+      "clip": "action_S3.mp4_11_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.257241427898407
+    },
+    {
+      "clip": "action_S3.mp4_12_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.12373898923397064
+    },
+    {
+      "clip": "action_S3.mp4_13_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.4236180782318115
+    },
+    {
+      "clip": "action_S3.mp4_14_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.04971211031079292
+    },
+    {
+      "clip": "action_S3.mp4_15_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.5984364151954651
+    },
+    {
+      "clip": "action_S3.mp4_16_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.21430684626102448
+    },
+    {
+      "clip": "action_S3.mp4_1_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.5660458207130432
+    },
+    {
+      "clip": "action_S3.mp4_2_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 1.211619257926941
+    },
+    {
+      "clip": "action_S3.mp4_3_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 1.0379830598831177
+    },
+    {
+      "clip": "action_S3.mp4_4_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.08001340925693512
+    },
+    {
+      "clip": "action_S3.mp4_5_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.5290000438690186
+    },
+    {
+      "clip": "action_S3.mp4_6_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.671874463558197
+    },
+    {
+      "clip": "action_S3.mp4_7_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.3593849241733551
+    },
+    {
+      "clip": "action_S3.mp4_8_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": 0.2749793529510498
+    },
+    {
+      "clip": "action_S3.mp4_9_.mp4",
+      "source": "S3",
+      "label": 1,
+      "score": -0.41892945766448975
+    },
+    {
+      "clip": "background_S3.mp4_0_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.8823709487915039
+    },
+    {
+      "clip": "background_S3.mp4_10_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.4505159854888916
+    },
+    {
+      "clip": "background_S3.mp4_11_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.9198293685913086
+    },
+    {
+      "clip": "background_S3.mp4_1_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.7863103151321411
+    },
+    {
+      "clip": "background_S3.mp4_2_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.15782512724399567
+    },
+    {
+      "clip": "background_S3.mp4_3_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.5059195756912231
+    },
+    {
+      "clip": "background_S3.mp4_4_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.48265355825424194
+    },
+    {
+      "clip": "background_S3.mp4_5_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.465021014213562
+    },
+    {
+      "clip": "background_S3.mp4_6_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.1147722005844116
+    },
+    {
+      "clip": "background_S3.mp4_7_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.1806141138076782
+    },
+    {
+      "clip": "background_S3.mp4_8_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -0.8187699317932129
+    },
+    {
+      "clip": "background_S3.mp4_9_.mp4",
+      "source": "S3",
+      "label": 0,
+      "score": -1.33395516872406
+    },
+    {
+      "clip": "action_S4.mp4_0_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 2.0297391414642334
+    },
+    {
+      "clip": "action_S4.mp4_10_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.4785759449005127
+    },
+    {
+      "clip": "action_S4.mp4_11_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 0.34081101417541504
+    },
+    {
+      "clip": "action_S4.mp4_12_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.6060442924499512
+    },
+    {
+      "clip": "action_S4.mp4_13_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.592078447341919
+    },
+    {
+      "clip": "action_S4.mp4_14_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 2.384500026702881
+    },
+    {
+      "clip": "action_S4.mp4_15_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 2.384500026702881
+    },
+    {
+      "clip": "action_S4.mp4_16_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 0.15186567604541779
+    },
+    {
+      "clip": "action_S4.mp4_17_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.5420653820037842
+    },
+    {
+      "clip": "action_S4.mp4_18_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.2331390380859375
+    },
+    {
+      "clip": "action_S4.mp4_19_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.5470342636108398
+    },
+    {
+      "clip": "action_S4.mp4_1_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.0448071956634521
+    },
+    {
+      "clip": "action_S4.mp4_20_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 2.6885058879852295
+    },
+    {
+      "clip": "action_S4.mp4_21_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 2.3481287956237793
+    },
+    {
+      "clip": "action_S4.mp4_22_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.8724184036254883
+    },
+    {
+      "clip": "action_S4.mp4_23_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 0.43454378843307495
+    },
+    {
+      "clip": "action_S4.mp4_24_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.318400263786316
+    },
+    {
+      "clip": "action_S4.mp4_2_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 0.18148799240589142
+    },
+    {
+      "clip": "action_S4.mp4_3_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.8847649097442627
+    },
+    {
+      "clip": "action_S4.mp4_4_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.0926862955093384
+    },
+    {
+      "clip": "action_S4.mp4_5_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.485886573791504
+    },
+    {
+      "clip": "action_S4.mp4_6_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.5202349424362183
+    },
+    {
+      "clip": "action_S4.mp4_7_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": 1.1207044124603271
+    },
+    {
+      "clip": "action_S4.mp4_9_.mp4",
+      "source": "S4",
+      "label": 1,
+      "score": -0.7044181227684021
+    },
+    {
+      "clip": "background_S4.mp4_0_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.8207686543464661
+    },
+    {
+      "clip": "background_S4.mp4_1_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.7514325976371765
+    },
+    {
+      "clip": "background_S4.mp4_2_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.049471452832221985
+    },
+    {
+      "clip": "background_S4.mp4_3_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": -0.37689948081970215
+    },
+    {
+      "clip": "background_S4.mp4_4_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": -0.06138478219509125
+    },
+    {
+      "clip": "background_S4.mp4_5_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.05481381714344025
+    },
+    {
+      "clip": "background_S4.mp4_6_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.146922305226326
+    },
+    {
+      "clip": "background_S4.mp4_7_.mp4",
+      "source": "S4",
+      "label": 0,
+      "score": 0.5570192337036133
+    },
+    {
+      "clip": "action_S5.mp4_0_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.630968451499939
+    },
+    {
+      "clip": "action_S5.mp4_10_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.6616657972335815
+    },
+    {
+      "clip": "action_S5.mp4_11_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.8211122751235962
+    },
+    {
+      "clip": "action_S5.mp4_12_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.7605196833610535
+    },
+    {
+      "clip": "action_S5.mp4_13_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.14201614260673523
+    },
+    {
+      "clip": "action_S5.mp4_1_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.1787644326686859
+    },
+    {
+      "clip": "action_S5.mp4_2_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 1.2263517379760742
+    },
+    {
+      "clip": "action_S5.mp4_3_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.7994809746742249
+    },
+    {
+      "clip": "action_S5.mp4_4_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 1.8118653297424316
+    },
+    {
+      "clip": "action_S5.mp4_5_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.6495286226272583
+    },
+    {
+      "clip": "action_S5.mp4_6_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": -0.37096989154815674
+    },
+    {
+      "clip": "action_S5.mp4_7_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.35993194580078125
+    },
+    {
+      "clip": "action_S5.mp4_8_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.8893229961395264
+    },
+    {
+      "clip": "action_S5.mp4_9_.mp4",
+      "source": "S5",
+      "label": 1,
+      "score": 0.543240487575531
+    },
+    {
+      "clip": "background_S5.mp4_0_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.0682543516159058
+    },
+    {
+      "clip": "background_S5.mp4_10_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": 0.33479198813438416
+    },
+    {
+      "clip": "background_S5.mp4_1_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.7989970445632935
+    },
+    {
+      "clip": "background_S5.mp4_2_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -0.3030247092247009
+    },
+    {
+      "clip": "background_S5.mp4_3_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -0.82841557264328
+    },
+    {
+      "clip": "background_S5.mp4_4_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.3821886777877808
+    },
+    {
+      "clip": "background_S5.mp4_5_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -0.4115705192089081
+    },
+    {
+      "clip": "background_S5.mp4_6_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.4556772708892822
+    },
+    {
+      "clip": "background_S5.mp4_7_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.2272473573684692
+    },
+    {
+      "clip": "background_S5.mp4_8_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -1.202836513519287
+    },
+    {
+      "clip": "background_S5.mp4_9_.mp4",
+      "source": "S5",
+      "label": 0,
+      "score": -0.6958101987838745
+    },
+    {
+      "clip": "action_S6.mp4_0_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.2690737247467041
+    },
+    {
+      "clip": "action_S6.mp4_1_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 1.3062688112258911
+    },
+    {
+      "clip": "action_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.07658432424068451
+    },
+    {
+      "clip": "action_S6.mp4_3_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.2470787912607193
+    },
+    {
+      "clip": "action_S6.mp4_4_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.5060839056968689
+    },
+    {
+      "clip": "action_S6.mp4_5_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.43655842542648315
+    },
+    {
+      "clip": "action_S6.mp4_6_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.22483272850513458
+    },
+    {
+      "clip": "action_S6.mp4_7_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 0.8375203013420105
+    },
+    {
+      "clip": "action_S6.mp4_8_.mp4",
+      "source": "S6",
+      "label": 1,
+      "score": 1.414231777191162
+    },
+    {
+      "clip": "background_S6.mp4_0_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.44518959522247314
+    },
+    {
+      "clip": "background_S6.mp4_1_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.454987108707428
+    },
+    {
+      "clip": "background_S6.mp4_2_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": 0.01426108181476593
+    },
+    {
+      "clip": "background_S6.mp4_3_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.5857452750205994
+    },
+    {
+      "clip": "background_S6.mp4_4_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.36030369997024536
+    },
+    {
+      "clip": "background_S6.mp4_5_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": 1.4919415712356567
+    },
+    {
+      "clip": "background_S6.mp4_6_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -1.0625029802322388
+    },
+    {
+      "clip": "background_S6.mp4_7_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -0.46028852462768555
+    },
+    {
+      "clip": "background_S6.mp4_8_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": -1.200416922569275
+    },
+    {
+      "clip": "background_S6.mp4_9_.mp4",
+      "source": "S6",
+      "label": 0,
+      "score": 1.0540170669555664
+    },
+    {
+      "clip": "action_S7.mp4_0_.mp4",
+      "source": "S7",
+      "label": 1,
+      "score": -0.8886020183563232
+    },
+    {
+      "clip": "background_S7.mp4_0_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.4023340940475464
+    },
+    {
+      "clip": "background_S7.mp4_10_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.256325125694275
+    },
+    {
+      "clip": "background_S7.mp4_11_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.6680880784988403
+    },
+    {
+      "clip": "background_S7.mp4_12_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.5967743396759033
+    },
+    {
+      "clip": "background_S7.mp4_13_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.1384016275405884
+    },
+    {
+      "clip": "background_S7.mp4_14_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.4697247743606567
+    },
+    {
+      "clip": "background_S7.mp4_15_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.0409317016601562
+    },
+    {
+      "clip": "background_S7.mp4_16_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.7302116751670837
+    },
+    {
+      "clip": "background_S7.mp4_17_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.7053772211074829
+    },
+    {
+      "clip": "background_S7.mp4_18_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.2530391216278076
+    },
+    {
+      "clip": "background_S7.mp4_19_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.7323340773582458
+    },
+    {
+      "clip": "background_S7.mp4_1_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.9816974997520447
+    },
+    {
+      "clip": "background_S7.mp4_2_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.0406110286712646
+    },
+    {
+      "clip": "background_S7.mp4_3_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -0.5446389317512512
+    },
+    {
+      "clip": "background_S7.mp4_4_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.0906420946121216
+    },
+    {
+      "clip": "background_S7.mp4_5_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.3847986459732056
+    },
+    {
+      "clip": "background_S7.mp4_6_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -2.2077627182006836
+    },
+    {
+      "clip": "background_S7.mp4_7_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.6045359373092651
+    },
+    {
+      "clip": "background_S7.mp4_8_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -1.477394938468933
+    },
+    {
+      "clip": "background_S7.mp4_9_.mp4",
+      "source": "S7",
+      "label": 0,
+      "score": -2.290062189102173
+    },
+    {
+      "clip": "action_S8.mp4_0_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.5677624940872192
+    },
+    {
+      "clip": "action_S8.mp4_10_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.8505572080612183
+    },
+    {
+      "clip": "action_S8.mp4_11_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.344688653945923
+    },
+    {
+      "clip": "action_S8.mp4_12_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.279115676879883
+    },
+    {
+      "clip": "action_S8.mp4_13_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.0999001264572144
+    },
+    {
+      "clip": "action_S8.mp4_14_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.3449573516845703
+    },
+    {
+      "clip": "action_S8.mp4_15_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.5644559860229492
+    },
+    {
+      "clip": "action_S8.mp4_1_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 3.67775297164917
+    },
+    {
+      "clip": "action_S8.mp4_2_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.081416606903076
+    },
+    {
+      "clip": "action_S8.mp4_3_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.167512893676758
+    },
+    {
+      "clip": "action_S8.mp4_4_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.0921006202697754
+    },
+    {
+      "clip": "action_S8.mp4_5_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 3.0816750526428223
+    },
+    {
+      "clip": "action_S8.mp4_6_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.4804807901382446
+    },
+    {
+      "clip": "action_S8.mp4_7_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.3560642004013062
+    },
+    {
+      "clip": "action_S8.mp4_8_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 1.0572681427001953
+    },
+    {
+      "clip": "action_S8.mp4_9_.mp4",
+      "source": "S8",
+      "label": 1,
+      "score": 2.672534704208374
+    },
+    {
+      "clip": "background_S8.mp4_0_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 1.1273605823516846
+    },
+    {
+      "clip": "background_S8.mp4_1_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.05335480719804764
+    },
+    {
+      "clip": "background_S8.mp4_2_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.058512456715106964
+    },
+    {
+      "clip": "background_S8.mp4_3_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": -0.03565772622823715
+    },
+    {
+      "clip": "background_S8.mp4_4_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.1570478081703186
+    },
+    {
+      "clip": "background_S8.mp4_5_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.16044998168945312
+    },
+    {
+      "clip": "background_S8.mp4_6_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.5512987971305847
+    },
+    {
+      "clip": "background_S8.mp4_7_.mp4",
+      "source": "S8",
+      "label": 0,
+      "score": 0.8025689125061035
+    },
+    {
+      "clip": "action_S9.mp4_0_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.11440101265907288
+    },
+    {
+      "clip": "action_S9.mp4_10_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.28351467847824097
+    },
+    {
+      "clip": "action_S9.mp4_11_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.4638651907444
+    },
+    {
+      "clip": "action_S9.mp4_12_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.5822455883026123
+    },
+    {
+      "clip": "action_S9.mp4_1_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.16286501288414001
+    },
+    {
+      "clip": "action_S9.mp4_2_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": -1.2352573871612549
+    },
+    {
+      "clip": "action_S9.mp4_3_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 0.0014772266149520874
+    },
+    {
+      "clip": "action_S9.mp4_4_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 1.446622610092163
+    },
+    {
+      "clip": "action_S9.mp4_5_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 2.249692916870117
+    },
+    {
+      "clip": "action_S9.mp4_6_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 3.9504876136779785
+    },
+    {
+      "clip": "action_S9.mp4_7_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 2.375960350036621
+    },
+    {
+      "clip": "action_S9.mp4_8_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 3.275364398956299
+    },
+    {
+      "clip": "action_S9.mp4_9_.mp4",
+      "source": "S9",
+      "label": 1,
+      "score": 2.2731001377105713
+    },
+    {
+      "clip": "background_S9.mp4_0_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -2.001218795776367
+    },
+    {
+      "clip": "background_S9.mp4_10_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 1.057805061340332
+    },
+    {
+      "clip": "background_S9.mp4_1_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -1.0497483015060425
+    },
+    {
+      "clip": "background_S9.mp4_2_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 0.09561046957969666
+    },
+    {
+      "clip": "background_S9.mp4_3_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.9539152383804321
+    },
+    {
+      "clip": "background_S9.mp4_4_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.7106978893280029
+    },
+    {
+      "clip": "background_S9.mp4_5_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.39110037684440613
+    },
+    {
+      "clip": "background_S9.mp4_6_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.5377563238143921
+    },
+    {
+      "clip": "background_S9.mp4_7_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.77608323097229
+    },
+    {
+      "clip": "background_S9.mp4_8_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": -0.9517384767532349
+    },
+    {
+      "clip": "background_S9.mp4_9_.mp4",
+      "source": "S9",
+      "label": 0,
+      "score": 1.9727964401245117
+    },
+    {
+      "clip": "action_S10.mp4_0_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.11299729347229
+    },
+    {
+      "clip": "action_S10.mp4_1_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.8264014720916748
+    },
+    {
+      "clip": "action_S10.mp4_2_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.4071849584579468
+    },
+    {
+      "clip": "action_S10.mp4_3_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 0.7774027585983276
+    },
+    {
+      "clip": "action_S10.mp4_4_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 2.3453221321105957
+    },
+    {
+      "clip": "action_S10.mp4_5_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.7692489624023438
+    },
+    {
+      "clip": "action_S10.mp4_6_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.6794524192810059
+    },
+    {
+      "clip": "action_S10.mp4_7_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.0142396688461304
+    },
+    {
+      "clip": "action_S10.mp4_8_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.2066477537155151
+    },
+    {
+      "clip": "action_S10.mp4_9_.mp4",
+      "source": "S10",
+      "label": 1,
+      "score": 1.675685167312622
+    },
+    {
+      "clip": "background_S10.mp4_0_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.24002578854560852
+    },
+    {
+      "clip": "background_S10.mp4_10_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.5009961128234863
+    },
+    {
+      "clip": "background_S10.mp4_11_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.02862882800400257
+    },
+    {
+      "clip": "background_S10.mp4_1_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.09004977345466614
+    },
+    {
+      "clip": "background_S10.mp4_2_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.16506779193878174
+    },
+    {
+      "clip": "background_S10.mp4_3_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.02884102053940296
+    },
+    {
+      "clip": "background_S10.mp4_4_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.6364050507545471
+    },
+    {
+      "clip": "background_S10.mp4_5_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": 0.3179435133934021
+    },
+    {
+      "clip": "background_S10.mp4_6_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.08328348398208618
+    },
+    {
+      "clip": "background_S10.mp4_7_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.858549952507019
+    },
+    {
+      "clip": "background_S10.mp4_8_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.4745100140571594
+    },
+    {
+      "clip": "background_S10.mp4_9_.mp4",
+      "source": "S10",
+      "label": 0,
+      "score": -0.8394761085510254
+    },
+    {
+      "clip": "action_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.6935886144638062
+    },
+    {
+      "clip": "action_S11.mp4_10_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.20317520201206207
+    },
+    {
+      "clip": "action_S11.mp4_11_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.8830734491348267
+    },
+    {
+      "clip": "action_S11.mp4_12_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.18631340563297272
+    },
+    {
+      "clip": "action_S11.mp4_1_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": 0.07052262127399445
+    },
+    {
+      "clip": "action_S11.mp4_2_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": 1.8160192966461182
+    },
+    {
+      "clip": "action_S11.mp4_3_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": 0.6421707272529602
+    },
+    {
+      "clip": "action_S11.mp4_4_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.1741521805524826
+    },
+    {
+      "clip": "action_S11.mp4_5_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": 0.046793509274721146
+    },
+    {
+      "clip": "action_S11.mp4_6_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": -0.1131221204996109
+    },
+    {
+      "clip": "action_S11.mp4_7_.mp4",
+      "source": "S11",
+      "label": 1,
+      "score": 0.38593733310699463
+    },
+    {
+      "clip": "background_S11.mp4_0_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": 0.22721000015735626
+    },
+    {
+      "clip": "background_S11.mp4_1_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -0.2037830501794815
+    },
+    {
+      "clip": "background_S11.mp4_2_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -0.9402058124542236
+    },
+    {
+      "clip": "background_S11.mp4_3_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -1.4969632625579834
+    },
+    {
+      "clip": "background_S11.mp4_4_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -1.221010446548462
+    },
+    {
+      "clip": "background_S11.mp4_5_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": 0.2585529088973999
+    },
+    {
+      "clip": "background_S11.mp4_6_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -1.4466325044631958
+    },
+    {
+      "clip": "background_S11.mp4_7_.mp4",
+      "source": "S11",
+      "label": 0,
+      "score": -1.3138169050216675
+    },
+    {
+      "clip": "action_S12.mp4_0_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 1.5392708778381348
+    },
+    {
+      "clip": "action_S12.mp4_1_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 1.954451560974121
+    },
+    {
+      "clip": "action_S12.mp4_2_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 1.2323261499404907
+    },
+    {
+      "clip": "action_S12.mp4_3_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": -0.03318645432591438
+    },
+    {
+      "clip": "action_S12.mp4_4_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": -0.33766844868659973
+    },
+    {
+      "clip": "action_S12.mp4_5_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": 0.5568722486495972
+    },
+    {
+      "clip": "action_S12.mp4_6_.mp4",
+      "source": "S12",
+      "label": 1,
+      "score": -0.7051301598548889
+    },
+    {
+      "clip": "background_S12.mp4_0_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.5408645868301392
+    },
+    {
+      "clip": "background_S12.mp4_10_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.35074782371521
+    },
+    {
+      "clip": "background_S12.mp4_11_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.6063178777694702
+    },
+    {
+      "clip": "background_S12.mp4_12_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -2.2108547687530518
+    },
+    {
+      "clip": "background_S12.mp4_13_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.680564284324646
+    },
+    {
+      "clip": "background_S12.mp4_14_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.8984007239341736
+    },
+    {
+      "clip": "background_S12.mp4_15_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.2063820362091064
+    },
+    {
+      "clip": "background_S12.mp4_1_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.0309720039367676
+    },
+    {
+      "clip": "background_S12.mp4_2_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.9771707057952881
+    },
+    {
+      "clip": "background_S12.mp4_3_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.28093817830085754
+    },
+    {
+      "clip": "background_S12.mp4_4_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.22302938997745514
+    },
+    {
+      "clip": "background_S12.mp4_5_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": 0.07666434347629547
+    },
+    {
+      "clip": "background_S12.mp4_6_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.4781562089920044
+    },
+    {
+      "clip": "background_S12.mp4_7_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.19516818225383759
+    },
+    {
+      "clip": "background_S12.mp4_8_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -0.5469619035720825
+    },
+    {
+      "clip": "background_S12.mp4_9_.mp4",
+      "source": "S12",
+      "label": 0,
+      "score": -1.1781845092773438
+    }
+  ],
+  "timestamp": "2026-05-10T11:11:11+0200"
+}
