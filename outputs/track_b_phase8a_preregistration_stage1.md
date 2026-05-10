@@ -410,3 +410,65 @@ User has reviewed and approves Phase 8a Stage 1 lock as drafted, including:
 - 2 audit-doc framing nuances deferred (not pre-reg)
 
 User signs off → CC builds `tools/phase8a_stress_test.py` → runs → drafts audit doc → user-approval checkpoint #2 → final commit + Phase 8b entry decision.
+
+---
+
+## Erratum (added 2026-05-10 per Phase 8b Stage 1 verification)
+
+**Forward-pointing additive correction; original locked content above
+is unchanged.**
+
+The "RME custom-YOLO ear detector" framing in §"RME pipeline framing
+verification (closing CC's flagged inaccuracy)" of this document is
+**factually correct about the existence of the custom YOLO ear
+detector** in `vendor/horse-face-ear-detection/horse_ear_detection/`,
+and the project's `notebooks/01_read_my_ears_replicate.ipynb`
+genuinely uses that detector. **However, the implication carried in
+this pre-reg's gate-calibration rationale — that the project's LOSO
+0.875 reference baseline uses the custom YOLO ear-cropped pipeline —
+is incorrect.**
+
+Phase 8b Stage 1 pre-registration verification traced the actual
+LOSO 0.875 reference to its source: `notebooks/02_vjepa2_zeroshot.ipynb`
+extracts whole-frame V-JEPA-2 ViT-L mean-pool features on raw RME
+mp4s (no ear cropping, no face masking). Cached features at
+`outputs/vjepa2_embeddings.npz` (283 × 1024) produce Sanity 5's
+`ssv2_motion` LOSO 0.8746126936531734.
+
+The custom YOLO ear detector exists and is used in notebook 01 to
+reproduce the **paper's** original optical-flow pipeline. It is NOT
+used in the project's V-JEPA-2 LOSO 0.875 reproduction (which is the
+reference baseline cited throughout this document).
+
+**What this means for Phase 8a's gate values**: nothing. Phase 8a's
+five tests (subject-bootstrap CI on Δ AUC; per-source LOSO ablation;
+per-clip score divergence; V-JEPA-2 feature similarity; G3-IoU-
+conditional AUC) are all computed on Phase 5 manual eye-cropped
+features vs Phase 7 corrected DLC eye-cropped features. The framing
+error about RME baseline is in this pre-reg's *secondary* discussion
+(closing the Phase 8b gate-recalibration justification); it does NOT
+affect Phase 8a's actual test methodology or results.
+
+The Phase 8a result (RETRACTION verdict, UNDERPOWERED_INDISTINGUISHABLE
+replacement) stands as recorded.
+
+**Phase 8b's full corrected framing** is documented in
+`outputs/track_b_phase8b_preregistration_stage1.md` ⚠ Framing
+correction surfaced pre-lock section. That document's gate-
+interpretation framing is the authoritative reference; this Phase 8a
+pre-reg's secondary discussion of "RME custom-YOLO baseline" should
+be read as historical-error-preserved-for-audit-trail-transparency,
+not as a locked-rule-claim.
+
+**Why this erratum is additive, not retroactive**:
+- Phase 8a Stage 1 pre-reg is locked + committed + merged + pushed
+  (hash `c0bf2bdca8d534ec50683525078f4ced7f5f3fab86c7bd5696a6ed96f95d392c`)
+- Modifying the original locked content would violate the discipline
+  pattern's audit-chain-witness role
+- This erratum is appended-only; the original above is untouched
+- Future readers see both: original framing-as-locked + correction
+- Same additive pattern as Phase 7's §7/§4 amendments and Phase 7
+  retraction (originals struck-through-not-erased)
+
+The discipline pattern is built around additive corrections. This is
+one of them.
