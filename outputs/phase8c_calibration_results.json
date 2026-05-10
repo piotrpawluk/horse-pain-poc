@@ -1,0 +1,216 @@
+{
+  "mode": "phase8c_calibration",
+  "input_file": "outputs/eye_loso_results_phase8b.json",
+  "preregistration": "outputs/track_b_phase8c_preregistration.md",
+  "n_clips": 283,
+  "n_sources": 12,
+  "phase8b_pooled_auc_reference": 0.9008495752123938,
+  "pre_cal_pooled_auc": 0.9008495752123938,
+  "post_cal_pooled_auc": 0.8986506746626687,
+  "auc_invariance_check": "FAIL",
+  "per_fold_T": {
+    "S1": 0.47625965996966296,
+    "S10": 0.5102044062901648,
+    "S11": 0.4774128682492866,
+    "S12": 0.5072805225043551,
+    "S2": 0.5244301504772227,
+    "S3": 0.5033148127137524,
+    "S4": 0.4819066710967845,
+    "S5": 0.5230286213903573,
+    "S6": 0.4840811187315511,
+    "S7": 0.5102293887040965,
+    "S8": 0.46982284361602045,
+    "S9": 0.45667995406340783
+  },
+  "T_median": 0.4936979657226518,
+  "T_iqr": [
+    0.4771245661793807,
+    0.5102106518936478
+  ],
+  "T_in_plausibility_band": true,
+  "T_plausibility_band": [
+    0.3,
+    5.0
+  ],
+  "ece": {
+    "pre_cal": 0.11178608971857328,
+    "post_cal": 0.039659638529613066,
+    "delta": -0.07212645118896022,
+    "n_bins": 10,
+    "binning": "equal-frequency"
+  },
+  "brier": {
+    "pre_cal": 0.1419791332349642,
+    "post_cal": 0.12890895674329841,
+    "delta": -0.01307017649166578
+  },
+  "nll": {
+    "post_cal": 0.40656842200135906
+  },
+  "per_source_metrics": {
+    "S1": {
+      "n_clips": 21,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.14964767082532202,
+      "ece_post_cal": 0.12836904964982726,
+      "brier_pre_cal": 0.1736071945968086,
+      "brier_post_cal": 0.1784646888865832,
+      "T_S": 0.47625965996966296
+    },
+    "S10": {
+      "n_clips": 22,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.27576283215187336,
+      "ece_post_cal": 0.20256269246812245,
+      "brier_pre_cal": 0.12946222502935303,
+      "brier_post_cal": 0.10320578154405578,
+      "T_S": 0.5102044062901648
+    },
+    "S11": {
+      "n_clips": 19,
+      "n_bins_used": 3,
+      "ece_pre_cal": 0.18483625145308527,
+      "ece_post_cal": 0.18496105945001018,
+      "brier_pre_cal": 0.20894285854595784,
+      "brier_post_cal": 0.22779403461369727,
+      "T_S": 0.4774128682492866
+    },
+    "S12": {
+      "n_clips": 23,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.1730071877249181,
+      "ece_post_cal": 0.08287375348380477,
+      "brier_pre_cal": 0.12933865143084256,
+      "brier_post_cal": 0.10494062181148707,
+      "T_S": 0.5072805225043551
+    },
+    "S2": {
+      "n_clips": 25,
+      "n_bins_used": 5,
+      "ece_pre_cal": 0.2676284224172292,
+      "ece_post_cal": 0.15655606217611015,
+      "brier_pre_cal": 0.08418696927876028,
+      "brier_post_cal": 0.04535205760553884,
+      "T_S": 0.5244301504772227
+    },
+    "S3": {
+      "n_clips": 28,
+      "n_bins_used": 5,
+      "ece_pre_cal": 0.2749084773517689,
+      "ece_post_cal": 0.21766718517295847,
+      "brier_pre_cal": 0.16503510629754703,
+      "brier_post_cal": 0.1486200553153294,
+      "T_S": 0.5033148127137524
+    },
+    "S4": {
+      "n_clips": 32,
+      "n_bins_used": 6,
+      "ece_pre_cal": 0.18333256777655002,
+      "ece_post_cal": 0.13010286376201347,
+      "brier_pre_cal": 0.1355815018251666,
+      "brier_post_cal": 0.13827288470500457,
+      "T_S": 0.4819066710967845
+    },
+    "S5": {
+      "n_clips": 25,
+      "n_bins_used": 5,
+      "ece_pre_cal": 0.20011108974123104,
+      "ece_post_cal": 0.09550195017237342,
+      "brier_pre_cal": 0.12107734070527357,
+      "brier_post_cal": 0.0814639726897355,
+      "T_S": 0.5230286213903573
+    },
+    "S6": {
+      "n_clips": 19,
+      "n_bins_used": 3,
+      "ece_pre_cal": 0.15642442011815047,
+      "ece_post_cal": 0.16049097302366908,
+      "brier_pre_cal": 0.19041107069272947,
+      "brier_post_cal": 0.16860904593505474,
+      "T_S": 0.4840811187315511
+    },
+    "S7": {
+      "n_clips": 21,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.19114361741355437,
+      "ece_post_cal": 0.06072740283421417,
+      "brier_pre_cal": 0.08259796109242544,
+      "brier_post_cal": 0.0501008130126912,
+      "T_S": 0.5102293887040965
+    },
+    "S8": {
+      "n_clips": 24,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.2077726607715519,
+      "ece_post_cal": 0.21273230719156888,
+      "brier_pre_cal": 0.1312767935809991,
+      "brier_post_cal": 0.15162937562235404,
+      "T_S": 0.46982284361602045
+    },
+    "S9": {
+      "n_clips": 24,
+      "n_bins_used": 4,
+      "ece_pre_cal": 0.1150153498676518,
+      "ece_post_cal": 0.08848396550804649,
+      "brier_pre_cal": 0.17280258402705329,
+      "brier_post_cal": 0.16958081502921843,
+      "T_S": 0.45667995406340783
+    }
+  },
+  "operating_point": {
+    "fpr_target": 0.05,
+    "tau_ear": 0.8137537137517363,
+    "tpr_at_tau": 0.5434782608695652,
+    "tpr_bootstrap_95_ci": [
+      0.30767543859649127,
+      0.7500408496732026
+    ],
+    "n_negatives_used": 145,
+    "n_positives_used": 138,
+    "bootstrap_B": 1000,
+    "bootstrap_seed": 42
+  },
+  "session_level_under_independence": {
+    "n_behaviors": 24,
+    "per_behavior_fpr": 0.05,
+    "session_threshold": 8,
+    "exact_poisson_binomial": {
+      "P_session_flagged_under_H0": 1.392769780978776e-05,
+      "method": "convolution of 24 Bernoulli(p=0.05); reduces to Binomial(n=24, p=0.05) under uniform p"
+    },
+    "poisson_approximation": {
+      "P_session_flagged_under_H0": 3.697886790621219e-05,
+      "lambda": 1.2000000000000002,
+      "method": "Poisson(\u03bb=1.2000000000000002) tail beyond 7"
+    },
+    "approximation_absolute_error": 2.3051170096424427e-05,
+    "approximation_relative_error": 1.655059609365239,
+    "independence_assumption_status": "UNVERIFIED \u2014 see pre-reg Limitation 1: RHpE behavior co-occurrence matrices not located in q3_architecture survey; tail swish + ear pinning, eye-cluster behaviors, and head/body co-occurrence are plausible violations. Direction of violation unknown."
+  },
+  "gates": {
+    "G1_sanity_auc_invariance": "FAIL",
+    "G2_calibration_improvement": "PASS",
+    "G3_calibration_quality_band": "well_calibrated",
+    "G4_T_plausibility": "PASS"
+  },
+  "config": {
+    "calibration_method": "temperature_scaling_one_parameter",
+    "fitting_objective": "NLL on training-fold scores",
+    "calibration_loso": "source-aware (per source S, fit T on other 11 sources' OOF scores)",
+    "ece_n_bins": 10,
+    "ece_binning": "equal-frequency",
+    "fpr_target": 0.05,
+    "bootstrap_B": 1000,
+    "bootstrap_seed": 42,
+    "n_behaviors_rhpe": 24,
+    "session_threshold": 8,
+    "scoring_rule_source": "Dyson 2018 J Vet Behav 23:47-57 + Dyson & Pollard 2023 Animals 13(12):1940 \u2014 presence/absence per behavior, session score = sum of presences, threshold \u22658/24. See v2/research/dyson_scoring_check.md"
+  },
+  "limitations": [
+    "L1: independence assumption for session-level operating point is unverified \u2014 see pre-reg Limitation 1.",
+    "L2: single-behavior scope (ear movement only) \u2014 see pre-reg Limitation 2.",
+    "L3: single-observer label noise from RME paper carries forward \u2014 see pre-reg Limitation 3.",
+    "L4: RidgeClassifier vs LogisticRegression deferred to Phase 9 \u2014 see pre-reg Limitation 4."
+  ],
+  "timestamp_utc": "2026-05-10T12:26:00.211473+00:00"
+}
