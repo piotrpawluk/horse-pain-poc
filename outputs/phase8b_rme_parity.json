@@ -1,0 +1,63 @@
+{
+  "tool": "tools/phase8b_rme_parity.py",
+  "stage1_decision": "\u00a7Decision 2 RME parity check",
+  "expected_pooled_auc": 0.8746126936531734,
+  "expected_source": "outputs/iter65_sanity5_loso_rme_results.json",
+  "observed_pooled_auc": 0.8746126936531734,
+  "deviation_absolute": 0.0,
+  "deviation_tolerance_strict": 1e-10,
+  "n_clips": 283,
+  "n_sources": 12,
+  "fold_log": {
+    "S1": {
+      "n": 21,
+      "auc": 0.8163265306122449
+    },
+    "S2": {
+      "n": 25,
+      "auc": 0.9266666666666666
+    },
+    "S3": {
+      "n": 28,
+      "auc": 0.9947916666666666
+    },
+    "S4": {
+      "n": 32,
+      "auc": 0.9114583333333334
+    },
+    "S5": {
+      "n": 25,
+      "auc": 0.9025974025974026
+    },
+    "S6": {
+      "n": 19,
+      "auc": 0.9555555555555555
+    },
+    "S7": {
+      "n": 21,
+      "auc": 1.0
+    },
+    "S8": {
+      "n": 24,
+      "auc": 0.6328125
+    },
+    "S9": {
+      "n": 24,
+      "auc": 0.7832167832167832
+    },
+    "S10": {
+      "n": 22,
+      "auc": 1.0
+    },
+    "S11": {
+      "n": 19,
+      "auc": 0.9204545454545454
+    },
+    "S12": {
+      "n": 23,
+      "auc": 1.0
+    }
+  },
+  "verdict": "PASS_BIT_EXACT",
+  "next_action": "Pooled AUC matches expected to within 1e-10. Proceed to Stage 1.5 ear keypoint inspection."
+}
