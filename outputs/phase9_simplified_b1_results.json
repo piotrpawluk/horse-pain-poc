@@ -1,0 +1,368 @@
+{
+  "mode": "phase9_simplified_b1",
+  "preregistration": "outputs/track_b_phase9_preregistration.md",
+  "inputs": {
+    "phase8c_calibration_results": "outputs/phase8c_calibration_results.json",
+    "phase8c_audit_extras": "outputs/phase8c_audit_extras.json"
+  },
+  "tau_ear_consumed": 0.8137537137517363,
+  "n_clips": 283,
+  "n_sources": 12,
+  "scoring_rule_source": "Dyson 2018 J Vet Behav 23:47-57 + Dyson & Pollard 2023 Animals 13(12):1940 \u2014 presence/absence per behavior, session score = sum of presences, threshold \u2265 8/24. See v2/research/dyson_scoring_check.md",
+  "gates": {
+    "G1_tool_execution": "PASS",
+    "G2_phase8c_consistency": "PASS",
+    "G3_pooled_FPR_sanity": "FAIL",
+    "G4_g1a_per_source_auc_invariance": "PASS",
+    "G5_synthetic_unit_tests": "PASS"
+  },
+  "pooled_diagnostic": {
+    "n": 283,
+    "n_pos": 138,
+    "n_neg": 145,
+    "TP": 75,
+    "FP": 8,
+    "TN": 137,
+    "FN": 63,
+    "FPR": 0.05517241379310345,
+    "TPR": 0.5434782608695652,
+    "accuracy": 0.7491166077738516,
+    "FPR_target": 0.05,
+    "FPR_drift": 0.005172413793103445,
+    "FPR_sanity_tol": 0.005
+  },
+  "per_source_confusion": {
+    "S1": {
+      "n": 21,
+      "n_pos": 7,
+      "n_neg": 14,
+      "TP": 0,
+      "FP": 0,
+      "TN": 14,
+      "FN": 7,
+      "FPR": 0.0,
+      "TPR": 0.0,
+      "accuracy": 0.6666666666666666
+    },
+    "S2": {
+      "n": 25,
+      "n_pos": 10,
+      "n_neg": 15,
+      "TP": 10,
+      "FP": 0,
+      "TN": 15,
+      "FN": 0,
+      "FPR": 0.0,
+      "TPR": 1.0,
+      "accuracy": 1.0
+    },
+    "S3": {
+      "n": 28,
+      "n_pos": 16,
+      "n_neg": 12,
+      "TP": 2,
+      "FP": 0,
+      "TN": 12,
+      "FN": 14,
+      "FPR": 0.0,
+      "TPR": 0.125,
+      "accuracy": 0.5
+    },
+    "S4": {
+      "n": 32,
+      "n_pos": 24,
+      "n_neg": 8,
+      "TP": 19,
+      "FP": 2,
+      "TN": 6,
+      "FN": 5,
+      "FPR": 0.25,
+      "TPR": 0.7916666666666666,
+      "accuracy": 0.78125
+    },
+    "S5": {
+      "n": 25,
+      "n_pos": 14,
+      "n_neg": 11,
+      "TP": 5,
+      "FP": 0,
+      "TN": 11,
+      "FN": 9,
+      "FPR": 0.0,
+      "TPR": 0.35714285714285715,
+      "accuracy": 0.64
+    },
+    "S6": {
+      "n": 19,
+      "n_pos": 9,
+      "n_neg": 10,
+      "TP": 3,
+      "FP": 2,
+      "TN": 8,
+      "FN": 6,
+      "FPR": 0.2,
+      "TPR": 0.3333333333333333,
+      "accuracy": 0.5789473684210527
+    },
+    "S7": {
+      "n": 21,
+      "n_pos": 1,
+      "n_neg": 20,
+      "TP": 0,
+      "FP": 0,
+      "TN": 20,
+      "FN": 1,
+      "FPR": 0.0,
+      "TPR": 0.0,
+      "accuracy": 0.9523809523809523
+    },
+    "S8": {
+      "n": 24,
+      "n_pos": 16,
+      "n_neg": 8,
+      "TP": 16,
+      "FP": 2,
+      "TN": 6,
+      "FN": 0,
+      "FPR": 0.25,
+      "TPR": 1.0,
+      "accuracy": 0.9166666666666666
+    },
+    "S9": {
+      "n": 24,
+      "n_pos": 13,
+      "n_neg": 11,
+      "TP": 6,
+      "FP": 2,
+      "TN": 9,
+      "FN": 7,
+      "FPR": 0.18181818181818182,
+      "TPR": 0.46153846153846156,
+      "accuracy": 0.625
+    },
+    "S10": {
+      "n": 22,
+      "n_pos": 10,
+      "n_neg": 12,
+      "TP": 10,
+      "FP": 0,
+      "TN": 12,
+      "FN": 0,
+      "FPR": 0.0,
+      "TPR": 1.0,
+      "accuracy": 1.0
+    },
+    "S11": {
+      "n": 19,
+      "n_pos": 11,
+      "n_neg": 8,
+      "TP": 1,
+      "FP": 0,
+      "TN": 8,
+      "FN": 10,
+      "FPR": 0.0,
+      "TPR": 0.09090909090909091,
+      "accuracy": 0.47368421052631576
+    },
+    "S12": {
+      "n": 23,
+      "n_pos": 7,
+      "n_neg": 16,
+      "TP": 3,
+      "FP": 0,
+      "TN": 16,
+      "FN": 4,
+      "FPR": 0.0,
+      "TPR": 0.42857142857142855,
+      "accuracy": 0.8260869565217391
+    }
+  },
+  "g1a_per_source_auc_invariance": {
+    "per_source": {
+      "S1": {
+        "n": 21,
+        "n_pos": 7,
+        "n_neg": 14,
+        "auc_pre_cal": 0.7959183673469388,
+        "auc_post_cal": 0.7959183673469388,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S2": {
+        "n": 25,
+        "n_pos": 10,
+        "n_neg": 15,
+        "auc_pre_cal": 1.0,
+        "auc_post_cal": 1.0,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S3": {
+        "n": 28,
+        "n_pos": 16,
+        "n_neg": 12,
+        "auc_pre_cal": 0.96875,
+        "auc_post_cal": 0.96875,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S4": {
+        "n": 32,
+        "n_pos": 24,
+        "n_neg": 8,
+        "auc_pre_cal": 0.8958333333333334,
+        "auc_post_cal": 0.8958333333333334,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S5": {
+        "n": 25,
+        "n_pos": 14,
+        "n_neg": 11,
+        "auc_pre_cal": 0.974025974025974,
+        "auc_post_cal": 0.974025974025974,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S6": {
+        "n": 19,
+        "n_pos": 9,
+        "n_neg": 10,
+        "auc_pre_cal": 0.8222222222222223,
+        "auc_post_cal": 0.8222222222222223,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S7": {
+        "n": 21,
+        "n_pos": 1,
+        "n_neg": 20,
+        "auc_pre_cal": 0.75,
+        "auc_post_cal": 0.75,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S8": {
+        "n": 24,
+        "n_pos": 16,
+        "n_neg": 8,
+        "auc_pre_cal": 0.984375,
+        "auc_post_cal": 0.984375,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S9": {
+        "n": 24,
+        "n_pos": 13,
+        "n_neg": 11,
+        "auc_pre_cal": 0.8321678321678322,
+        "auc_post_cal": 0.8321678321678322,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S10": {
+        "n": 22,
+        "n_pos": 10,
+        "n_neg": 12,
+        "auc_pre_cal": 1.0,
+        "auc_post_cal": 1.0,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S11": {
+        "n": 19,
+        "n_pos": 11,
+        "n_neg": 8,
+        "auc_pre_cal": 0.7954545454545454,
+        "auc_post_cal": 0.7954545454545454,
+        "delta": 0.0,
+        "invariant": true
+      },
+      "S12": {
+        "n": 23,
+        "n_pos": 7,
+        "n_neg": 16,
+        "auc_pre_cal": 0.8928571428571428,
+        "auc_post_cal": 0.8928571428571428,
+        "delta": 0.0,
+        "invariant": true
+      }
+    },
+    "all_12_invariant": true,
+    "tolerance": 1e-10,
+    "verdict": "PASS"
+  },
+  "g1b_pooled_drift": {
+    "auc_pre_cal_pooled": 0.9008495752123938,
+    "auc_post_cal_pooled": 0.8986506746626687,
+    "delta_auc_pooled": 0.002198900549725158,
+    "T_max": 0.5244301504772227,
+    "T_min": 0.45667995406340783,
+    "T_range": 0.06775019641381491,
+    "k_constant": 0.04,
+    "bound": 0.0027100078565525966,
+    "ratio": 0.03245600258181364,
+    "invariant_holds": true,
+    "flag": false,
+    "verdict": "WITHIN_BOUND"
+  },
+  "g5_synthetic_unit_tests": {
+    "cases": [
+      {
+        "name": "all-zero",
+        "presence_sum": 0,
+        "expected_score": 0,
+        "expected_flag": false,
+        "observed_score": 0,
+        "observed_flag": false,
+        "pass": true
+      },
+      {
+        "name": "seven (off-by-one guard)",
+        "presence_sum": 7,
+        "expected_score": 7,
+        "expected_flag": false,
+        "observed_score": 7,
+        "observed_flag": false,
+        "pass": true
+      },
+      {
+        "name": "exactly-eight (at threshold)",
+        "presence_sum": 8,
+        "expected_score": 8,
+        "expected_flag": true,
+        "observed_score": 8,
+        "observed_flag": true,
+        "pass": true
+      },
+      {
+        "name": "all-one (super-threshold)",
+        "presence_sum": 24,
+        "expected_score": 24,
+        "expected_flag": true,
+        "observed_score": 24,
+        "observed_flag": true,
+        "pass": true
+      }
+    ],
+    "all_pass": true,
+    "verdict": "PASS",
+    "n_behaviors": 24,
+    "threshold": 8
+  },
+  "scaffold_for_K_eq_24": {
+    "api_signature": "compute_session_score(presence_vector: list[int] | np.ndarray, threshold: int = 8) -> tuple[int, bool]",
+    "exercised_at_K_eq_1": true,
+    "exercised_with_real_data_at_K_gt_1": false,
+    "validated_at_K_eq_24_via_synthetic_unit_tests_only": true,
+    "note": "Mechanism-only validation at K = 24; clinical claim is blocked on multi-behavior probe development (Phase 10+)."
+  },
+  "limitations": [
+    "L1: single-behavior scope (K = 1) \u2014 \u2265 8/24 cannot fire.",
+    "L2: single-window-per-session \u2014 RME clip structure.",
+    "L3: independence assumption carries forward from Phase 8c.",
+    "L4: single-observer label noise carries forward.",
+    "L5: k = 0.04 is N = 1 phase empirical anchor (G1b reportable)."
+  ],
+  "timestamp_utc": "2026-05-11T14:41:48.822518+00:00"
+}
