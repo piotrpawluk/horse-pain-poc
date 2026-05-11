@@ -668,6 +668,32 @@ The discipline pattern caught this through its locked routing matrix: CONFIDENT_
 
 ---
 
+## Lesson 21 — RME ear-motion labels ≠ RHpE Behavior #7 (sustained ears-back); thesis framing implications (May 2026, Phase 10 setup)
+
+The project's RME-trained ear classifier (Phases 5–9) detects ear *motion* — any positional change, any direction, any duration — per the operational labels in `docs/labeling-protocol-2026-05.md` §2 and the underlying optical-flow magnitude threshold in the RME paper (Alves et al. CVPR-W 2025). This is **not** identical to **RHpE Behavior #7 (Ears Back)** as defined by Dyson 2018, which is a sustained-position behavior: ears pinned/rotated back behind vertical for ≥5 seconds.
+
+**Why this matters.** Pain literature correlates the two phenomena — a horse in discomfort often shows both elevated ear motion AND sustained pinning — but they are measurably distinct. RME's optical-flow magnitude threshold detects MOTION events; Dyson's stopwatch criterion ≥5s detects SUSTAINED POSITION. A classifier trained on RME labels detects the former; a thesis claim of "detecting RHpE behaviors" implicitly refers to the latter. The gap is real and load-bearing for any clinical-utility framing.
+
+**Three honest framings** (project-level decision; chosen mix recorded here):
+
+- **(a) Pipeline-demonstration framing — adopted as primary thesis framing.** "RME ear-motion detection serves as a proof-of-concept for the underlying pipeline (V-JEPA-2 + Ridge probe + DLC keypoint-anchored cropping + per-source calibration + simplified-B1 aggregation). The pipeline is the contribution; the specific behavior is a vehicle. Subsequent phases extend to RHpE-cataloged behaviors with their own validated labels."
+- **(b) Related-target framing — adopted as forward-look in limitations.** "Ear motion (RME) is empirically correlated with RHpE Behavior #7 in clinical practice; we use it as a tractable proxy while building the broader detector. RHpE Behavior #7 with its sustained-position criterion is in scope for K=2 expansion."
+- **(c) Strict-RHpE framing — legitimate Phase 11+ scope, not adopted now.** Retrain the ear classifier on RHpE Behavior #7 labels (sustained ≥5s). RME work informs the architecture; the deployed classifier matches RHpE definitions exactly. Requires re-labeling all 283 RME clips with the sustained criterion + retraining + revalidation — significant additional work.
+
+**Implications for downstream phases:**
+
+- **Phase 10 transfer test** (Prudnik championship footage, simplified-B1 + calibration pipeline applied to new context) uses `docs/labeling-protocol-2026-05.md` verbatim. The test is "does the trained ear-motion classifier transfer from clinical-lab to championship footage?" — a clean transfer test of the existing pipeline. Phase 10 does **not** validate RHpE Behavior #7 detection; that is out of scope.
+- **Phase 11+ K=2 expansion choice** becomes genuinely interesting under this framing. Two natural options worth direct comparison:
+  - Add a different RHpE behavior (e.g., eye-region) as the second probe — true K=2, different region.
+  - Add ears-back-sustained as the second probe — same region, refined target — and **directly quantify how much "ear-motion detection" buys you toward "RHpE Behavior #7 detection"**. The comparison is publishable in itself.
+- **Multi-rater κ track** (gated on SLU/Palichleb response) should ideally include κ on BOTH RME-style labels AND RHpE Behavior #7 labels on overlapping clips, so the relationship between the two targets has multi-observer ground truth — not just within-target consistency.
+
+**Methodological observation.** This Lesson documents a *thesis framing gap*, not a *classifier failure*. The pipeline does what it was trained to do; the thesis discussion section needs to be precise about what that is. The discipline pattern catches scope drift at any layer — including framing.
+
+**Surfacing context.** Caught 2026-05-11 during Phase 10 setup preparation when a conflict was flagged between user instruction phrasing ("ears rotated back behind vertical") and the existing project labeling protocol (`labeling-protocol-2026-05.md` §2 ear-motion rule). Pre-Phase-10 clarification cycle resolved to interpretation (A) — use RME labels verbatim for the transfer test, document the gap separately. This Lesson IS that documentation.
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
