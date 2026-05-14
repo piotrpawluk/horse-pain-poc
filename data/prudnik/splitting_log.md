@@ -1,0 +1,344 @@
+# Phase 10 — Splitting log (flagged clips)
+
+*Generated 2026-05-12T20:08:02.147447+00:00 by `tools/phase10_split_flagged.py`. See `Plans/refactored-orbiting-fog.md` and `docs/labeling-protocol-2026-05.md` for context.*
+
+## Summary
+
+- Processed flagged clips: **81**
+- Clips split into windows: **80**
+- Clips skipped (sub-5.0s, can't split): **1**
+- Total derived windows generated: **236**
+- ffmpeg failures: **0**
+
+## Splitting parameters
+
+- Target window: **10.0s** (midpoint of RME 5–15s range)
+- Window bounds: **[5.0s, 15.0s]**
+- Method: uniform splits via ffmpeg `-c copy` (no re-encode)
+- 15+s clips: `n = max(2, round(D/10))`, window_dur = D/n bounded to [5, 15]
+- 5–15s clips: forced 2 equal halves (since flagged needs_resplit=1)
+- <5.0s clips: skipped (cannot split below RME minimum)
+
+## Archive policy
+
+Original per-clip labels for the 80 split clips moved into the new `archived_full_clip_label` column. Original rows in `labels_pending.csv` are kept with their `label` field intact (preserving the per-clip judgment as historical context). Derived window rows have blank `label` for the user's per-window labeling pass.
+
+## Per-clip splits
+
+- `IMG_1106` SKIP — duration 2.75s < 5.0s minimum
+- `IMG_1133` (7.09s, original label `action`):
+  - w1: 0.00-3.54s (3.54s) → `IMG_1133_w1.mov` (16.6 MB)
+  - w2: 3.54-7.09s (3.54s) → `IMG_1133_w2.mov` (16.7 MB)
+- `IMG_1115` (7.84s, original label `action`):
+  - w1: 0.00-3.92s (3.92s) → `IMG_1115_w1.mov` (18.3 MB)
+  - w2: 3.92-7.84s (3.92s) → `IMG_1115_w2.mov` (20.0 MB)
+- `IMG_1017` (7.90s, original label `action`):
+  - w1: 0.00-3.95s (3.95s) → `IMG_1017_w1.mov` (8.1 MB)
+  - w2: 3.95-7.90s (3.95s) → `IMG_1017_w2.mov` (8.9 MB)
+- `IMG_1055` (7.94s, original label `action`):
+  - w1: 0.00-3.97s (3.97s) → `IMG_1055_w1.mov` (8.0 MB)
+  - w2: 3.97-7.94s (3.97s) → `IMG_1055_w2.mov` (8.8 MB)
+- `IMG_1107` (8.22s, original label `background`):
+  - w1: 0.00-4.11s (4.11s) → `IMG_1107_w1.mov` (19.4 MB)
+  - w2: 4.11-8.22s (4.11s) → `IMG_1107_w2.mov` (19.7 MB)
+- `IMG_1160` (8.34s, original label `action`):
+  - w1: 0.00-4.17s (4.17s) → `IMG_1160_w1.mov` (19.5 MB)
+  - w2: 4.17-8.34s (4.17s) → `IMG_1160_w2.mov` (20.3 MB)
+- `IMG_1061` (8.57s, original label `background`):
+  - w1: 0.00-4.29s (4.29s) → `IMG_1061_w1.mov` (8.7 MB)
+  - w2: 4.29-8.57s (4.29s) → `IMG_1061_w2.mov` (9.1 MB)
+- `IMG_1108` (9.99s, original label `action`):
+  - w1: 0.00-4.99s (4.99s) → `IMG_1108_w1.mov` (23.3 MB)
+  - w2: 4.99-9.99s (4.99s) → `IMG_1108_w2.mov` (25.6 MB)
+- `IMG_1130` (10.54s, original label `action`):
+  - w1: 0.00-5.27s (5.27s) → `IMG_1130_w1.mov` (24.7 MB)
+  - w2: 5.27-10.54s (5.27s) → `IMG_1130_w2.mov` (26.3 MB)
+- `IMG_1156` (12.24s, original label `action`):
+  - w1: 0.00-6.12s (6.12s) → `IMG_1156_w1.mov` (28.6 MB)
+  - w2: 6.12-12.24s (6.12s) → `IMG_1156_w2.mov` (29.4 MB)
+- `IMG_1047` (12.37s, original label `action`):
+  - w1: 0.00-6.19s (6.19s) → `IMG_1047_w1.mov` (12.4 MB)
+  - w2: 6.19-12.37s (6.19s) → `IMG_1047_w2.mov` (12.6 MB)
+- `IMG_1154` (12.99s, original label `background`):
+  - w1: 0.00-6.50s (6.50s) → `IMG_1154_w1.mov` (30.2 MB)
+  - w2: 6.50-12.99s (6.50s) → `IMG_1154_w2.mov` (32.8 MB)
+- `IMG_1072` (13.06s, original label `action`):
+  - w1: 0.00-6.53s (6.53s) → `IMG_1072_w1.mov` (13.3 MB)
+  - w2: 6.53-13.06s (6.53s) → `IMG_1072_w2.mov` (13.2 MB)
+- `IMG_1101` (13.44s, original label `action`):
+  - w1: 0.00-6.72s (6.72s) → `IMG_1101_w1.mov` (31.7 MB)
+  - w2: 6.72-13.44s (6.72s) → `IMG_1101_w2.mov` (32.6 MB)
+- `IMG_1123` (13.86s, original label `action`):
+  - w1: 0.00-6.93s (6.93s) → `IMG_1123_w1.mov` (32.4 MB)
+  - w2: 6.93-13.86s (6.93s) → `IMG_1123_w2.mov` (34.5 MB)
+- `IMG_1155` (14.04s, original label `action`):
+  - w1: 0.00-7.02s (7.02s) → `IMG_1155_w1.mov` (33.0 MB)
+  - w2: 7.02-14.04s (7.02s) → `IMG_1155_w2.mov` (33.0 MB)
+- `IMG_1141` (14.46s, original label `action`):
+  - w1: 0.00-7.23s (7.23s) → `IMG_1141_w1.mov` (33.8 MB)
+  - w2: 7.23-14.46s (7.23s) → `IMG_1141_w2.mov` (34.6 MB)
+- `IMG_1147` (14.74s, original label `action`):
+  - w1: 0.00-7.37s (7.37s) → `IMG_1147_w1.mov` (34.5 MB)
+  - w2: 7.37-14.74s (7.37s) → `IMG_1147_w2.mov` (36.4 MB)
+- `IMG_1117` (14.96s, original label `action`):
+  - w1: 0.00-7.48s (7.48s) → `IMG_1117_w1.mov` (34.9 MB)
+  - w2: 7.48-14.96s (7.48s) → `IMG_1117_w2.mov` (37.5 MB)
+- `IMG_1067` (16.14s, original label `action`):
+  - w1: 0.00-8.07s (8.07s) → `IMG_1067_w1.mov` (16.0 MB)
+  - w2: 8.07-16.14s (8.07s) → `IMG_1067_w2.mov` (16.1 MB)
+- `IMG_1060` (17.23s, original label `action`):
+  - w1: 0.00-8.61s (8.61s) → `IMG_1060_w1.mov` (17.1 MB)
+  - w2: 8.61-17.23s (8.61s) → `IMG_1060_w2.mov` (17.4 MB)
+- `IMG_1118` (17.91s, original label `action`):
+  - w1: 0.00-8.95s (8.95s) → `IMG_1118_w1.mov` (41.8 MB)
+  - w2: 8.95-17.91s (8.95s) → `IMG_1118_w2.mov` (44.3 MB)
+- `IMG_1134` (18.57s, original label `action`):
+  - w1: 0.00-9.29s (9.29s) → `IMG_1134_w1.mov` (43.3 MB)
+  - w2: 9.29-18.57s (9.29s) → `IMG_1134_w2.mov` (45.1 MB)
+- `IMG_1058` (18.99s, original label `action`):
+  - w1: 0.00-9.50s (9.50s) → `IMG_1058_w1.mov` (19.3 MB)
+  - w2: 9.50-18.99s (9.50s) → `IMG_1058_w2.mov` (19.7 MB)
+- `IMG_1161` (19.04s, original label `action`):
+  - w1: 0.00-9.52s (9.52s) → `IMG_1161_w1.mov` (44.5 MB)
+  - w2: 9.52-19.04s (9.52s) → `IMG_1161_w2.mov` (45.3 MB)
+- `IMG_1046` (19.68s, original label `action`):
+  - w1: 0.00-9.84s (9.84s) → `IMG_1046_w1.mov` (19.6 MB)
+  - w2: 9.84-19.68s (9.84s) → `IMG_1046_w2.mov` (20.2 MB)
+- `IMG_1013` (20.04s, original label `action`):
+  - w1: 0.00-10.02s (10.02s) → `IMG_1013_w1.mov` (20.2 MB)
+  - w2: 10.02-20.04s (10.02s) → `IMG_1013_w2.mov` (20.3 MB)
+- `IMG_1121` (20.64s, original label `action`):
+  - w1: 0.00-10.32s (10.32s) → `IMG_1121_w1.mov` (48.3 MB)
+  - w2: 10.32-20.64s (10.32s) → `IMG_1121_w2.mov` (50.1 MB)
+- `IMG_1136` (20.68s, original label `action`):
+  - w1: 0.00-10.34s (10.34s) → `IMG_1136_w1.mov` (48.3 MB)
+  - w2: 10.34-20.68s (10.34s) → `IMG_1136_w2.mov` (50.3 MB)
+- `IMG_1089` (21.09s, original label `action`):
+  - w1: 0.00-10.55s (10.55s) → `IMG_1089_w1.mov` (49.3 MB)
+  - w2: 10.55-21.09s (10.55s) → `IMG_1089_w2.mov` (50.3 MB)
+- `IMG_1078` (21.93s, original label `action`):
+  - w1: 0.00-10.96s (10.96s) → `IMG_1078_w1.mov` (21.6 MB)
+  - w2: 10.96-21.93s (10.96s) → `IMG_1078_w2.mov` (22.7 MB)
+- `IMG_1045` (22.06s, original label `action`):
+  - w1: 0.00-11.03s (11.03s) → `IMG_1045_w1.mov` (21.8 MB)
+  - w2: 11.03-22.06s (11.03s) → `IMG_1045_w2.mov` (22.0 MB)
+- `IMG_1132` (22.09s, original label `action`):
+  - w1: 0.00-11.05s (11.05s) → `IMG_1132_w1.mov` (51.9 MB)
+  - w2: 11.05-22.09s (11.05s) → `IMG_1132_w2.mov` (52.4 MB)
+- `IMG_1014` (22.85s, original label `action`):
+  - w1: 0.00-11.42s (11.42s) → `IMG_1014_w1.mov` (22.5 MB)
+  - w2: 11.42-22.85s (11.42s) → `IMG_1014_w2.mov` (23.5 MB)
+- `IMG_1143` (23.18s, original label `action`):
+  - w1: 0.00-11.59s (11.59s) → `IMG_1143_w1.mov` (54.2 MB)
+  - w2: 11.59-23.18s (11.59s) → `IMG_1143_w2.mov` (54.9 MB)
+- `IMG_1043` (23.26s, original label `action`):
+  - w1: 0.00-11.63s (11.63s) → `IMG_1043_w1.mov` (23.0 MB)
+  - w2: 11.63-23.26s (11.63s) → `IMG_1043_w2.mov` (23.3 MB)
+- `IMG_1116` (23.53s, original label `action`):
+  - w1: 0.00-11.76s (11.76s) → `IMG_1116_w1.mov` (54.9 MB)
+  - w2: 11.76-23.53s (11.76s) → `IMG_1116_w2.mov` (56.6 MB)
+- `IMG_1065` (23.63s, original label `action`):
+  - w1: 0.00-11.81s (11.81s) → `IMG_1065_w1.mov` (23.4 MB)
+  - w2: 11.81-23.63s (11.81s) → `IMG_1065_w2.mov` (24.1 MB)
+- `IMG_1127` (23.89s, original label `action`):
+  - w1: 0.00-11.95s (11.95s) → `IMG_1127_w1.mov` (55.8 MB)
+  - w2: 11.95-23.89s (11.95s) → `IMG_1127_w2.mov` (58.8 MB)
+- `IMG_1148` (24.46s, original label `action`):
+  - w1: 0.00-12.23s (12.23s) → `IMG_1148_w1.mov` (57.2 MB)
+  - w2: 12.23-24.46s (12.23s) → `IMG_1148_w2.mov` (58.5 MB)
+- `IMG_1068` (24.51s, original label `action`):
+  - w1: 0.00-12.26s (12.26s) → `IMG_1068_w1.mov` (24.2 MB)
+  - w2: 12.26-24.51s (12.26s) → `IMG_1068_w2.mov` (24.8 MB)
+- `IMG_1016` (24.93s, original label `action`):
+  - w1: 0.00-12.46s (12.46s) → `IMG_1016_w1.mov` (24.5 MB)
+  - w2: 12.46-24.93s (12.46s) → `IMG_1016_w2.mov` (25.6 MB)
+- `IMG_1100` (24.98s, original label `action`):
+  - w1: 0.00-12.49s (12.49s) → `IMG_1100_w1.mov` (58.3 MB)
+  - w2: 12.49-24.98s (12.49s) → `IMG_1100_w2.mov` (61.1 MB)
+- `IMG_1084` (25.20s, original label `action`):
+  - w1: 0.00-8.40s (8.40s) → `IMG_1084_w1.mov` (39.2 MB)
+  - w2: 8.40-16.80s (8.40s) → `IMG_1084_w2.mov` (41.4 MB)
+  - w3: 16.80-25.20s (8.40s) → `IMG_1084_w3.mov` (41.0 MB)
+- `IMG_1144` (26.00s, original label `action`):
+  - w1: 0.00-8.67s (8.67s) → `IMG_1144_w1.mov` (40.4 MB)
+  - w2: 8.67-17.33s (8.67s) → `IMG_1144_w2.mov` (41.5 MB)
+  - w3: 17.33-26.00s (8.66s) → `IMG_1144_w3.mov` (42.4 MB)
+- `IMG_1113` (26.58s, original label `action`):
+  - w1: 0.00-8.86s (8.86s) → `IMG_1113_w1.mov` (41.4 MB)
+  - w2: 8.86-17.72s (8.86s) → `IMG_1113_w2.mov` (43.5 MB)
+  - w3: 17.72-26.58s (8.86s) → `IMG_1113_w3.mov` (42.7 MB)
+- `IMG_1152` (26.95s, original label `action`):
+  - w1: 0.00-8.98s (8.98s) → `IMG_1152_w1.mov` (42.0 MB)
+  - w2: 8.98-17.96s (8.98s) → `IMG_1152_w2.mov` (44.3 MB)
+  - w3: 17.96-26.95s (8.98s) → `IMG_1152_w3.mov` (44.4 MB)
+- `IMG_1023` (27.30s, original label `action`):
+  - w1: 0.00-9.10s (9.10s) → `IMG_1023_w1.mov` (18.3 MB)
+  - w2: 9.10-18.20s (9.10s) → `IMG_1023_w2.mov` (18.3 MB)
+  - w3: 18.20-27.30s (9.10s) → `IMG_1023_w3.mov` (18.6 MB)
+- `IMG_1138` (27.70s, original label `action`):
+  - w1: 0.00-9.23s (9.23s) → `IMG_1138_w1.mov` (43.2 MB)
+  - w2: 9.23-18.46s (9.23s) → `IMG_1138_w2.mov` (44.2 MB)
+  - w3: 18.46-27.70s (9.23s) → `IMG_1138_w3.mov` (45.9 MB)
+- `IMG_1039` (27.83s, original label `action`):
+  - w1: 0.00-9.28s (9.28s) → `IMG_1039_w1.mov` (18.6 MB)
+  - w2: 9.28-18.55s (9.28s) → `IMG_1039_w2.mov` (18.8 MB)
+  - w3: 18.55-27.83s (9.28s) → `IMG_1039_w3.mov` (18.4 MB)
+- `IMG_1153` (28.01s, original label `action`):
+  - w1: 0.00-9.34s (9.34s) → `IMG_1153_w1.mov` (43.5 MB)
+  - w2: 9.34-18.68s (9.34s) → `IMG_1153_w2.mov` (45.4 MB)
+  - w3: 18.68-28.01s (9.34s) → `IMG_1153_w3.mov` (44.5 MB)
+- `IMG_1151` (28.41s, original label `action`):
+  - w1: 0.00-9.47s (9.47s) → `IMG_1151_w1.mov` (44.2 MB)
+  - w2: 9.47-18.94s (9.47s) → `IMG_1151_w2.mov` (46.8 MB)
+  - w3: 18.94-28.41s (9.47s) → `IMG_1151_w3.mov` (46.7 MB)
+- `IMG_1052` (28.88s, original label `action`):
+  - w1: 0.00-9.63s (9.63s) → `IMG_1052_w1.mov` (19.4 MB)
+  - w2: 9.63-19.25s (9.63s) → `IMG_1052_w2.mov` (19.4 MB)
+  - w3: 19.25-28.88s (9.63s) → `IMG_1052_w3.mov` (19.6 MB)
+- `IMG_1119` (28.88s, original label `action`):
+  - w1: 0.00-9.63s (9.63s) → `IMG_1119_w1.mov` (45.2 MB)
+  - w2: 9.63-19.25s (9.63s) → `IMG_1119_w2.mov` (45.8 MB)
+  - w3: 19.25-28.88s (9.63s) → `IMG_1119_w3.mov` (46.3 MB)
+- `IMG_1048` (30.33s, original label `action`):
+  - w1: 0.00-10.11s (10.11s) → `IMG_1048_w1.mov` (20.4 MB)
+  - w2: 10.11-20.22s (10.11s) → `IMG_1048_w2.mov` (20.3 MB)
+  - w3: 20.22-30.33s (10.11s) → `IMG_1048_w3.mov` (20.2 MB)
+- `IMG_1082` (30.57s, original label `action`):
+  - w1: 0.00-10.19s (10.19s) → `IMG_1082_w1.mov` (47.5 MB)
+  - w2: 10.19-20.38s (10.19s) → `IMG_1082_w2.mov` (48.7 MB)
+  - w3: 20.38-30.57s (10.19s) → `IMG_1082_w3.mov` (49.3 MB)
+- `IMG_1157` (32.08s, original label `action`):
+  - w1: 0.00-10.69s (10.69s) → `IMG_1157_w1.mov` (50.0 MB)
+  - w2: 10.69-21.39s (10.69s) → `IMG_1157_w2.mov` (51.1 MB)
+  - w3: 21.39-32.08s (10.69s) → `IMG_1157_w3.mov` (52.2 MB)
+- `IMG_1093` (33.00s, original label `action`):
+  - w1: 0.00-11.00s (11.00s) → `IMG_1093_w1.mov` (15.1 MB)
+  - w2: 11.00-22.00s (11.00s) → `IMG_1093_w2.mov` (16.4 MB)
+  - w3: 22.00-33.00s (11.00s) → `IMG_1093_w3.mov` (15.1 MB)
+- `IMG_1015` (34.50s, original label `action`):
+  - w1: 0.00-11.50s (11.50s) → `IMG_1015_w1.mov` (23.1 MB)
+  - w2: 11.50-23.00s (11.50s) → `IMG_1015_w2.mov` (23.9 MB)
+  - w3: 23.00-34.50s (11.50s) → `IMG_1015_w3.mov` (23.8 MB)
+- `IMG_1062` (35.27s, original label `action`):
+  - w1: 0.00-8.82s (8.82s) → `IMG_1062_w1.mov` (17.4 MB)
+  - w2: 8.82-17.63s (8.82s) → `IMG_1062_w2.mov` (18.1 MB)
+  - w3: 17.63-26.45s (8.82s) → `IMG_1062_w3.mov` (17.8 MB)
+  - w4: 26.45-35.27s (8.82s) → `IMG_1062_w4.mov` (18.1 MB)
+- `IMG_1122` (35.75s, original label `action`):
+  - w1: 0.00-8.94s (8.94s) → `IMG_1122_w1.mov` (41.6 MB)
+  - w2: 8.94-17.88s (8.94s) → `IMG_1122_w2.mov` (44.1 MB)
+  - w3: 17.88-26.81s (8.94s) → `IMG_1122_w3.mov` (44.2 MB)
+  - w4: 26.81-35.75s (8.94s) → `IMG_1122_w4.mov` (42.5 MB)
+- `IMG_1162` (36.60s, original label `action`):
+  - w1: 0.00-9.15s (9.15s) → `IMG_1162_w1.mov` (42.9 MB)
+  - w2: 9.15-18.30s (9.15s) → `IMG_1162_w2.mov` (43.7 MB)
+  - w3: 18.30-27.45s (9.15s) → `IMG_1162_w3.mov` (44.3 MB)
+  - w4: 27.45-36.60s (9.15s) → `IMG_1162_w4.mov` (45.3 MB)
+- `IMG_1063` (36.98s, original label `action`):
+  - w1: 0.00-9.25s (9.25s) → `IMG_1063_w1.mov` (18.5 MB)
+  - w2: 9.25-18.49s (9.25s) → `IMG_1063_w2.mov` (18.8 MB)
+  - w3: 18.49-27.74s (9.25s) → `IMG_1063_w3.mov` (19.3 MB)
+  - w4: 27.74-36.98s (9.25s) → `IMG_1063_w4.mov` (18.8 MB)
+- `IMG_1031` (37.02s, original label `action`):
+  - w1: 0.00-9.25s (9.25s) → `IMG_1031_w1.mov` (18.5 MB)
+  - w2: 9.25-18.51s (9.25s) → `IMG_1031_w2.mov` (18.9 MB)
+  - w3: 18.51-27.76s (9.25s) → `IMG_1031_w3.mov` (18.2 MB)
+  - w4: 27.76-37.02s (9.25s) → `IMG_1031_w4.mov` (19.0 MB)
+- `IMG_1080` (37.78s, original label `action`):
+  - w1: 0.00-9.45s (9.45s) → `IMG_1080_w1.mov` (19.2 MB)
+  - w2: 9.45-18.89s (9.45s) → `IMG_1080_w2.mov` (19.4 MB)
+  - w3: 18.89-28.34s (9.45s) → `IMG_1080_w3.mov` (19.4 MB)
+  - w4: 28.34-37.78s (9.45s) → `IMG_1080_w4.mov` (19.3 MB)
+- `IMG_1124` (38.52s, original label `action`):
+  - w1: 0.00-9.63s (9.63s) → `IMG_1124_w1.mov` (45.3 MB)
+  - w2: 9.63-19.26s (9.63s) → `IMG_1124_w2.mov` (46.1 MB)
+  - w3: 19.26-28.89s (9.63s) → `IMG_1124_w3.mov` (46.1 MB)
+  - w4: 28.89-38.52s (9.63s) → `IMG_1124_w4.mov` (46.8 MB)
+- `IMG_1150` (39.80s, original label `action`):
+  - w1: 0.00-9.95s (9.95s) → `IMG_1150_w1.mov` (46.3 MB)
+  - w2: 9.95-19.90s (9.95s) → `IMG_1150_w2.mov` (48.9 MB)
+  - w3: 19.90-29.85s (9.95s) → `IMG_1150_w3.mov` (48.8 MB)
+  - w4: 29.85-39.80s (9.95s) → `IMG_1150_w4.mov` (48.6 MB)
+- `IMG_1040` (40.65s, original label `action`):
+  - w1: 0.00-10.16s (10.16s) → `IMG_1040_w1.mov` (20.2 MB)
+  - w2: 10.16-20.33s (10.16s) → `IMG_1040_w2.mov` (20.4 MB)
+  - w3: 20.33-30.49s (10.16s) → `IMG_1040_w3.mov` (20.8 MB)
+  - w4: 30.49-40.65s (10.16s) → `IMG_1040_w4.mov` (21.2 MB)
+- `IMG_1054` (44.32s, original label `action`):
+  - w1: 0.00-11.08s (11.08s) → `IMG_1054_w1.mov` (22.1 MB)
+  - w2: 11.08-22.16s (11.08s) → `IMG_1054_w2.mov` (22.0 MB)
+  - w3: 22.16-33.24s (11.08s) → `IMG_1054_w3.mov` (22.0 MB)
+  - w4: 33.24-44.32s (11.08s) → `IMG_1054_w4.mov` (22.2 MB)
+- `IMG_1090` (45.62s, original label `action`):
+  - w1: 0.00-9.12s (9.12s) → `IMG_1090_w1.mov` (42.6 MB)
+  - w2: 9.12-18.25s (9.12s) → `IMG_1090_w2.mov` (43.5 MB)
+  - w3: 18.25-27.37s (9.12s) → `IMG_1090_w3.mov` (44.0 MB)
+  - w4: 27.37-36.50s (9.12s) → `IMG_1090_w4.mov` (44.7 MB)
+  - w5: 36.50-45.62s (9.12s) → `IMG_1090_w5.mov` (44.7 MB)
+- `IMG_1086` (46.97s, original label `action`):
+  - w1: 0.00-9.39s (9.39s) → `IMG_1086_w1.mov` (43.8 MB)
+  - w2: 9.39-18.79s (9.39s) → `IMG_1086_w2.mov` (46.0 MB)
+  - w3: 18.79-28.18s (9.39s) → `IMG_1086_w3.mov` (45.6 MB)
+  - w4: 28.18-37.58s (9.39s) → `IMG_1086_w4.mov` (45.0 MB)
+  - w5: 37.58-46.97s (9.39s) → `IMG_1086_w5.mov` (44.2 MB)
+- `IMG_1098` (48.31s, original label `action`):
+  - w1: 0.00-9.66s (9.66s) → `IMG_1098_w1.mov` (45.3 MB)
+  - w2: 9.66-19.32s (9.66s) → `IMG_1098_w2.mov` (45.8 MB)
+  - w3: 19.32-28.98s (9.66s) → `IMG_1098_w3.mov` (47.2 MB)
+  - w4: 28.98-38.65s (9.66s) → `IMG_1098_w4.mov` (47.4 MB)
+  - w5: 38.65-48.31s (9.66s) → `IMG_1098_w5.mov` (46.2 MB)
+- `IMG_1021` (49.34s, original label `action`):
+  - w1: 0.00-9.87s (9.87s) → `IMG_1021_w1.mov` (19.8 MB)
+  - w2: 9.87-19.74s (9.87s) → `IMG_1021_w2.mov` (20.5 MB)
+  - w3: 19.74-29.60s (9.87s) → `IMG_1021_w3.mov` (20.2 MB)
+  - w4: 29.60-39.47s (9.87s) → `IMG_1021_w4.mov` (19.9 MB)
+  - w5: 39.47-49.34s (9.87s) → `IMG_1021_w5.mov` (20.5 MB)
+- `IMG_1087` (51.92s, original label `action`):
+  - w1: 0.00-10.38s (10.38s) → `IMG_1087_w1.mov` (48.5 MB)
+  - w2: 10.38-20.77s (10.38s) → `IMG_1087_w2.mov` (50.6 MB)
+  - w3: 20.77-31.16s (10.39s) → `IMG_1087_w3.mov` (50.0 MB)
+  - w4: 31.16-41.54s (10.38s) → `IMG_1087_w4.mov` (49.4 MB)
+  - w5: 41.54-51.92s (10.38s) → `IMG_1087_w5.mov` (49.2 MB)
+- `IMG_1083` (54.29s, original label `action`):
+  - w1: 0.00-10.86s (10.86s) → `IMG_1083_w1.mov` (51.1 MB)
+  - w2: 10.86-21.72s (10.86s) → `IMG_1083_w2.mov` (53.1 MB)
+  - w3: 21.72-32.58s (10.86s) → `IMG_1083_w3.mov` (51.5 MB)
+  - w4: 32.58-43.43s (10.86s) → `IMG_1083_w4.mov` (50.9 MB)
+  - w5: 43.43-54.29s (10.86s) → `IMG_1083_w5.mov` (53.5 MB)
+- `IMG_1038` (57.04s, original label `action`):
+  - w1: 0.00-9.51s (9.51s) → `IMG_1038_w1.mov` (18.9 MB)
+  - w2: 9.51-19.01s (9.51s) → `IMG_1038_w2.mov` (18.9 MB)
+  - w3: 19.01-28.52s (9.51s) → `IMG_1038_w3.mov` (18.9 MB)
+  - w4: 28.52-38.03s (9.51s) → `IMG_1038_w4.mov` (19.2 MB)
+  - w5: 38.03-47.54s (9.51s) → `IMG_1038_w5.mov` (18.9 MB)
+  - w6: 47.54-57.04s (9.51s) → `IMG_1038_w6.mov` (19.0 MB)
+- `IMG_1126` (60.18s, original label `action`):
+  - w1: 0.00-10.03s (10.03s) → `IMG_1126_w1.mov` (47.0 MB)
+  - w2: 10.03-20.06s (10.03s) → `IMG_1126_w2.mov` (47.4 MB)
+  - w3: 20.06-30.09s (10.03s) → `IMG_1126_w3.mov` (47.4 MB)
+  - w4: 30.09-40.12s (10.03s) → `IMG_1126_w4.mov` (47.3 MB)
+  - w5: 40.12-50.15s (10.03s) → `IMG_1126_w5.mov` (47.7 MB)
+  - w6: 50.15-60.18s (10.03s) → `IMG_1126_w6.mov` (47.5 MB)
+- `IMG_1056` (62.66s, original label `action`):
+  - w1: 0.00-10.44s (10.44s) → `IMG_1056_w1.mov` (20.9 MB)
+  - w2: 10.44-20.89s (10.44s) → `IMG_1056_w2.mov` (21.4 MB)
+  - w3: 20.89-31.33s (10.44s) → `IMG_1056_w3.mov` (21.5 MB)
+  - w4: 31.33-41.78s (10.44s) → `IMG_1056_w4.mov` (21.5 MB)
+  - w5: 41.78-52.22s (10.44s) → `IMG_1056_w5.mov` (21.2 MB)
+  - w6: 52.22-62.66s (10.44s) → `IMG_1056_w6.mov` (21.1 MB)
+- `IMG_1079` (67.83s, original label `action`):
+  - w1: 0.00-9.69s (9.69s) → `IMG_1079_w1.mov` (19.1 MB)
+  - w2: 9.69-19.38s (9.69s) → `IMG_1079_w2.mov` (19.6 MB)
+  - w3: 19.38-29.07s (9.69s) → `IMG_1079_w3.mov` (20.0 MB)
+  - w4: 29.07-38.76s (9.69s) → `IMG_1079_w4.mov` (19.4 MB)
+  - w5: 38.76-48.45s (9.69s) → `IMG_1079_w5.mov` (19.7 MB)
+  - w6: 48.45-58.14s (9.69s) → `IMG_1079_w6.mov` (20.1 MB)
+  - w7: 58.14-67.83s (9.69s) → `IMG_1079_w7.mov` (19.7 MB)
+- `IMG_1074` (70.70s, original label `action`):
+  - w1: 0.00-10.10s (10.10s) → `IMG_1074_w1.mov` (20.0 MB)
+  - w2: 10.10-20.20s (10.10s) → `IMG_1074_w2.mov` (20.2 MB)
+  - w3: 20.20-30.30s (10.10s) → `IMG_1074_w3.mov` (20.6 MB)
+  - w4: 30.30-40.40s (10.10s) → `IMG_1074_w4.mov` (20.7 MB)
+  - w5: 40.40-50.50s (10.10s) → `IMG_1074_w5.mov` (20.8 MB)
+  - w6: 50.50-60.60s (10.10s) → `IMG_1074_w6.mov` (21.2 MB)
+  - w7: 60.60-70.70s (10.10s) → `IMG_1074_w7.mov` (20.1 MB)
