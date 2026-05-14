@@ -694,6 +694,38 @@ The project's RME-trained ear classifier (Phases 5–9) detects ear *motion* —
 
 ---
 
+## Lesson 22 — DLC `__version__` constant is not load-bearing; pip dist-info is the source of truth (May 2026, Phase 10a cloud setup)
+
+When pinning DLC for Modal image reproducibility, two version sources were discovered to disagree on the local install:
+
+- **pip dist-info `METADATA` file**: `Version: 3.0.0rc14` (truth — the wheel artifact installed by `uv pip install`)
+- **runtime `deeplabcut.__version__` constant** (`.venv/.../deeplabcut/version.py`): `"3.0.0rc13"` (stale display string)
+
+The mismatch is real and the rc14-vs-rc13 delta is NOT cosmetic. GitHub release notes for rc14 (published 2026-03-23) document substantive inference-affecting changes since rc10:
+
+- PR #3105: disable `torch.autocast` by default in inference settings
+- PR #3154: filter low-confidence bbox detections from Faster R-CNN
+- PR #3078: fix RTMPose likelihood computation
+- PR #3110, #3117, #3121: PyTorch inference speed-ups
+- PRs #3096 + #3109: two separate "Updating version" commits — at least one didn't bump `version.py`, which is why the runtime constant lags
+
+**Why this matters.** A casual environment audit (`python -c "import deeplabcut; print(deeplabcut.__version__)"`) would report `3.0.0rc13` and an auditor would conclude the project ran on rc13. The actual binary is rc14, with rc14's behavioral changes. Audit-doc claims about "ran DLC version X" need to cite the source explicitly.
+
+**Generalizable rule.** For any third-party package where reproducibility matters:
+
+1. Treat **pip dist-info `Version:` field** as the source of truth, not the in-code `__version__` constant. The latter can lag due to incomplete release-process bumps.
+2. **Capture the SHA256 of the dist-info `METADATA` file** as part of any reproducibility manifest. Two installs with the same METADATA SHA256 are byte-identical wheel installs; same `Version:` field with different METADATA SHA256 means same release but different wheel build (still likely benign, but worth recording).
+3. **Capture the SHA256 of any in-code version file** (`version.py`, `_version.py`) as independent proof when version-constant lag is suspected.
+4. In smoke-test / audit JSON, store both `pip_dist_info_version` AND `runtime_version_constant` as **separate fields** — never collapse to one.
+
+**Resolution for Phase 10a / Modal pipeline.** `tools/cloud_dlc/dlc_inference.py:runtime_environment()` captures the full four-field manifest (pip version, runtime constant, METADATA SHA256, version.py SHA256). `tools/cloud_dlc/smoke_test.py:_version_identity_check()` compares local vs cloud and classifies the agreement as HASH_MATCH / VERSION_MATCH_HASH_DIFFER / VERSION_MISMATCH. Phase 10a audit doc will cite all four fields when documenting the methodology preservation chain.
+
+**Methodological observation.** Phase 8b ran on this same install — so Phase 8b is also rc14-bytes-with-rc13-display. Modal pin `deeplabcut==3.0.0rc14` matches Phase 8b's actual code, not a different version. Methodology survives because of install-time coincidence (both pre-Modal and Modal are post-rc14-release), not by design — a future project that installs Phase 8b before rc14 release and Modal after would hit a real version split hidden behind matching display strings.
+
+**Surfacing context.** Caught 2026-05-13 during Phase 10a cloud DLC scaffolding when an external critic flagged my "benign in-code lag" framing as unverified. Verification via `gh api /repos/DeepLabCut/DeepLabCut/releases` revealed the substantive inference changes. The discipline pattern caught this through external critique before any cloud GPU runs.
+
+---
+
 ## What worked (verified, build on)
 
 - **V-JEPA-2 ViT-L encoder features** (1024-d, pretrain-only by construction in our pipeline — see Lesson 12)
