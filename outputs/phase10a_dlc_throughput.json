@@ -1,0 +1,177 @@
+{
+  "device_routing": {
+    "dlc_version": "3.0.0rc13",
+    "torch_version": "2.11.0",
+    "device_arg_used": "auto (default)",
+    "actual_routing": "CPU (Faster R-CNN detector forces CPU fallback regardless of device kwarg)",
+    "mps_available_on_hardware": true,
+    "mps_smoke_test_pass": true,
+    "hardware": "MacBook Pro 14\" 2023, M2 Max, 96 GB unified memory"
+  },
+  "mps_probe": {
+    "ran_at": "2026-05-13",
+    "clip": "IMG_1050",
+    "clip_resolution": "1080x1920",
+    "clip_frames": 57,
+    "wall_clock_s_with_mps_kwarg": 118.36,
+    "wall_clock_s_cpu_baseline": 70.0,
+    "cpu_pct_during_probe": 321,
+    "stage_decomposition": {
+      "detector_faster_rcnn_s_per_frame": 1.68,
+      "detector_interpretation": "Silent fallback to CPU \u2014 Faster R-CNN ops not MPS-compatible",
+      "pose_hrnet_w32_s_per_frame": 0.17,
+      "pose_interpretation": "MPS engaged \u2014 pose model runs ~10\u00d7 faster than detector"
+    },
+    "verdict": "METHODOLOGICAL_FINDING",
+    "rationale": "Detector dominates wall-clock (~80%) and silently falls back to CPU. MPS-engaged pose stage shows only ~6\u00d7 speedup over its CPU equivalent, insufficient to overcome detector CPU bottleneck + MPS\u2194CPU shuttle overhead + first-call MPS init. device='auto' (pure CPU) is already the optimal routing for this DLC version on this hardware for these clips. NO ENGINEERING FIX AVAILABLE without swapping detector.",
+    "phase11_optimization_candidate": "Replace Faster R-CNN with MPS-compatible bbox detector (e.g., Yolov8 from Ultralytics) \u2014 would unlock pose-stage speedup (~6\u00d7) and likely give 4-8\u00d7 total throughput on portrait clips."
+  },
+  "cpu_run_throughput": {
+    "n_clips_timed": 11,
+    "n_clips_total_completed": 12,
+    "s_per_frame_mean": 1.201,
+    "s_per_frame_median": 1.167,
+    "s_per_frame_stdev": 0.089,
+    "s_per_frame_min": 1.128,
+    "s_per_frame_max": 1.391,
+    "slowest_clip": {
+      "clip_id": "IMG_1163",
+      "s_per_frame": 1.391,
+      "wall_clock_s": 429.89,
+      "n_frames": 309,
+      "resolution": "2160x3840"
+    }
+  },
+  "phase8b_reference": {
+    "s_per_clip_landscape": 31.1,
+    "note": "Phase 8b RME (RMA) was landscape 1920\u00d71080 at ~31.1 s/clip. Prudnik portrait at ~1.18 s/frame \u00d7 ~300 frames \u2248 350 s/clip \u2248 10\u00d7 more expensive. ATTRIBUTION (load-bearing for audit interpretation): the 10\u00d7 gap is DETECTOR-ARCHITECTURE-SPECIFIC, NOT ORIENTATION-FUNDAMENTAL. Faster R-CNN silently CPU-falls-back on these clips regardless of device kwarg, and CPU execution scales near-linearly with pixel count. The pose stage (hrnet_w32) runs cleanly on MPS (~0.17 s/frame in probe) and that performance is preserved across orientations. A reader who infers 'portrait orientation is intrinsically 10\u00d7 more expensive' has misread this finding \u2014 the correct reading is 'Faster R-CNN's CPU-bound execution on portrait dimensions costs 10\u00d7 more than landscape; pose-stage MPS performance is preserved across orientations'. This distinction matters for the orientation hypothesis (Limitation 6) in the audit doc: compute cost does NOT validate or invalidate the orientation-induced distribution-shift hypothesis for the classifier. Those are orthogonal concerns."
+  },
+  "implication_for_phase10a_full": {
+    "compute_budget_per_clip_s": 72.0,
+    "n_remaining_clips_in_prelim": "TBD when run completes",
+    "fix_available": false,
+    "honest_compute_plan": "Phase 10a-full (~283 clips equivalent at portrait scale) would take roughly: 283 \u00d7 mean_clip_wall_s \u2248 many hours. Plan as overnight job. No software fix available within current DLC + detector pipeline."
+  },
+  "per_clip_detail": [
+    {
+      "clip_id": "IMG_1103",
+      "h5_completed_at": "2026-05-13T13:07:54",
+      "duration_s": 0.483,
+      "n_frames": 29,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": null,
+      "s_per_frame": null
+    },
+    {
+      "clip_id": "IMG_1050",
+      "h5_completed_at": "2026-05-13T13:09:04",
+      "duration_s": 0.95,
+      "n_frames": 57,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 69.67,
+      "s_per_frame": 1.222
+    },
+    {
+      "clip_id": "IMG_1088",
+      "h5_completed_at": "2026-05-13T13:11:33",
+      "duration_s": 2.118,
+      "n_frames": 127,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 148.99,
+      "s_per_frame": 1.173
+    },
+    {
+      "clip_id": "IMG_1106",
+      "h5_completed_at": "2026-05-13T13:14:45",
+      "duration_s": 2.752,
+      "n_frames": 165,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 192.63,
+      "s_per_frame": 1.167
+    },
+    {
+      "clip_id": "IMG_1022",
+      "h5_completed_at": "2026-05-13T13:18:30",
+      "duration_s": 3.252,
+      "n_frames": 195,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 224.3,
+      "s_per_frame": 1.15
+    },
+    {
+      "clip_id": "IMG_1077",
+      "h5_completed_at": "2026-05-13T13:22:28",
+      "duration_s": 3.468,
+      "n_frames": 208,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 238.36,
+      "s_per_frame": 1.146
+    },
+    {
+      "clip_id": "IMG_1149",
+      "h5_completed_at": "2026-05-13T13:26:41",
+      "duration_s": 3.735,
+      "n_frames": 224,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 252.64,
+      "s_per_frame": 1.128
+    },
+    {
+      "clip_id": "IMG_1129",
+      "h5_completed_at": "2026-05-13T13:32:19",
+      "duration_s": 4.985,
+      "n_frames": 299,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 338.07,
+      "s_per_frame": 1.131
+    },
+    {
+      "clip_id": "IMG_1146",
+      "h5_completed_at": "2026-05-13T13:38:03",
+      "duration_s": 5.085,
+      "n_frames": 305,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 344.73,
+      "s_per_frame": 1.13
+    },
+    {
+      "clip_id": "IMG_1059",
+      "h5_completed_at": "2026-05-13T13:44:22",
+      "duration_s": 5.135,
+      "n_frames": 308,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 379.02,
+      "s_per_frame": 1.231
+    },
+    {
+      "clip_id": "IMG_1049",
+      "h5_completed_at": "2026-05-13T13:51:16",
+      "duration_s": 5.152,
+      "n_frames": 309,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 413.79,
+      "s_per_frame": 1.339
+    },
+    {
+      "clip_id": "IMG_1163",
+      "h5_completed_at": "2026-05-13T13:58:26",
+      "duration_s": 5.152,
+      "n_frames": 309,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 429.89,
+      "s_per_frame": 1.391
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "mode": "phase10a_prelim",
+  "preregistration": "outputs/track_b_phase10a_prelim_preregistration.md",
+  "n_subset": 90,
+  "n_action": 74,
+  "n_background": 16,
+  "pooled_auc": 0.3842905405405405,
+  "pooled_auc_bootstrap_95ci": [
+    0.22719417838100917,
+    0.5527803914895321
+  ],
+  "pre_cal_auc": 0.3842905405405405,
+  "post_cal_auc": 0.3842905405405405,
+  "g6_auc_invariance_pass": true,
+  "permutation_p_vs_chance": 0.9120879120879121,
+  "ece_pre_cal": 0.3922746557662734,
+  "ece_post_cal": 0.46642468524014274,
+  "ece_n_bins_used": 10,
+  "verdict_band": "WEAK_OR_NO_TRANSFER",
+  "routing_recommendation": "PAUSE labeling. Diagnose first \u2014 portrait orientation (data_quality_notes \u00a71) is the leading hypothesis.",
+  "frame_type_subgroup_auc": {
+    "head-zoom": {
+      "n": 16,
+      "auc": null,
+      "auc_reported": false,
+      "reason": "n<20 (guard per Test 7)"
+    },
+    "full-body": {
+      "n": 74,
+      "auc": 0.3416666666666667,
+      "auc_reported": true
+    }
+  },
+  "operating_point_evaluation": "DEFERRED to Phase 10a-full per D5 (n_neg too small)",
+  "limitations_load_bearing": {
+    "L1_selection_bias": "n=91 was filtered to high/medium-confidence, clearly-classifiable; remaining 180 derived rows are likely harder. Preliminary AUC is likely an UPPER BOUND on full Phase 10a-full.",
+    "L2_single_source": "Prudnik = 1 source; clip-bootstrap not source-bootstrap.",
+    "L3_n_neg_16": "n_neg too small for operating-point analysis.",
+    "L6_portrait_orientation": "All clips portrait; leading hypothesis if WEAK_OR_NO_TRANSFER."
+  },
+  "config": {
+    "deployed_classifier": "outputs/phase10a_prelim_deployed_classifier.json",
+    "t_median_used": 0.494,
+    "bootstrap_B": 10000,
+    "bootstrap_seed": 42,
+    "permutation_B": 1000,
+    "decision_boundary": 0.0
+  },
+  "timestamp_utc": "2026-05-14T05:37:56.184562+00:00"
+}
