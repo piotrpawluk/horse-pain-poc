@@ -156,7 +156,7 @@ This is a **measurement specification** for Phase 10b, not just a caveat.
 
 Per `outputs/phase10a_dlc_throughput.json`:
 
-- DLC per-frame rate: 1.18 s/frame mean (median 1.16, range [1.13, 1.39]) on 90 clips
+- DLC per-frame rate: 1.20 s/frame mean (median 1.20, range [1.12, 1.39]) across 89 timed clips of 90 completed (first clip has no prior mtime anchor for inter-clip wall-clock derivation)
 - 50,622s total DLC walltime (~14h) — Sanity #2 fired at 18.1× the original 2,790s estimate
 - MPS probe (May 13) established that the bottleneck is **Faster R-CNN detector silently falling back to CPU** because of MPS-incompatible ops in DLC 3.0.0rc14
 - The 10× compute gap vs Phase 8b RME (31.1 s/clip landscape) is **detector-architecture-specific, NOT orientation-fundamental** — pose-stage hrnet_w32 runs ~6× faster on MPS when alone
@@ -223,7 +223,7 @@ This is the same selection-bias trap as L1 on the original n=90 selection. The P
 
 **D3.** Phase 10b proceeds with Path A (n≈20 manual-bbox diagnostic) as the next preliminary read. Selection stratified per §Phase 10b proposal. Locked measurement spec: uncalibrated AUC + score distribution alongside calibrated metrics.
 
-**D4.** Cloud-DLC migration (Modal CUDA Phase 8b retrain + tolerance-equivalence chain) is **DEFERRED** to Phase 11+. Rationale: CUDA does not address a model that cannot find ears on its native compute substrate. The cloud-DLC scaffolding (`tools/cloud_dlc/`) remains valuable as parked infrastructure; see Lesson 23 candidate below.
+**D4.** Cloud-DLC migration (Modal CUDA Phase 8b retrain + tolerance-equivalence chain) is **DEFERRED** to Phase 11+. Rationale: CUDA does not address a model that cannot find ears on its native compute substrate. The cloud-DLC scaffolding (`tools/cloud_dlc/`) remains valuable as parked infrastructure; see Lesson 23 candidate below. *Note: Phase 10b cohort selection may surface footage where DLC operates in the Phase 8b regime; the cloud-DLC deferral is then governed by throughput economics (cohort size × per-clip CPU rate vs cloud cost), not DLC viability — see Phase 10b scoping.*
 
 **D5.** ECE worsening interpretation is locked to two mechanisms (input distribution drift + base-rate calibration pathology). Phase 10b Path A measurement spec includes uncalibrated metrics specifically to separate the two.
 

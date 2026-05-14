@@ -27,12 +27,12 @@
     "phase11_optimization_candidate": "Replace Faster R-CNN with MPS-compatible bbox detector (e.g., Yolov8 from Ultralytics) \u2014 would unlock pose-stage speedup (~6\u00d7) and likely give 4-8\u00d7 total throughput on portrait clips."
   },
   "cpu_run_throughput": {
-    "n_clips_timed": 11,
-    "n_clips_total_completed": 12,
-    "s_per_frame_mean": 1.201,
-    "s_per_frame_median": 1.167,
-    "s_per_frame_stdev": 0.089,
-    "s_per_frame_min": 1.128,
+    "n_clips_timed": 89,
+    "n_clips_total_completed": 90,
+    "s_per_frame_mean": 1.2,
+    "s_per_frame_median": 1.198,
+    "s_per_frame_stdev": 0.058,
+    "s_per_frame_min": 1.116,
     "s_per_frame_max": 1.391,
     "slowest_clip": {
       "clip_id": "IMG_1163",
@@ -172,6 +172,786 @@
       "portrait": true,
       "wall_clock_s": 429.89,
       "s_per_frame": 1.391
+    },
+    {
+      "clip_id": "IMG_1085",
+      "h5_completed_at": "2026-05-13T14:05:15",
+      "duration_s": 5.587,
+      "n_frames": 335,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 409.16,
+      "s_per_frame": 1.221
+    },
+    {
+      "clip_id": "IMG_1076",
+      "h5_completed_at": "2026-05-13T14:12:24",
+      "duration_s": 5.887,
+      "n_frames": 353,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 428.42,
+      "s_per_frame": 1.214
+    },
+    {
+      "clip_id": "IMG_1041",
+      "h5_completed_at": "2026-05-13T14:19:27",
+      "duration_s": 5.937,
+      "n_frames": 356,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 423.0,
+      "s_per_frame": 1.188
+    },
+    {
+      "clip_id": "IMG_1053",
+      "h5_completed_at": "2026-05-13T14:27:23",
+      "duration_s": 6.47,
+      "n_frames": 388,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 476.56,
+      "s_per_frame": 1.228
+    },
+    {
+      "clip_id": "IMG_1064",
+      "h5_completed_at": "2026-05-13T14:35:15",
+      "duration_s": 6.903,
+      "n_frames": 414,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 472.03,
+      "s_per_frame": 1.14
+    },
+    {
+      "clip_id": "IMG_1137",
+      "h5_completed_at": "2026-05-13T14:44:09",
+      "duration_s": 7.17,
+      "n_frames": 430,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 534.13,
+      "s_per_frame": 1.242
+    },
+    {
+      "clip_id": "IMG_1167",
+      "h5_completed_at": "2026-05-13T14:52:53",
+      "duration_s": 7.17,
+      "n_frames": 430,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 523.1,
+      "s_per_frame": 1.217
+    },
+    {
+      "clip_id": "IMG_1164",
+      "h5_completed_at": "2026-05-13T15:02:47",
+      "duration_s": 7.77,
+      "n_frames": 466,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 594.46,
+      "s_per_frame": 1.276
+    },
+    {
+      "clip_id": "IMG_1044",
+      "h5_completed_at": "2026-05-13T15:12:57",
+      "duration_s": 7.937,
+      "n_frames": 476,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 610.11,
+      "s_per_frame": 1.282
+    },
+    {
+      "clip_id": "IMG_1145",
+      "h5_completed_at": "2026-05-13T15:23:32",
+      "duration_s": 8.587,
+      "n_frames": 515,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 634.39,
+      "s_per_frame": 1.232
+    },
+    {
+      "clip_id": "IMG_1051",
+      "h5_completed_at": "2026-05-13T15:35:13",
+      "duration_s": 8.737,
+      "n_frames": 524,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 701.94,
+      "s_per_frame": 1.34
+    },
+    {
+      "clip_id": "IMG_1066",
+      "h5_completed_at": "2026-05-13T15:47:07",
+      "duration_s": 9.272,
+      "n_frames": 556,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 713.51,
+      "s_per_frame": 1.283
+    },
+    {
+      "clip_id": "IMG_1092",
+      "h5_completed_at": "2026-05-13T15:53:12",
+      "duration_s": 9.633,
+      "n_frames": 289,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 364.68,
+      "s_per_frame": 1.262
+    },
+    {
+      "clip_id": "IMG_1081",
+      "h5_completed_at": "2026-05-13T16:05:09",
+      "duration_s": 9.888,
+      "n_frames": 593,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 717.42,
+      "s_per_frame": 1.21
+    },
+    {
+      "clip_id": "IMG_1102",
+      "h5_completed_at": "2026-05-13T16:17:57",
+      "duration_s": 10.272,
+      "n_frames": 616,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 767.88,
+      "s_per_frame": 1.247
+    },
+    {
+      "clip_id": "IMG_1096",
+      "h5_completed_at": "2026-05-13T16:34:46",
+      "duration_s": 13.34,
+      "n_frames": 800,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 1009.22,
+      "s_per_frame": 1.262
+    },
+    {
+      "clip_id": "IMG_1037",
+      "h5_completed_at": "2026-05-13T16:51:57",
+      "duration_s": 13.757,
+      "n_frames": 825,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1031.19,
+      "s_per_frame": 1.25
+    },
+    {
+      "clip_id": "IMG_1069",
+      "h5_completed_at": "2026-05-13T17:10:01",
+      "duration_s": 14.373,
+      "n_frames": 862,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1083.93,
+      "s_per_frame": 1.257
+    },
+    {
+      "clip_id": "IMG_1075",
+      "h5_completed_at": "2026-05-13T17:28:29",
+      "duration_s": 14.857,
+      "n_frames": 891,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1107.99,
+      "s_per_frame": 1.244
+    },
+    {
+      "clip_id": "IMG_1070",
+      "h5_completed_at": "2026-05-13T17:48:04",
+      "duration_s": 15.34,
+      "n_frames": 920,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1174.81,
+      "s_per_frame": 1.277
+    },
+    {
+      "clip_id": "IMG_1159",
+      "h5_completed_at": "2026-05-13T18:07:38",
+      "duration_s": 16.425,
+      "n_frames": 985,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 1174.29,
+      "s_per_frame": 1.192
+    },
+    {
+      "clip_id": "IMG_1057",
+      "h5_completed_at": "2026-05-13T18:28:35",
+      "duration_s": 16.542,
+      "n_frames": 992,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1257.04,
+      "s_per_frame": 1.267
+    },
+    {
+      "clip_id": "IMG_1135",
+      "h5_completed_at": "2026-05-13T18:49:12",
+      "duration_s": 16.858,
+      "n_frames": 1011,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 1236.35,
+      "s_per_frame": 1.223
+    },
+    {
+      "clip_id": "IMG_1032",
+      "h5_completed_at": "2026-05-13T19:10:58",
+      "duration_s": 16.925,
+      "n_frames": 1015,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1306.21,
+      "s_per_frame": 1.287
+    },
+    {
+      "clip_id": "IMG_1073",
+      "h5_completed_at": "2026-05-13T19:36:06",
+      "duration_s": 20.427,
+      "n_frames": 1225,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 1507.57,
+      "s_per_frame": 1.231
+    },
+    {
+      "clip_id": "IMG_1120",
+      "h5_completed_at": "2026-05-13T20:15:57",
+      "duration_s": 34.933,
+      "n_frames": 2095,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 2391.43,
+      "s_per_frame": 1.141
+    },
+    {
+      "clip_id": "IMG_1133_w1",
+      "h5_completed_at": "2026-05-13T20:20:05",
+      "duration_s": 3.543,
+      "n_frames": 212,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 247.72,
+      "s_per_frame": 1.168
+    },
+    {
+      "clip_id": "IMG_1133_w2",
+      "h5_completed_at": "2026-05-13T20:24:17",
+      "duration_s": 3.543,
+      "n_frames": 212,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 252.19,
+      "s_per_frame": 1.19
+    },
+    {
+      "clip_id": "IMG_1115_w1",
+      "h5_completed_at": "2026-05-13T20:28:46",
+      "duration_s": 3.918,
+      "n_frames": 235,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 269.33,
+      "s_per_frame": 1.146
+    },
+    {
+      "clip_id": "IMG_1115_w2",
+      "h5_completed_at": "2026-05-13T20:33:42",
+      "duration_s": 3.918,
+      "n_frames": 235,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 295.83,
+      "s_per_frame": 1.259
+    },
+    {
+      "clip_id": "IMG_1017_w1",
+      "h5_completed_at": "2026-05-13T20:38:27",
+      "duration_s": 3.951,
+      "n_frames": 237,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 284.93,
+      "s_per_frame": 1.202
+    },
+    {
+      "clip_id": "IMG_1017_w2",
+      "h5_completed_at": "2026-05-13T20:43:32",
+      "duration_s": 3.951,
+      "n_frames": 237,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 305.5,
+      "s_per_frame": 1.289
+    },
+    {
+      "clip_id": "IMG_1055_w1",
+      "h5_completed_at": "2026-05-13T20:48:22",
+      "duration_s": 3.969,
+      "n_frames": 238,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 289.37,
+      "s_per_frame": 1.216
+    },
+    {
+      "clip_id": "IMG_1055_w2",
+      "h5_completed_at": "2026-05-13T20:53:33",
+      "duration_s": 3.969,
+      "n_frames": 238,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 311.64,
+      "s_per_frame": 1.309
+    },
+    {
+      "clip_id": "IMG_1107_w2",
+      "h5_completed_at": "2026-05-13T20:58:30",
+      "duration_s": 4.11,
+      "n_frames": 247,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 296.15,
+      "s_per_frame": 1.199
+    },
+    {
+      "clip_id": "IMG_1160_w1",
+      "h5_completed_at": "2026-05-13T21:03:18",
+      "duration_s": 4.168,
+      "n_frames": 250,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 288.64,
+      "s_per_frame": 1.155
+    },
+    {
+      "clip_id": "IMG_1160_w2",
+      "h5_completed_at": "2026-05-13T21:08:18",
+      "duration_s": 4.168,
+      "n_frames": 250,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 299.96,
+      "s_per_frame": 1.2
+    },
+    {
+      "clip_id": "IMG_1061_w1",
+      "h5_completed_at": "2026-05-13T21:13:27",
+      "duration_s": 4.285,
+      "n_frames": 257,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 308.83,
+      "s_per_frame": 1.202
+    },
+    {
+      "clip_id": "IMG_1061_w2",
+      "h5_completed_at": "2026-05-13T21:18:36",
+      "duration_s": 4.285,
+      "n_frames": 257,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 308.64,
+      "s_per_frame": 1.201
+    },
+    {
+      "clip_id": "IMG_1108_w1",
+      "h5_completed_at": "2026-05-13T21:24:21",
+      "duration_s": 4.994,
+      "n_frames": 299,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 345.36,
+      "s_per_frame": 1.155
+    },
+    {
+      "clip_id": "IMG_1108_w2",
+      "h5_completed_at": "2026-05-13T21:30:38",
+      "duration_s": 4.994,
+      "n_frames": 299,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 377.04,
+      "s_per_frame": 1.261
+    },
+    {
+      "clip_id": "IMG_1130_w1",
+      "h5_completed_at": "2026-05-13T21:36:40",
+      "duration_s": 5.269,
+      "n_frames": 316,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 362.17,
+      "s_per_frame": 1.146
+    },
+    {
+      "clip_id": "IMG_1130_w2",
+      "h5_completed_at": "2026-05-13T21:43:13",
+      "duration_s": 5.269,
+      "n_frames": 316,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 392.4,
+      "s_per_frame": 1.242
+    },
+    {
+      "clip_id": "IMG_1156_w1",
+      "h5_completed_at": "2026-05-13T21:50:08",
+      "duration_s": 6.119,
+      "n_frames": 367,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 415.82,
+      "s_per_frame": 1.133
+    },
+    {
+      "clip_id": "IMG_1156_w2",
+      "h5_completed_at": "2026-05-13T21:57:43",
+      "duration_s": 6.119,
+      "n_frames": 367,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 454.74,
+      "s_per_frame": 1.239
+    },
+    {
+      "clip_id": "IMG_1047_w1",
+      "h5_completed_at": "2026-05-13T22:04:37",
+      "duration_s": 6.186,
+      "n_frames": 371,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 414.15,
+      "s_per_frame": 1.116
+    },
+    {
+      "clip_id": "IMG_1047_w2",
+      "h5_completed_at": "2026-05-13T22:11:41",
+      "duration_s": 6.186,
+      "n_frames": 371,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 423.4,
+      "s_per_frame": 1.141
+    },
+    {
+      "clip_id": "IMG_1154_w1",
+      "h5_completed_at": "2026-05-13T22:19:17",
+      "duration_s": 6.495,
+      "n_frames": 390,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 456.73,
+      "s_per_frame": 1.171
+    },
+    {
+      "clip_id": "IMG_1154_w2",
+      "h5_completed_at": "2026-05-13T22:27:20",
+      "duration_s": 6.495,
+      "n_frames": 390,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 482.99,
+      "s_per_frame": 1.238
+    },
+    {
+      "clip_id": "IMG_1072_w1",
+      "h5_completed_at": "2026-05-13T22:35:30",
+      "duration_s": 6.529,
+      "n_frames": 392,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 489.4,
+      "s_per_frame": 1.248
+    },
+    {
+      "clip_id": "IMG_1072_w2",
+      "h5_completed_at": "2026-05-13T22:43:15",
+      "duration_s": 6.529,
+      "n_frames": 392,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 464.98,
+      "s_per_frame": 1.186
+    },
+    {
+      "clip_id": "IMG_1101_w2",
+      "h5_completed_at": "2026-05-13T22:51:01",
+      "duration_s": 6.72,
+      "n_frames": 403,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 466.12,
+      "s_per_frame": 1.157
+    },
+    {
+      "clip_id": "IMG_1123_w2",
+      "h5_completed_at": "2026-05-13T22:59:23",
+      "duration_s": 6.928,
+      "n_frames": 415,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 501.96,
+      "s_per_frame": 1.21
+    },
+    {
+      "clip_id": "IMG_1155_w1",
+      "h5_completed_at": "2026-05-13T23:07:25",
+      "duration_s": 7.02,
+      "n_frames": 421,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 481.98,
+      "s_per_frame": 1.145
+    },
+    {
+      "clip_id": "IMG_1155_w2",
+      "h5_completed_at": "2026-05-13T23:15:28",
+      "duration_s": 7.02,
+      "n_frames": 421,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 482.99,
+      "s_per_frame": 1.147
+    },
+    {
+      "clip_id": "IMG_1141_w1",
+      "h5_completed_at": "2026-05-13T23:23:41",
+      "duration_s": 7.229,
+      "n_frames": 434,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 492.77,
+      "s_per_frame": 1.135
+    },
+    {
+      "clip_id": "IMG_1141_w2",
+      "h5_completed_at": "2026-05-13T23:32:22",
+      "duration_s": 7.229,
+      "n_frames": 434,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 521.74,
+      "s_per_frame": 1.202
+    },
+    {
+      "clip_id": "IMG_1147_w1",
+      "h5_completed_at": "2026-05-13T23:40:50",
+      "duration_s": 7.37,
+      "n_frames": 442,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 507.11,
+      "s_per_frame": 1.147
+    },
+    {
+      "clip_id": "IMG_1147_w2",
+      "h5_completed_at": "2026-05-13T23:49:50",
+      "duration_s": 7.37,
+      "n_frames": 442,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 540.94,
+      "s_per_frame": 1.224
+    },
+    {
+      "clip_id": "IMG_1117_w1",
+      "h5_completed_at": "2026-05-13T23:58:15",
+      "duration_s": 7.479,
+      "n_frames": 449,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 504.61,
+      "s_per_frame": 1.124
+    },
+    {
+      "clip_id": "IMG_1117_w2",
+      "h5_completed_at": "2026-05-14T00:07:13",
+      "duration_s": 7.479,
+      "n_frames": 449,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 537.59,
+      "s_per_frame": 1.197
+    },
+    {
+      "clip_id": "IMG_1067_w1",
+      "h5_completed_at": "2026-05-14T00:16:53",
+      "duration_s": 8.071,
+      "n_frames": 484,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 580.62,
+      "s_per_frame": 1.2
+    },
+    {
+      "clip_id": "IMG_1067_w2",
+      "h5_completed_at": "2026-05-14T00:26:32",
+      "duration_s": 8.071,
+      "n_frames": 484,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 579.16,
+      "s_per_frame": 1.197
+    },
+    {
+      "clip_id": "IMG_1060_w1",
+      "h5_completed_at": "2026-05-14T00:36:52",
+      "duration_s": 8.613,
+      "n_frames": 517,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 619.55,
+      "s_per_frame": 1.198
+    },
+    {
+      "clip_id": "IMG_1060_w2",
+      "h5_completed_at": "2026-05-14T00:46:58",
+      "duration_s": 8.613,
+      "n_frames": 517,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 606.35,
+      "s_per_frame": 1.173
+    },
+    {
+      "clip_id": "IMG_1118_w1",
+      "h5_completed_at": "2026-05-14T00:56:59",
+      "duration_s": 8.954,
+      "n_frames": 537,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 600.63,
+      "s_per_frame": 1.118
+    },
+    {
+      "clip_id": "IMG_1118_w2",
+      "h5_completed_at": "2026-05-14T01:07:27",
+      "duration_s": 8.954,
+      "n_frames": 537,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 628.25,
+      "s_per_frame": 1.17
+    },
+    {
+      "clip_id": "IMG_1134_w1",
+      "h5_completed_at": "2026-05-14T01:18:01",
+      "duration_s": 9.287,
+      "n_frames": 557,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 633.92,
+      "s_per_frame": 1.138
+    },
+    {
+      "clip_id": "IMG_1134_w2",
+      "h5_completed_at": "2026-05-14T01:29:07",
+      "duration_s": 9.287,
+      "n_frames": 557,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 665.75,
+      "s_per_frame": 1.195
+    },
+    {
+      "clip_id": "IMG_1058_w2",
+      "h5_completed_at": "2026-05-14T01:40:20",
+      "duration_s": 9.496,
+      "n_frames": 569,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 673.12,
+      "s_per_frame": 1.183
+    },
+    {
+      "clip_id": "IMG_1161_w1",
+      "h5_completed_at": "2026-05-14T01:51:10",
+      "duration_s": 9.521,
+      "n_frames": 571,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 649.67,
+      "s_per_frame": 1.138
+    },
+    {
+      "clip_id": "IMG_1161_w2",
+      "h5_completed_at": "2026-05-14T02:02:00",
+      "duration_s": 9.521,
+      "n_frames": 571,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 650.66,
+      "s_per_frame": 1.14
+    },
+    {
+      "clip_id": "IMG_1046_w1",
+      "h5_completed_at": "2026-05-14T02:13:04",
+      "duration_s": 9.838,
+      "n_frames": 590,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 663.8,
+      "s_per_frame": 1.125
+    },
+    {
+      "clip_id": "IMG_1046_w2",
+      "h5_completed_at": "2026-05-14T02:24:03",
+      "duration_s": 9.838,
+      "n_frames": 590,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 659.01,
+      "s_per_frame": 1.117
+    },
+    {
+      "clip_id": "IMG_1013_w1",
+      "h5_completed_at": "2026-05-14T02:35:47",
+      "duration_s": 10.021,
+      "n_frames": 601,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 703.95,
+      "s_per_frame": 1.171
+    },
+    {
+      "clip_id": "IMG_1013_w2",
+      "h5_completed_at": "2026-05-14T02:47:08",
+      "duration_s": 10.021,
+      "n_frames": 601,
+      "resolution": "1080x1920",
+      "portrait": true,
+      "wall_clock_s": 680.76,
+      "s_per_frame": 1.133
+    },
+    {
+      "clip_id": "IMG_1121_w1",
+      "h5_completed_at": "2026-05-14T02:58:49",
+      "duration_s": 10.322,
+      "n_frames": 619,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 700.89,
+      "s_per_frame": 1.132
+    },
+    {
+      "clip_id": "IMG_1121_w2",
+      "h5_completed_at": "2026-05-14T03:10:59",
+      "duration_s": 10.322,
+      "n_frames": 619,
+      "resolution": "2160x3840",
+      "portrait": true,
+      "wall_clock_s": 729.9,
+      "s_per_frame": 1.179
     }
   ]
 }
